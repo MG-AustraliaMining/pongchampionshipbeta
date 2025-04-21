@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>🏆 PONG ROUND OF 16 BETA🏆</title>
+  <title>🏆 PONG ROUND OF 16 🏆</title>
   <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
@@ -96,23 +96,23 @@
       z-index: 10;
     }
     #titleScreen h1, #endScreen h1, #lobbyScreen h1, #createGameScreen h1, #findGameScreen h1 {
-      font-size: 4rem;
+      font-size: 2.5rem;
       color: gold;
       text-shadow: 0 0 10px rgba(255,215,0,0.7);
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
       text-align: center;
     }
     #titleScreen h2, #lobbyScreen h2 {
-      font-size: 2.5rem;
+      font-size: 1.8rem;
       color: white;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
     .btn-championship {
       background: linear-gradient(45deg, #ff8a00, #e52e71);
       border: none;
-      font-size: 1.5rem;
-      padding: 10px 30px;
-      margin: 10px;
+      font-size: 1.2rem;
+      padding: 8px 20px;
+      margin: 8px;
       border-radius: 50px;
       color: white;
       box-shadow: 0 5px 15px rgba(0,0,0,0.3);
@@ -124,19 +124,19 @@
     }
     #muteButton, #pauseButton {
       position: absolute;
-      top: 20px;
+      top: 15px;
       z-index: 20;
       background: rgba(255,255,255,0.2);
       border: none;
       border-radius: 50%;
-      width: 50px;
-      height: 50px;
+      width: 40px;
+      height: 40px;
       color: white;
-      font-size: 1.5rem;
+      font-size: 1.2rem;
       cursor: pointer;
     }
-    #muteButton { left: 20px; }
-    #pauseButton { left: 80px; }
+    #muteButton { left: 15px; }
+    #pauseButton { left: 65px; }
     #pauseScreen {
       position: absolute;
       top: 0;
@@ -150,7 +150,7 @@
       align-items: center;
       z-index: 15;
       color: white;
-      font-size: 3rem;
+      font-size: 2rem;
     }
     #countdown {
       position: absolute;
@@ -165,85 +165,87 @@
       align-items: center;
       z-index: 25;
       color: white;
-      font-size: 8rem;
+      font-size: 5rem;
       font-weight: bold;
     }
-    .touch-control {
-      position: absolute;
-      width: 30%;
-      height: 100%;
-      opacity: 0.3;
-      z-index: 5;
-    }
-    #leftTouchTop { left: 0; top: 0; height: 50%; }
-    #leftTouchBottom { left: 0; bottom: 0; height: 50%; }
-    #rightTouchTop { right: 0; top: 0; height: 50%; }
-    #rightTouchBottom { right: 0; bottom: 0; height: 50%; }
     #playerNameInput {
-      padding: 10px;
-      font-size: 1.5rem;
-      margin-bottom: 20px;
-      width: 300px;
+      padding: 8px;
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+      width: 250px;
       text-align: center;
       border-radius: 20px;
       border: none;
     }
     #gameList {
-      width: 80%;
-      max-height: 60vh;
+      width: 90%;
+      max-height: 50vh;
       overflow-y: auto;
-      margin: 20px 0;
+      margin: 15px 0;
     }
     .game-item {
       background: rgba(255,255,255,0.1);
-      padding: 15px;
-      margin: 10px 0;
+      padding: 12px;
+      margin: 8px 0;
       border-radius: 10px;
       cursor: pointer;
       transition: all 0.3s;
+      font-size: 1.1rem;
     }
     .game-item:hover {
       background: rgba(255,255,255,0.2);
     }
     #refreshButton {
       position: absolute;
-      top: 20px;
-      right: 20px;
+      top: 15px;
+      right: 15px;
       background: rgba(255,255,255,0.2);
       border: none;
       border-radius: 50%;
-      width: 50px;
-      height: 50px;
+      width: 40px;
+      height: 40px;
       color: white;
-      font-size: 1.5rem;
+      font-size: 1.2rem;
       cursor: pointer;
     }
     #waitingMessage {
+      font-size: 1.2rem;
+      color: white;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+    /* Mobile Controls */
+    #leftControls, #rightControls {
+      position: absolute;
+      bottom: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 5;
+    }
+    #leftControls { left: 20px; }
+    #rightControls { right: 20px; }
+    .control-btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 5px;
       font-size: 1.5rem;
       color: white;
-      margin-bottom: 20px;
+      user-select: none;
     }
-    @media (max-width: 768px) {
-      #leftScore, #rightScore { font-size: 2rem; }
-      #timer { font-size: 1.5rem; }
-      #titleScreen h1, #lobbyScreen h1 { font-size: 2.5rem; }
-      #titleScreen h2, #lobbyScreen h2 { font-size: 1.8rem; }
-      .btn-championship { font-size: 1.2rem; }
-      #commentary { font-size: 1rem; padding: 8px 16px; }
-    }
-    @media (max-height: 500px) {
-      #titleScreen h1, #lobbyScreen h1 { font-size: 2rem; }
-      #titleScreen h2, #lobbyScreen h2 { font-size: 1.5rem; }
-      .btn-championship { font-size: 1rem; padding: 8px 20px; }
-      #leftScore, #rightScore { font-size: 1.5rem; top: 10px; }
-      #timer { font-size: 1.2rem; top: 10px; }
-      #bonusPoints { font-size: 1rem; top: 50px; }
+    .control-btn:active {
+      background: rgba(255,255,255,0.5);
     }
     /* Confetti styles */
     .confetti {
       position: absolute;
-      width: 10px;
-      height: 10px;
+      width: 8px;
+      height: 8px;
       background-color: #f00;
       border-radius: 50%;
       pointer-events: none;
@@ -253,17 +255,40 @@
       0% { transform: translateY(-100px) rotate(0deg); }
       100% { transform: translateY(100vh) rotate(360deg); }
     }
+    @media (max-width: 768px) {
+      #leftScore, #rightScore { font-size: 1.8rem; top: 10px; }
+      #timer { font-size: 1.2rem; top: 10px; }
+      #bonusPoints { font-size: 1rem; top: 50px; }
+      #commentary { font-size: 0.9rem; padding: 6px 12px; }
+      .btn-championship { font-size: 1rem; padding: 6px 15px; }
+      #titleScreen h1, #lobbyScreen h1 { font-size: 2rem; }
+      #titleScreen h2, #lobbyScreen h2 { font-size: 1.5rem; }
+      #playerNameInput { width: 200px; font-size: 1rem; }
+      .game-item { font-size: 1rem; padding: 10px; }
+      .control-btn { width: 50px; height: 50px; font-size: 1.2rem; }
+    }
+    @media (max-height: 500px) {
+      #titleScreen h1, #lobbyScreen h1 { font-size: 1.8rem; }
+      #titleScreen h2, #lobbyScreen h2 { font-size: 1.3rem; }
+      .btn-championship { font-size: 0.9rem; padding: 5px 12px; }
+      #leftControls, #rightControls { bottom: 15px; }
+      .control-btn { width: 45px; height: 45px; font-size: 1.1rem; }
+    }
   </style>
 </head>
 <body>
   <div id="gameContainer">
     <canvas id="pongCanvas"></canvas>
     
-    <!-- Touch Controls -->
-    <div class="touch-control" id="leftTouchTop"></div>
-    <div class="touch-control" id="leftTouchBottom"></div>
-    <div class="touch-control" id="rightTouchTop"></div>
-    <div class="touch-control" id="rightTouchBottom"></div>
+    <!-- Mobile Controls -->
+    <div id="leftControls">
+      <div class="control-btn" id="upBtnLeft">↑</div>
+      <div class="control-btn" id="downBtnLeft">↓</div>
+    </div>
+    <div id="rightControls">
+      <div class="control-btn" id="upBtnRight">↑</div>
+      <div class="control-btn" id="downBtnRight">↓</div>
+    </div>
     
     <div id="leftScore">0</div>
     <div id="rightScore">0</div>
@@ -275,10 +300,10 @@
 
     <!-- Audio Elements -->
     <audio id="menuMusic" loop>
-      <source src="music1.mp3" type="audio/mpeg">
+      <source src="https://assets.mixkit.co/music/preview/mixkit-game-show-suspense-waiting-668.mp3" type="audio/mpeg">
     </audio>
     <audio id="gameMusic" loop>
-      <source src="music2.mp3" type="audio/mpeg">
+      <source src="https://assets.mixkit.co/music/preview/mixkit-arcade-retro-game-over-213.mp3" type="audio/mpeg">
     </audio>
 
     <!-- Countdown Screen -->
@@ -297,7 +322,7 @@
       <h2>First Match</h2>
       <button class="btn-championship" onclick="startGame(false)">2 PLAYERS</button>
       <button class="btn-championship" onclick="startGame(true)">4 PLAYERS</button>
-      <button class="btn-championship" onclick="showLobbyScreen()">WIRELESS PLAY BETA</button>
+      <button class="btn-championship" onclick="showLobbyScreen()">ONLINE PLAY</button>
     </div>
 
     <!-- Lobby Screen -->
@@ -335,8 +360,9 @@
 
     <!-- End Screen -->
     <div id="endScreen" style="display: none;">
-      <h1 id="endMessage" style="color: gold; font-size: 3rem;"></h1>
+      <h1 id="endMessage" style="color: gold; font-size: 2rem;"></h1>
       <button class="btn-championship" onclick="returnToMenu()">RETURN TO MENU</button>
+      <button class="btn-championship" onclick="restartGame()">PLAY AGAIN</button>
     </div>
   </div>
 
@@ -382,12 +408,10 @@
     const waitingMessage = document.getElementById('waitingMessage');
     const menuMusic = document.getElementById('menuMusic');
     const gameMusic = document.getElementById('gameMusic');
-
-    // Touch control elements
-    const leftTouchTop = document.getElementById('leftTouchTop');
-    const leftTouchBottom = document.getElementById('leftTouchBottom');
-    const rightTouchTop = document.getElementById('rightTouchTop');
-    const rightTouchBottom = document.getElementById('rightTouchBottom');
+    const upBtnLeft = document.getElementById('upBtnLeft');
+    const downBtnLeft = document.getElementById('downBtnLeft');
+    const upBtnRight = document.getElementById('upBtnRight');
+    const downBtnRight = document.getElementById('downBtnRight');
 
     // PeerJS connection variables
     let peer;
@@ -396,100 +420,6 @@
     let isHost = false;
     let currentGameId = null;
     let peerList = {};
-
-    // ===== ENHANCED TOURNAMENT COMMENTARY SYSTEM =====
-    const TOURNAMENT_COMMENTARY = {
-      introductions: [
-        "Ladies and gentlemen! Welcome to the PONG ROUND OF 16!",
-        "This is the moment we've all been waiting for - the Pong Round of 16 match!",
-        "The arena is electric as we prepare for this knockout showdown!",
-        "History will be made today in this Round of 16 battle!",
-        "The crowd is on their feet for this elimination match!"
-      ],
-      playerIntroductions: [
-        "In the left corner, we have {leftPlayer}!",
-        "And in the right corner, the formidable {rightPlayer}!",
-        "Facing off today: {leftPlayer} versus {rightPlayer}!",
-        "This match features {leftPlayer} taking on {rightPlayer}!",
-        "Two competitors enter, only one will advance to the quarter finals!"
-      ],
-      countdown: [
-        "The knockout match is about to begin!",
-        "Players to your positions for this elimination bout!",
-        "The crowd falls silent as we approach match start time!",
-        "Moment of truth in this Round of 16 showdown!",
-        "History will be made starting now!"
-      ],
-      scores: [
-        "INCREDIBLE POINT by {player}! The crowd goes wild!",
-        "{player} with a TOURNAMENT-LEVEL shot!",
-        "WHAT A PLAY by {player}! That's how champions perform!",
-        "UNBELIEVABLE! {player} scores in spectacular fashion!",
-        "{player} delivers under tournament pressure!",
-        "PRECISION PERFECTION from {player}!",
-        "{player} showing why they belong in this tournament!",
-        "DOMINANT play by {player}!"
-      ],
-      matchPoint: [
-        "MATCH POINT for {player}! Can they advance to the quarter finals?",
-        "{player} is one point away from ADVANCING IN THE TOURNAMENT!",
-        "This could be the match-winning point for {player}!",
-        "The next round is within reach for {player}!",
-        "Do or die moment in this knockout match!"
-      ],
-      deuce: [
-        "DEUCE! What an incredible match we're witnessing!",
-        "Tied up! The tension is UNBEARABLE!",
-        "Neither competitor backing down in this epic battle!",
-        "This is tournament pong at its absolute finest!",
-        "The crowd is on their feet as we reach a tie!"
-      ],
-      overtime: [
-        "OVERTIME! 30 SECONDS ADDED TO DECIDE WHO ADVANCES!",
-        "We're going to EXTRA TIME in this tournament match!",
-        "The players will need to dig deep in this tournament overtime!",
-        "Just when you thought it couldn't get more intense - OVERTIME!",
-        "Thirty seconds added to determine who moves forward!"
-      ],
-      reactions: [
-        "UNBELIEVABLE!",
-        "INCREDIBLE SHOT!",
-        "WHAT A PLAY!",
-        "MAGNIFICENT RALLY!",
-        "SPECTACULAR POINT!",
-        "PHENOMENAL!",
-        "ASTOUNDING PLAY!",
-        "EXTRAORDINARY!"
-      ],
-      victories: [
-        "AND ADVANCING TO THE QUARTER FINALS IS... {winner}!!!",
-        "{winner} MOVES FORWARD IN STUNNING FASHION!",
-        "{winner} STANDS TALL AS THEY ADVANCE IN THE TOURNAMENT!",
-        "HISTORY MADE AS {winner} WINS THIS ROUND OF 16 MATCH!",
-        "{winner} HAS DONE IT! THEY ARE THROUGH TO THE NEXT ROUND!"
-      ],
-      betweenPoints: [
-        "The tension builds as we prepare for the next tournament point",
-        "Both competitors regrouping for the next rally",
-        "The crowd buzzing with tournament anticipation",
-        "World-class focus from both players",
-        "The stakes couldn't be higher in this elimination match"
-      ],
-      timeWarnings: [
-        "30 SECONDS REMAINING IN THIS TOURNAMENT MATCH!",
-        "ONLY 30 SECONDS LEFT TO DECIDE WHO ADVANCES!",
-        "THE TOURNAMENT CLOCK IS WINDING DOWN - 30 SECONDS!",
-        "JUST 10 SECONDS REMAINING! TOURNAMENT PRESSURE!",
-        "10 SECONDS LEFT! WHO WILL MOVE FORWARD?"
-      ],
-      specialMoves: [
-        "LIGHTNING FAST return by {player}!",
-        "{player} with a POWER SHOT! Incredible speed!",
-        "What a SPIN on that ball by {player}!",
-        "{player} with a TOURNAMENT TOUCH on that shot!",
-        "PERFECT ANGLE from {player}! Textbook tournament play!"
-      ]
-    };
 
     // ===== GAME STATE =====
     let game = {
@@ -533,13 +463,199 @@
         rightBottom: false
       },
       isOnlineGame: false,
-      playerPosition: null // 'left' or 'right'
+      playerPosition: null, // 'left' or 'right'
+      mobileControls: {
+        leftUp: false,
+        leftDown: false,
+        rightUp: false,
+        rightDown: false
+      }
     };
+
+    // ===== COMMENTARY SYSTEM =====
+    const commentaryPhrases = {
+      introductions: [
+        "Welcome to the Pong Championship!",
+        "Get ready for an epic Pong battle!",
+        "The crowd is buzzing for this match!"
+      ],
+      playerIntroductions: [
+        "On the left we have {leftPlayer}, and on the right {rightPlayer}",
+        "Two titans of Pong face off today: {leftPlayer} versus {rightPlayer}",
+        "Let's meet our competitors: {leftPlayer} and {rightPlayer}"
+      ],
+      countdown: [
+        "The match is about to begin!",
+        "Players take your positions!",
+        "Here we go!"
+      ],
+      scores: [
+        "Point to {player}!",
+        "{player} scores!",
+        "What a shot by {player}!"
+      ],
+      deuce: [
+        "We're at deuce! Bonus point activated!",
+        "Tied up! Next point wins!",
+        "It's anyone's game now!"
+      ],
+      matchPoint: [
+        "Match point for {player}!",
+        "{player} is one point away from victory!",
+        "Can {player} close it out here?"
+      ],
+      timeWarnings: [
+        "Only 30 seconds remaining!",
+        "The clock is ticking down!",
+        "Time is running out!"
+      ],
+      overtime: [
+        "We're going to overtime!",
+        "Sudden death overtime begins now!",
+        "Next point wins in overtime!"
+      ],
+      victories: [
+        "What a performance!",
+        "Absolutely dominant play!",
+        "A well-earned victory!"
+      ],
+      specialMoves: [
+        "Incredible shot!",
+        "That was spectacular!",
+        "Unbelievable play!"
+      ],
+      betweenPoints: [
+        "The tension is palpable!",
+        "Who will take the lead?",
+        "This match is heating up!"
+      ],
+      reactions: [
+        "Amazing!",
+        "Wow!",
+        "Incredible!"
+      ]
+    };
+
+    function getRandomCommentary(type) {
+      const phrases = commentaryPhrases[type];
+      if (!phrases) return "";
+      
+      let phrase = phrases[Math.floor(Math.random() * phrases.length)];
+      phrase = phrase.replace(/{leftPlayer}/g, game.leftPlayer);
+      phrase = phrase.replace(/{rightPlayer}/g, game.rightPlayer);
+      phrase = phrase.replace(/{player}/g, game.lastScorer || "the player");
+      
+      return phrase;
+    }
+
+    function queueCommentary(text, important = false) {
+      if (important) {
+        game.commentaryQueue.unshift(text);
+      } else {
+        game.commentaryQueue.push(text);
+      }
+      
+      if (!game.isSpeaking) {
+        speakNextCommentary();
+      }
+    }
+
+    function announceCommentary(text, important = false) {
+      commentaryEl.textContent = text;
+      
+      if (!game.isMuted) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 0.9;
+        utterance.pitch = 1.2;
+        
+        utterance.onend = () => {
+          game.isSpeaking = false;
+          speakNextCommentary();
+        };
+        
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(utterance);
+        game.isSpeaking = true;
+      }
+    }
+
+    function speakNextCommentary() {
+      if (game.commentaryQueue.length > 0 && !game.isSpeaking) {
+        const text = game.commentaryQueue.shift();
+        announceCommentary(text);
+      }
+    }
+
+    function checkForSpecialMove() {
+      // Check if ball speed is very high (special move)
+      const speedThreshold = game.isFourPlayer ? FOUR_PLAYER_BALL_SPEED * 1.8 : INITIAL_BALL_SPEED * 1.8;
+      const now = Date.now();
+      
+      if (game.ball.speed >= speedThreshold && now - game.lastSpecialMoveTime > 5000) {
+        game.lastSpecialMoveTime = now;
+        return true;
+      }
+      return false;
+    }
+
+    // ===== MOBILE CONTROLS =====
+    function setupMobileControls() {
+      // Left controls
+      upBtnLeft.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        game.mobileControls.leftUp = true;
+      });
+      upBtnLeft.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        game.mobileControls.leftUp = false;
+      });
+      downBtnLeft.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        game.mobileControls.leftDown = true;
+      });
+      downBtnLeft.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        game.mobileControls.leftDown = false;
+      });
+
+      // Right controls
+      upBtnRight.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        game.mobileControls.rightUp = true;
+      });
+      upBtnRight.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        game.mobileControls.rightUp = false;
+      });
+      downBtnRight.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        game.mobileControls.rightDown = true;
+      });
+      downBtnRight.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        game.mobileControls.rightDown = false;
+      });
+
+      // Mouse controls for testing on desktop
+      upBtnLeft.addEventListener('mousedown', () => game.mobileControls.leftUp = true);
+      upBtnLeft.addEventListener('mouseup', () => game.mobileControls.leftUp = false);
+      downBtnLeft.addEventListener('mousedown', () => game.mobileControls.leftDown = true);
+      downBtnLeft.addEventListener('mouseup', () => game.mobileControls.leftDown = false);
+      upBtnRight.addEventListener('mousedown', () => game.mobileControls.rightUp = true);
+      upBtnRight.addEventListener('mouseup', () => game.mobileControls.rightUp = false);
+      downBtnRight.addEventListener('mousedown', () => game.mobileControls.rightDown = true);
+      downBtnRight.addEventListener('mouseup', () => game.mobileControls.rightDown = false);
+    }
 
     // ===== PEERJS INITIALIZATION =====
     function initializePeerJS() {
       // Create a new Peer with a random ID
-      peer = new Peer();
+      peer = new Peer({
+        config: {'iceServers': [
+          { url: 'stun:stun.l.google.com:19302' },
+          { url: 'stun:global.stun.twilio.com:3478?transport=udp' }
+        ]}
+      });
 
       peer.on('open', (id) => {
         peerId = id;
@@ -676,29 +792,59 @@
       waitingScreen.style.display = 'flex';
       waitingMessage.textContent = `Share this code with your friend: ${peerId}`;
       
+      // Store game in "available games" list
+      const gameInfo = {
+        id: peerId,
+        name: `${playerName}'s Game`,
+        timestamp: Date.now()
+      };
+      addGameToDiscoveryList(gameInfo);
+      
       game.leftPlayer = playerName;
       game.rightPlayer = "Waiting...";
     }
 
     function refreshGameList() {
-      // In a real app, you'd query a server here
-      // For this demo, we'll simulate finding games on the same network
-      gameList.innerHTML = '';
+      gameList.innerHTML = '<div style="color: white; text-align: center;">Searching for games...</div>';
       
-      // Check if we have any stored games (for demo purposes)
+      // In a real app, you would query a server here
+      // For this demo, we'll use localStorage to simulate game discovery
+      setTimeout(() => {
+        const games = getAvailableGames();
+        
+        if (games.length === 0) {
+          gameList.innerHTML = '<div style="color: white; text-align: center;">No games found. Try refreshing.</div>';
+        } else {
+          gameList.innerHTML = '';
+          games.forEach(game => {
+            const gameItem = document.createElement('div');
+            gameItem.className = 'game-item';
+            gameItem.innerHTML = `
+              <div><strong>${game.name}</strong></div>
+              <div>Code: ${game.id}</div>
+            `;
+            gameItem.onclick = () => joinGame(game.id);
+            gameList.appendChild(gameItem);
+          });
+        }
+      }, 1000);
+    }
+
+    // Simulate game discovery using localStorage
+    function addGameToDiscoveryList(gameInfo) {
       const games = JSON.parse(localStorage.getItem('pongGames')) || [];
-      
-      if (games.length === 0) {
-        gameList.innerHTML = '<div style="color: white; text-align: center;">No games found. Try refreshing.</div>';
-      } else {
-        games.forEach(gameId => {
-          const gameItem = document.createElement('div');
-          gameItem.className = 'game-item';
-          gameItem.textContent = `Game ${gameId.substring(0, 6)}`;
-          gameItem.onclick = () => joinGame(gameId);
-          gameList.appendChild(gameItem);
-        });
-      }
+      // Remove old games (older than 5 minutes)
+      const now = Date.now();
+      const freshGames = games.filter(g => now - g.timestamp < 300000);
+      freshGames.push(gameInfo);
+      localStorage.setItem('pongGames', JSON.stringify(freshGames));
+    }
+
+    function getAvailableGames() {
+      const games = JSON.parse(localStorage.getItem('pongGames')) || [];
+      // Filter out games older than 5 minutes
+      const now = Date.now();
+      return games.filter(g => now - g.timestamp < 300000);
     }
 
     function joinGame(gameId) {
@@ -750,6 +896,13 @@
       if (conn) conn.close();
       waitingScreen.style.display = 'none';
       lobbyScreen.style.display = 'flex';
+      
+      // Remove game from discovery list if host cancels
+      if (isHost && currentGameId) {
+        const games = JSON.parse(localStorage.getItem('pongGames')) || [];
+        const updatedGames = games.filter(g => g.id !== currentGameId);
+        localStorage.setItem('pongGames', JSON.stringify(updatedGames));
+      }
     }
 
     function startOnlineGame() {
@@ -776,233 +929,14 @@
       startCountdown();
     }
 
-    // ===== TOUCH CONTROL FUNCTIONS =====
-    function setupTouchControls() {
-      // Track all touch areas
-      const touchAreas = [
-        { element: leftTouchTop, id: 'leftTop', y: 0 },
-        { element: leftTouchBottom, id: 'leftBottom', y: 0 },
-        { element: rightTouchTop, id: 'rightTop', y: 0 },
-        { element: rightTouchBottom, id: 'rightBottom', y: 0 }
-      ];
-
-      // Handle touch start
-      function handleTouchStart(e) {
-        e.preventDefault();
-        const touches = e.changedTouches;
-        
-        for (let i = 0; i < touches.length; i++) {
-          const touch = touches[i];
-          const touchX = touch.clientX;
-          const touchY = touch.clientY;
-          
-          // Check which touch area was touched
-          for (const area of touchAreas) {
-            const rect = area.element.getBoundingClientRect();
-            if (
-              touchX >= rect.left && 
-              touchX <= rect.right && 
-              touchY >= rect.top && 
-              touchY <= rect.bottom
-            ) {
-              game.activeTouches[touch.identifier] = area.id;
-              game.touchControls[area.id] = true;
-              area.y = touchY; // Store initial Y position
-              break;
-            }
-          }
-        }
-      }
-
-      // Handle touch move
-      function handleTouchMove(e) {
-        e.preventDefault();
-        const touches = e.changedTouches;
-        
-        for (let i = 0; i < touches.length; i++) {
-          const touch = touches[i];
-          const touchId = touch.identifier;
-          const touchY = touch.clientY;
-          
-          if (game.activeTouches[touchId]) {
-            const areaId = game.activeTouches[touchId];
-            const area = touchAreas.find(a => a.id === areaId);
-            
-            if (area) {
-              // Calculate movement direction based on Y position change
-              const movement = touchY - area.y;
-              if (Math.abs(movement) > 5) { // Deadzone to prevent jitter
-                if (movement > 0) {
-                  // Moving down
-                  if (areaId === 'leftTop' || areaId === 'leftBottom') {
-                    game.leftBottomPaddle.y += PADDLE_SPEED;
-                  } else {
-                    game.rightBottomPaddle.y += PADDLE_SPEED;
-                  }
-                } else {
-                  // Moving up
-                  if (areaId === 'leftTop' || areaId === 'leftBottom') {
-                    game.leftTopPaddle.y -= PADDLE_SPEED;
-                  } else {
-                    game.rightTopPaddle.y -= PADDLE_SPEED;
-                  }
-                }
-                area.y = touchY; // Update last Y position
-              }
-            }
-          }
-        }
-      }
-
-      // Handle touch end
-      function handleTouchEnd(e) {
-        e.preventDefault();
-        const touches = e.changedTouches;
-        
-        for (let i = 0; i < touches.length; i++) {
-          const touchId = touches[i].identifier;
-          if (game.activeTouches[touchId]) {
-            const areaId = game.activeTouches[touchId];
-            game.touchControls[areaId] = false;
-            delete game.activeTouches[touchId];
-          }
-        }
-      }
-
-      // Add event listeners to all touch areas
-      for (const area of touchAreas) {
-        area.element.addEventListener('touchstart', handleTouchStart, { passive: false });
-        area.element.addEventListener('touchmove', handleTouchMove, { passive: false });
-        area.element.addEventListener('touchend', handleTouchEnd, { passive: false });
-        area.element.addEventListener('touchcancel', handleTouchEnd, { passive: false });
-      }
-
-      // Prevent scrolling when touching the game area
-      document.addEventListener('touchmove', (e) => {
-        if (game.gameStarted && !game.isPaused) {
-          e.preventDefault();
-        }
-      }, { passive: false });
-    }
-
-    // ===== IMPROVED COMMENTARY SYSTEM =====
-    function announceCommentary(text, priority = false) {
-      // Always cancel any current speech immediately
-      if (window.speechSynthesis.speaking) {
-        window.speechSynthesis.cancel();
-        game.isSpeaking = false;
-      }
-
-      // Replace template variables
-      text = text.replace(/{player}/g, game.lastScorer || "The competitor");
-      text = text.replace(/{winner}/g, 
-        game.leftPaddle.score > game.rightPaddle.score ? game.leftPlayer : game.rightPlayer);
-      text = text.replace(/{leftPlayer}/g, game.leftPlayer);
-      text = text.replace(/{rightPlayer}/g, game.rightPlayer);
-      
-      // Update on-screen commentary
-      commentaryEl.textContent = text;
-      
-      if (!game.isMuted) {
-        game.currentUtterance = new SpeechSynthesisUtterance(text);
-        
-        // Enhanced speech settings for tournament style
-        game.currentUtterance.rate = 1.1;
-        game.currentUtterance.pitch = 1.05;
-        game.currentUtterance.volume = 1.2;
-        
-        // More dramatic delivery for important announcements
-        if (priority || text.includes("!") || text === text.toUpperCase()) {
-          game.currentUtterance.rate = 0.9;
-          game.currentUtterance.pitch = 1.2;
-          game.currentUtterance.volume = 1.5;
-        }
-        
-        game.currentUtterance.onend = function() {
-          game.isSpeaking = false;
-          processCommentaryQueue();
-        };
-        
-        window.speechSynthesis.speak(game.currentUtterance);
-        game.isSpeaking = true;
-      } else {
-        setTimeout(() => {
-          game.isSpeaking = false;
-          processCommentaryQueue();
-        }, 2000);
-      }
-    }
-
-    function queueCommentary(message, priority = false) {
-      // Don't queue duplicate messages
-      if (game.commentaryQueue.includes(message) || commentaryEl.textContent === message) {
-        return;
-      }
-
-      if (priority) {
-        // For high priority messages, clear the queue and play immediately
-        game.commentaryQueue = [];
-        if (game.isSpeaking) {
-          window.speechSynthesis.cancel();
-        }
-        announceCommentary(message, true);
-      } else {
-        // Regular priority goes to the queue
-        // Don't add if already in queue
-        if (!game.commentaryQueue.includes(message)) {
-          game.commentaryQueue.push(message);
-        }
-        processCommentaryQueue();
-      }
-    }
-
-    function processCommentaryQueue() {
-      // If we're already speaking, wait until current speech finishes
-      if (game.isSpeaking) return;
-      
-      // If there's nothing in the queue, do nothing
-      if (game.commentaryQueue.length === 0) return;
-      
-      // Get the next message and remove it from queue
-      const message = game.commentaryQueue.shift();
-      
-      // If this message is the same as what's currently displayed, skip it
-      if (message === commentaryEl.textContent) {
-        processCommentaryQueue(); // Process next message immediately
-        return;
-      }
-      
-      game.isSpeaking = true;
-      announceCommentary(message);
-    }
-
-    function getRandomCommentary(type) {
-      const items = TOURNAMENT_COMMENTARY[type];
-      return items[Math.floor(Math.random() * items.length)];
-    }
-
-    // ===== SPECIAL MOVE DETECTION =====
-    function checkForSpecialMove() {
-      // Only check for special moves every 5 seconds
-      const now = Date.now();
-      if (now - game.lastSpecialMoveTime < 5000) return false;
-      
-      // 20% chance of a special move callout
-      if (Math.random() < 0.2) {
-        game.lastSpecialMoveTime = now;
-        return true;
-      }
-      return false;
-    }
-
-    // ===== INITIALIZE GAME =====
+    // ===== GAME INITIALIZATION =====
     function initGame() {
       // Set up responsive design
       handleResize();
       window.addEventListener('resize', handleResize);
       
       // Set up controls
-      setupTouchControls();
+      setupMobileControls();
       setupKeyboardControls();
       
       // Initialize game elements
@@ -1015,7 +949,12 @@
       pauseBtn.addEventListener('click', togglePause);
       
       // Start menu music
-      menuMusic.play().catch(e => console.log("Autoplay prevented:", e));
+      try {
+        menuMusic.volume = 0.5;
+        menuMusic.play().catch(e => console.log("Autoplay prevented:", e));
+      } catch (e) {
+        console.log("Music error:", e);
+      }
       
       // Start game loop
       gameLoop();
@@ -1030,10 +969,16 @@
 
     // ===== RESPONSIVE DESIGN =====
     function handleResize() {
-      // Update touch control areas
-      const touchAreaWidth = Math.min(150, window.innerWidth * 0.3);
-      document.querySelectorAll('.touch-control').forEach(control => {
-        control.style.width = `${touchAreaWidth}px`;
+      // Update control button positions for mobile
+      const controlMargin = window.innerWidth * 0.05;
+      document.getElementById('leftControls').style.left = `${controlMargin}px`;
+      document.getElementById('rightControls').style.right = `${controlMargin}px`;
+      
+      // Adjust control button size based on screen size
+      const controlSize = Math.min(60, window.innerWidth * 0.12);
+      document.querySelectorAll('.control-btn').forEach(btn => {
+        btn.style.width = `${controlSize}px`;
+        btn.style.height = `${controlSize}px`;
       });
       
       // Reset game elements after resize
@@ -1076,154 +1021,17 @@
       requestAnimationFrame(gameLoop);
     }
 
-    // ===== PAUSE FUNCTIONALITY =====
-    function togglePause() {
-      game.isPaused = !game.isPaused;
-      pauseScreen.style.display = game.isPaused ? "flex" : "none";
-      
-      if (game.isPaused) {
-        // When pausing, store the current time and pause music
-        game.pausedTime = Date.now();
-        gameMusic.pause();
-        announceCommentary("GAME PAUSED", true);
-      } else {
-        // When unpausing, adjust the start time to account for pause duration
-        const pauseDuration = Date.now() - game.pausedTime;
-        game.startTime += pauseDuration;
-        gameMusic.play().catch(e => console.log("Music play prevented:", e));
-        announceCommentary("GAME RESUMED", true);
-      }
-    }
-
-    function returnToMenu() {
-      game.isPaused = false;
-      pauseScreen.style.display = "none";
-      titleScreen.style.display = "flex";
-      clearInterval(game.timerInterval);
-      game.gameStarted = false;
-      game.isOnlineGame = false;
-      gameMusic.pause();
-      menuMusic.play().catch(e => console.log("Music play prevented:", e));
-      
-      // Close any peer connections
-      if (conn) conn.close();
-      if (peer) peer.destroy();
-      
-      announceCommentary("RETURNING TO MENU", true);
-    }
-
-    // ===== COUNTDOWN FUNCTION =====
-    function startCountdown() {
-      let count = 3;
-      countdownEl.style.display = "flex";
-      
-      function updateCountdown() {
-        if (count > 0) {
-          countdownEl.textContent = count;
-          if (!game.isMuted) {
-            const utterance = new SpeechSynthesisUtterance(count.toString());
-            utterance.rate = 0.8;
-            utterance.pitch = 1.3;
-            window.speechSynthesis.speak(utterance);
-          }
-          count--;
-        } else if (count === 0) {
-          countdownEl.textContent = "GO!";
-          queueCommentary(getRandomCommentary('reactions'), true);
-          if (!game.isMuted) {
-            const utterance = new SpeechSynthesisUtterance("GO!");
-            utterance.rate = 0.7;
-            utterance.pitch = 1.5;
-            window.speechSynthesis.speak(utterance);
-          }
-          count--;
-        } else {
-          clearInterval(game.countdownInterval);
-          countdownEl.style.display = "none";
-          game.gameStarted = true;
-          game.startTime = Date.now();
-          menuMusic.pause();
-          gameMusic.play().catch(e => console.log("Game music play prevented:", e));
-          startTimer();
-        }
-      }
-      
-      updateCountdown();
-      game.countdownInterval = setInterval(updateCountdown, 1000);
-    }
-
-    // ===== START/RESTART GAME =====
-    function startGame(fourPlayerMode) {
-      game.isFourPlayer = fourPlayerMode;
-      game.isPaused = false;
-      game.isOnlineGame = false;
-      game.leftPaddle.score = 0;
-      game.rightPaddle.score = 0;
-      game.remainingTime = GAME_TIME;
-      game.matchPoint = false;
-      game.bonusPoints = 0;
-      game.deuceActive = false;
-      game.commentaryQueue = [];
-      game.hasAnnounced30 = false;
-      game.hasAnnounced10 = false;
-      bonusPointsEl.textContent = "";
-      game.ball.speed = game.isFourPlayer ? FOUR_PLAYER_BALL_SPEED : INITIAL_BALL_SPEED;
-
-      game.leftPlayer = prompt("Left Player's Name:", "PLAYER ONE") || "PLAYER ONE";
-      game.rightPlayer = prompt("Right Player's Name:", "PLAYER TWO") || "PLAYER TWO";
-
-      titleScreen.style.display = "none";
-      endScreen.style.display = "none";
-      pauseScreen.style.display = "none";
-      resetBall();
-      resetPaddles();
-      
-      leftScoreEl.textContent = "0";
-      rightScoreEl.textContent = "0";
-      timerEl.textContent = "2:00.000";
-      
-      // Enhanced tournament introductions
-      queueCommentary(getRandomCommentary('introductions'), true);
-      setTimeout(() => {
-        queueCommentary(getRandomCommentary('playerIntroductions'), true);
-      }, 3000);
-      setTimeout(() => {
-        queueCommentary(getRandomCommentary('countdown'), true);
-      }, 6000);
-      
-      startCountdown();
-    }
-
-    function restartGame() {
-      endScreen.style.display = "none";
-      startGame(game.isFourPlayer);
-    }
-
-    // ===== KEYBOARD CONTROLS =====
-    function setupKeyboardControls() {
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'p' || e.key === 'P') {
-          togglePause();
-        } else if (e.key === 'm' || e.key === 'M') {
-          toggleMute();
-        } else {
-          game.keysPressed[e.key] = true;
-        }
-      });
-
-      document.addEventListener('keyup', (e) => {
-        game.keysPressed[e.key] = false;
-      });
-    }
-
-    // ===== UPDATE PADDLES WITH TOUCH CONTROLS =====
+    // ===== UPDATE PADDLES =====
     function updatePaddles() {
       if (game.isPaused) return;
 
-      // Touch controls - now handled in touch event handlers
-      // The state is maintained in game.touchControls
+      // Mobile controls
+      if (game.mobileControls.leftUp) game.leftPaddle.y -= PADDLE_SPEED;
+      if (game.mobileControls.leftDown) game.leftPaddle.y += PADDLE_SPEED;
+      if (game.mobileControls.rightUp) game.rightPaddle.y -= PADDLE_SPEED;
+      if (game.mobileControls.rightDown) game.rightPaddle.y += PADDLE_SPEED;
 
-      // 2-Player Keyboard Controls
+      // Keyboard controls
       if (!game.isFourPlayer) {
         if (game.isOnlineGame) {
           // Online game controls - only control your own paddle
@@ -1387,49 +1195,7 @@
           game.lastScorer = game.rightPlayer;
         }
       }
-      // Collision detection for 4-player mode (not used in online games)
-      else {
-        // Left top paddle collision
-        if (game.ball.x - BALL_RADIUS < 20 + PADDLE_WIDTH &&
-            game.ball.y > game.leftTopPaddle.y &&
-            game.ball.y < game.leftTopPaddle.y + paddleHeight) {
-          const angle = getBallAngle(game.leftTopPaddle.y, game.ball.y, paddleHeight);
-          game.ball.dx = Math.abs(Math.cos(angle)) * game.ball.speed;
-          game.ball.dy = Math.sin(angle) * game.ball.speed;
-          game.ball.speed *= 1.05;
-        }
-        
-        // Left bottom paddle collision
-        if (game.ball.x - BALL_RADIUS < 20 + PADDLE_WIDTH &&
-            game.ball.y > game.leftBottomPaddle.y &&
-            game.ball.y < game.leftBottomPaddle.y + paddleHeight) {
-          const angle = getBallAngle(game.leftBottomPaddle.y, game.ball.y, paddleHeight);
-          game.ball.dx = Math.abs(Math.cos(angle)) * game.ball.speed;
-          game.ball.dy = Math.sin(angle) * game.ball.speed;
-          game.ball.speed *= 1.05;
-        }
-        
-        // Right top paddle collision
-        if (game.ball.x + BALL_RADIUS > canvas.width - 20 - PADDLE_WIDTH &&
-            game.ball.y > game.rightTopPaddle.y &&
-            game.ball.y < game.rightTopPaddle.y + paddleHeight) {
-          const angle = getBallAngle(game.rightTopPaddle.y, game.ball.y, paddleHeight);
-          game.ball.dx = -Math.abs(Math.cos(angle)) * game.ball.speed;
-          game.ball.dy = Math.sin(angle) * game.ball.speed;
-          game.ball.speed *= 1.05;
-        }
-        
-        // Right bottom paddle collision
-        if (game.ball.x + BALL_RADIUS > canvas.width - 20 - PADDLE_WIDTH &&
-            game.ball.y > game.rightBottomPaddle.y &&
-            game.ball.y < game.rightBottomPaddle.y + paddleHeight) {
-          const angle = getBallAngle(game.rightBottomPaddle.y, game.ball.y, paddleHeight);
-          game.ball.dx = -Math.abs(Math.cos(angle)) * game.ball.speed;
-          game.ball.dy = Math.sin(angle) * game.ball.speed;
-          game.ball.speed *= 1.05;
-        }
-      }
-
+      
       // Scoring (only host handles scoring in online games)
       if (!game.isOnlineGame || isHost) {
         if (game.ball.x - BALL_RADIUS < 0) {
@@ -1586,7 +1352,7 @@
         confetti.style.animationDelay = Math.random() * 0.5 + 's';
         
         // Random size and shape
-        const size = Math.random() * 10 + 5;
+        const size = Math.random() * 8 + 5;
         confetti.style.width = size + 'px';
         confetti.style.height = size + 'px';
         
@@ -1649,23 +1415,157 @@
         gameMusic.volume = 0;
         announceCommentary("Sound muted", true);
       } else {
-        menuMusic.volume = 1;
-        gameMusic.volume = 1;
+        menuMusic.volume = 0.5;
+        gameMusic.volume = 0.5;
         announceCommentary("Sound unmuted", true);
       }
     }
 
-    // ===== INITIALIZE GAME =====
-    initGame();
-
-    // For demo purposes - simulate game discovery on local network
-    function simulateGameDiscovery() {
-      const games = ['abc123', 'def456', 'ghi789'];
-      localStorage.setItem('pongGames', JSON.stringify(games));
+    // ===== PAUSE FUNCTIONALITY =====
+    function togglePause() {
+      game.isPaused = !game.isPaused;
+      pauseScreen.style.display = game.isPaused ? "flex" : "none";
+      
+      if (game.isPaused) {
+        // When pausing, store the current time and pause music
+        game.pausedTime = Date.now();
+        gameMusic.pause();
+        announceCommentary("GAME PAUSED", true);
+      } else {
+        // When unpausing, adjust the start time to account for pause duration
+        const pauseDuration = Date.now() - game.pausedTime;
+        game.startTime += pauseDuration;
+        gameMusic.play().catch(e => console.log("Music play prevented:", e));
+        announceCommentary("GAME RESUMED", true);
+      }
     }
-    
-    // Run the simulation when the page loads
-    simulateGameDiscovery();
+
+    function returnToMenu() {
+      game.isPaused = false;
+      pauseScreen.style.display = "none";
+      titleScreen.style.display = "flex";
+      clearInterval(game.timerInterval);
+      game.gameStarted = false;
+      game.isOnlineGame = false;
+      gameMusic.pause();
+      menuMusic.play().catch(e => console.log("Music play prevented:", e));
+      
+      // Close any peer connections
+      if (conn) conn.close();
+      if (peer) peer.destroy();
+      
+      announceCommentary("RETURNING TO MENU", true);
+    }
+
+    // ===== COUNTDOWN FUNCTION =====
+    function startCountdown() {
+      let count = 3;
+      countdownEl.style.display = "flex";
+      
+      function updateCountdown() {
+        if (count > 0) {
+          countdownEl.textContent = count;
+          if (!game.isMuted) {
+            const utterance = new SpeechSynthesisUtterance(count.toString());
+            utterance.rate = 0.8;
+            utterance.pitch = 1.3;
+            window.speechSynthesis.speak(utterance);
+          }
+          count--;
+        } else if (count === 0) {
+          countdownEl.textContent = "GO!";
+          queueCommentary(getRandomCommentary('reactions'), true);
+          if (!game.isMuted) {
+            const utterance = new SpeechSynthesisUtterance("GO!");
+            utterance.rate = 0.7;
+            utterance.pitch = 1.5;
+            window.speechSynthesis.speak(utterance);
+          }
+          count--;
+        } else {
+          clearInterval(game.countdownInterval);
+          countdownEl.style.display = "none";
+          game.gameStarted = true;
+          game.startTime = Date.now();
+          menuMusic.pause();
+          gameMusic.play().catch(e => console.log("Game music play prevented:", e));
+          startTimer();
+        }
+      }
+      
+      updateCountdown();
+      game.countdownInterval = setInterval(updateCountdown, 1000);
+    }
+
+    // ===== START/RESTART GAME =====
+    function startGame(fourPlayerMode) {
+      game.isFourPlayer = fourPlayerMode;
+      game.isPaused = false;
+      game.isOnlineGame = false;
+      game.leftPaddle.score = 0;
+      game.rightPaddle.score = 0;
+      game.remainingTime = GAME_TIME;
+      game.matchPoint = false;
+      game.bonusPoints = 0;
+      game.deuceActive = false;
+      game.commentaryQueue = [];
+      game.hasAnnounced30 = false;
+      game.hasAnnounced10 = false;
+      bonusPointsEl.textContent = "";
+      game.ball.speed = game.isFourPlayer ? FOUR_PLAYER_BALL_SPEED : INITIAL_BALL_SPEED;
+
+      game.leftPlayer = prompt("Left Player's Name:", "PLAYER ONE") || "PLAYER ONE";
+      game.rightPlayer = prompt("Right Player's Name:", "PLAYER TWO") || "PLAYER TWO";
+
+      titleScreen.style.display = "none";
+      endScreen.style.display = "none";
+      pauseScreen.style.display = "none";
+      resetBall();
+      resetPaddles();
+      
+      leftScoreEl.textContent = "0";
+      rightScoreEl.textContent = "0";
+      timerEl.textContent = "2:00.000";
+      
+      // Enhanced tournament introductions
+      queueCommentary(getRandomCommentary('introductions'), true);
+      setTimeout(() => {
+        queueCommentary(getRandomCommentary('playerIntroductions'), true);
+      }, 3000);
+      setTimeout(() => {
+        queueCommentary(getRandomCommentary('countdown'), true);
+      }, 6000);
+      
+      startCountdown();
+    }
+
+    function restartGame() {
+      endScreen.style.display = "none";
+      startGame(game.isFourPlayer);
+    }
+
+    // ===== KEYBOARD CONTROLS =====
+    function setupKeyboardControls() {
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'p' || e.key === 'P') {
+          togglePause();
+        } else if (e.key === 'm' || e.key === 'M') {
+          toggleMute();
+        } else {
+          game.keysPressed[e.key] = true;
+        }
+      });
+
+      document.addEventListener('keyup', (e) => {
+        game.keysPressed[e.key] = false;
+      });
+    }
+
+    // ===== INITIALIZE GAME =====
+    // Wait for DOM to be fully loaded before initializing
+    document.addEventListener('DOMContentLoaded', () => {
+      initGame();
+    });
   </script>
 </body>
 </html>
