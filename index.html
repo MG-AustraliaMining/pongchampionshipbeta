@@ -122,7 +122,7 @@
       transform: scale(1.05);
       box-shadow: 0 8px 20px rgba(0,0,0,0.4);
     }
-    #muteButton, #pauseButton {
+    #muteButton, #pauseButton, #fullscreenButton {
       position: absolute;
       top: 15px;
       z-index: 20;
@@ -137,6 +137,7 @@
     }
     #muteButton { left: 15px; }
     #pauseButton { left: 65px; }
+    #fullscreenButton { left: 115px; }
     #pauseScreen {
       position: absolute;
       top: 0;
@@ -241,6 +242,27 @@
     .control-btn:active {
       background: rgba(255,255,255,0.5);
     }
+    /* D-pad controls */
+    .dpad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 5px;
+    }
+    .dpad-btn {
+      width: 40px;
+      height: 40px;
+      background: rgba(255,255,255,0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 5px;
+    }
+    .dpad-up { grid-column: 2; grid-row: 1; }
+    .dpad-left { grid-column: 1; grid-row: 2; }
+    .dpad-center { grid-column: 2; grid-row: 2; background: transparent; }
+    .dpad-right { grid-column: 3; grid-row: 2; }
+    .dpad-down { grid-column: 2; grid-row: 3; }
     /* Confetti styles */
     .confetti {
       position: absolute;
@@ -301,13 +323,14 @@
     <div id="commentary">WELCOME TO THE PONG ROUND OF 16!</div>
     <button id="muteButton">🔊</button>
     <button id="pauseButton">⏸️</button>
+    <button id="fullscreenButton">⛶</button>
 
     <!-- Audio Elements -->
     <audio id="menuMusic" loop>
-      <source src="https://assets.mixkit.co/music/preview/mixkit-game-show-suspense-waiting-668.mp3" type="audio/mpeg">
+      <source src="music1.mp3" type="audio/mpeg">
     </audio>
     <audio id="gameMusic" loop>
-      <source src="https://assets.mixkit.co/music/preview/mixkit-arcade-retro-game-over-213.mp3" type="audio/mpeg">
+      <source src="music2.mp3" type="audio/mpeg">
     </audio>
 
     <!-- Countdown Screen -->
@@ -365,8 +388,18 @@
     <!-- End Screen -->
     <div id="endScreen" style="display: none;">
       <h1 id="endMessage" style="color: gold; font-size: 2rem;"></h1>
-      <button class="btn-championship" onclick="returnToMenu()">RETURN TO MENU</button>
-      <button class="btn-championship" onclick="restartGame()">PLAY AGAIN</button>
+      <button class="btn-championship" id="endScreenBtn" onclick="returnToMenu()">RETURN TO MENU</button>
+    </div>
+
+    <!-- D-pad for online players without keyboard -->
+    <div id="dpadControls" style="display: none; position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);">
+      <div class="dpad">
+        <div class="dpad-btn dpad-up" id="dpadUp">↑</div>
+        <div class="dpad-btn dpad-left" id="dpadLeft">←</div>
+        <div class="dpad-center"></div>
+        <div class="dpad-btn dpad-right" id="dpadRight">→</div>
+        <div class="dpad-btn dpad-down" id="dpadDown">↓</div>
+      </div>
     </div>
   </div>
 
@@ -396,11 +429,13 @@
     const commentaryEl = document.getElementById('commentary');
     const muteBtn = document.getElementById('muteButton');
     const pauseBtn = document.getElementById('pauseButton');
+    const fullscreenBtn = document.getElementById('fullscreenButton');
     const pauseScreen = document.getElementById('pauseScreen');
     const countdownEl = document.getElementById('countdown');
     const titleScreen = document.getElementById('titleScreen');
     const endScreen = document.getElementById('endScreen');
     const endMessage = document.getElementById('endMessage');
+    const endScreenBtn = document.getElementById('endScreenBtn');
     const lobbyScreen = document.getElementById('lobbyScreen');
     const createGameScreen = document.getElementById('createGameScreen');
     const findGameScreen = document.getElementById('findGameScreen');
@@ -416,13 +451,9 @@
     const downBtnLeft = document.getElementById('downBtnLeft');
     const upBtnRight = document.getElementById('upBtnRight');
     const downBtnRight = document.getElementById('downBtnRight');
-
-    // PeerJS connection variables
-    let peer;
-    let conn;
-    let peerId;
-    let isHost = false;
-    let currentGameId = null;
+    const dpadControls = document.getElementById('dpadControls');
+    const dpadUp = document.getElementById('dpadUp');
+    const dpadDown = document.getElementById('dpadDown');
 
     // ===== GAME STATE =====
     let game = {
@@ -465,70 +496,78 @@
         rightDown: false
       },
       isOnlineGame: false,
-      playerPosition: null // 'left' or 'right'
+      playerPosition: null, // 'left' or 'right'
+      audioInitialized: false
     };
 
-    // ===== COMMENTARY SYSTEM =====
+    // ===== ENHANCED COMMENTARY SYSTEM =====
     const commentaryPhrases = {
       introductions: [
-        "Welcome to the Pong Championship!",
-        "Get ready for an epic Pong battle!",
-        "The crowd is buzzing for this match!"
+        "Ladies and gentlemen, welcome to the Pong Championship Finals!",
+        "The moment we've all been waiting for - the Pong Championship!",
+        "This is it! The ultimate Pong battle is about to begin!"
       ],
       playerIntroductions: [
-        "On the left we have {leftPlayer}, and on the right {rightPlayer}",
-        "Two titans of Pong face off today: {leftPlayer} versus {rightPlayer}",
-        "Let's meet our competitors: {leftPlayer} and {rightPlayer}"
+        "On the left, the formidable {leftPlayer}! On the right, the incredible {rightPlayer}!",
+        "Two legends enter the arena today: {leftPlayer} versus {rightPlayer}!",
+        "Let's meet our gladiators! In the blue corner, {leftPlayer}! In the red corner, {rightPlayer}!"
       ],
       countdown: [
-        "The match is about to begin!",
-        "Players take your positions!",
-        "Here we go!"
+        "The tension is unbearable! The match begins in...",
+        "The crowd is on their feet! Starting in...",
+        "History will be made here today! Beginning in..."
       ],
       scores: [
-        "Point to {player}!",
-        "{player} scores!",
-        "What a shot by {player}!"
+        "INCREDIBLE! Point to {player}!",
+        "WHAT A SHOT! {player} scores!",
+        "UNBELIEVABLE! {player} takes the point!"
       ],
       deuce: [
-        "We're at deuce! Bonus point activated!",
-        "Tied up! Next point wins!",
-        "It's anyone's game now!"
+        "WE'RE AT DEUCE! BONUS POINT ACTIVATED! NEXT POINT WINS!",
+        "IT'S ALL TIED UP! SUDDEN DEATH POINT!",
+        "THE TENSION IS PALPABLE! DEUCE! NEXT POINT TAKES IT ALL!"
       ],
       matchPoint: [
-        "Match point for {player}!",
-        "{player} is one point away from victory!",
-        "Can {player} close it out here?"
+        "THIS IS IT! MATCH POINT FOR {player}!",
+        "{player} IS ONE POINT AWAY FROM GLORY!",
+        "CAN {player} CLINCH THE CHAMPIONSHIP HERE?"
       ],
       timeWarnings: [
-        "Only 30 seconds remaining!",
-        "The clock is ticking down!",
-        "Time is running out!"
+        "ONLY 30 SECONDS REMAINING! THE CLOCK IS TICKING!",
+        "THE SANDS OF TIME ARE RUNNING OUT! 30 SECONDS LEFT!",
+        "THE FINAL COUNTDOWN! 30 SECONDS TO DECIDE THE CHAMPION!"
       ],
       overtime: [
-        "We're going to overtime!",
-        "Sudden death overtime begins now!",
-        "Next point wins in overtime!"
+        "WE'RE GOING TO OVERTIME! NEXT POINT WINS!",
+        "SUDDEN DEATH OVERTIME! THE CROWD IS GOING WILD!",
+        "IT'S ALL COME DOWN TO THIS! OVERTIME!"
       ],
       victories: [
-        "What a performance!",
-        "Absolutely dominant play!",
-        "A well-earned victory!"
+        "WHAT A PERFORMANCE! {player} IS THE CHAMPION!",
+        "ABSOLUTELY DOMINANT! {player} TAKES THE TITLE!",
+        "HISTORY HAS BEEN MADE! {player} WINS THE CHAMPIONSHIP!"
       ],
       specialMoves: [
-        "Incredible shot!",
-        "That was spectacular!",
-        "Unbelievable play!"
+        "OH MY GOODNESS! WHAT A SHOT!",
+        "INCREDIBLE! DID YOU SEE THAT?",
+        "UNBELIEVABLE PLAY! THE CROWD IS IN A FRENZY!"
       ],
       betweenPoints: [
-        "The tension is palpable!",
-        "Who will take the lead?",
-        "This match is heating up!"
+        "THE TENSION COULD CUT A KNIFE! WHO WILL TAKE CONTROL?",
+        "THIS MATCH IS HEATING UP! THE NEXT POINT IS CRUCIAL!",
+        "EVERY POINT MATTERS IN THIS EPIC BATTLE!"
       ],
       reactions: [
-        "Amazing!",
-        "Wow!",
-        "Incredible!"
+        "WOW!",
+        "OH!",
+        "INCREDIBLE!",
+        "UNBELIEVABLE!",
+        "WHAT A SHOT!"
+      ],
+      crowdChants: [
+        "THE CROWD IS CHANTING {player}'S NAME!",
+        "THE STADIUM IS ROCKING!",
+        "THE FANS ARE GOING WILD!"
       ]
     };
 
@@ -544,14 +583,21 @@
       return phrase;
     }
 
-    function queueCommentary(text, important = false) {
+    function queueCommentary(text, important = false, force = false) {
+      if (force) {
+        // Clear any current speech and queue
+        window.speechSynthesis.cancel();
+        game.commentaryQueue = [];
+        game.isSpeaking = false;
+      }
+      
       if (important) {
         game.commentaryQueue.unshift(text);
       } else {
         game.commentaryQueue.push(text);
       }
       
-      if (!game.isSpeaking) {
+      if (!game.isSpeaking || force) {
         speakNextCommentary();
       }
     }
@@ -563,14 +609,19 @@
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.rate = 0.9;
         utterance.pitch = 1.2;
+        utterance.volume = 1.0;
         
         utterance.onend = () => {
           game.isSpeaking = false;
           speakNextCommentary();
         };
         
-        window.speechSynthesis.cancel();
+        if (game.currentUtterance) {
+          window.speechSynthesis.cancel();
+        }
+        
         window.speechSynthesis.speak(utterance);
+        game.currentUtterance = utterance;
         game.isSpeaking = true;
       }
     }
@@ -583,7 +634,6 @@
     }
 
     function checkForSpecialMove() {
-      // Check if ball speed is very high (special move)
       const speedThreshold = game.isFourPlayer ? FOUR_PLAYER_BALL_SPEED * 1.8 : INITIAL_BALL_SPEED * 1.8;
       const now = Date.now();
       
@@ -643,6 +693,85 @@
       downBtnRight.addEventListener('mouseup', () => game.mobileControls.rightDown = false);
     }
 
+    // ===== DPAD CONTROLS FOR ONLINE =====
+    function setupDpadControls() {
+      dpadUp.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        if (game.playerPosition === 'left') {
+          game.mobileControls.leftUp = true;
+        } else {
+          game.mobileControls.rightUp = true;
+        }
+      });
+      dpadUp.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        if (game.playerPosition === 'left') {
+          game.mobileControls.leftUp = false;
+        } else {
+          game.mobileControls.rightUp = false;
+        }
+      });
+      dpadDown.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        if (game.playerPosition === 'left') {
+          game.mobileControls.leftDown = true;
+        } else {
+          game.mobileControls.rightDown = true;
+        }
+      });
+      dpadDown.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        if (game.playerPosition === 'left') {
+          game.mobileControls.leftDown = false;
+        } else {
+          game.mobileControls.rightDown = false;
+        }
+      });
+
+      // Mouse controls for testing
+      dpadUp.addEventListener('mousedown', () => {
+        if (game.playerPosition === 'left') {
+          game.mobileControls.leftUp = true;
+        } else {
+          game.mobileControls.rightUp = true;
+        }
+      });
+      dpadUp.addEventListener('mouseup', () => {
+        if (game.playerPosition === 'left') {
+          game.mobileControls.leftUp = false;
+        } else {
+          game.mobileControls.rightUp = false;
+        }
+      });
+      dpadDown.addEventListener('mousedown', () => {
+        if (game.playerPosition === 'left') {
+          game.mobileControls.leftDown = true;
+        } else {
+          game.mobileControls.rightDown = true;
+        }
+      });
+      dpadDown.addEventListener('mouseup', () => {
+        if (game.playerPosition === 'left') {
+          game.mobileControls.leftDown = false;
+        } else {
+          game.mobileControls.rightDown = false;
+        }
+      });
+    }
+
+    // ===== FULLSCREEN FUNCTIONALITY =====
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.log(`Error attempting to enable fullscreen: ${err.message}`);
+        });
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+
     // ===== PEERJS INITIALIZATION =====
     function initializePeerJS() {
       // Create a new Peer with a random ID
@@ -667,7 +796,6 @@
         
         conn.on('open', () => {
           console.log('Connection established');
-          // If we're the host, we're the left player
           if (isHost) {
             game.playerPosition = 'left';
             game.leftPlayer = hostNameInput.value || "HOST PLAYER";
@@ -683,7 +811,7 @@
         conn.on('close', () => {
           console.log('Connection closed');
           if (game.gameStarted) {
-            announceCommentary("Opponent disconnected!", true);
+            queueCommentary("Opponent disconnected!", true, true);
             endGame();
           }
         });
@@ -691,34 +819,33 @@
 
       peer.on('error', (err) => {
         console.error('PeerJS error:', err);
-        announceCommentary("Connection error occurred", true);
+        queueCommentary("Connection error occurred", true, true);
       });
     }
 
     function handlePeerData(data) {
       if (data.type === 'paddleMove') {
-        // Update the opponent's paddle position
         if (game.playerPosition === 'left') {
           game.rightPaddle.y = data.y;
         } else {
           game.leftPaddle.y = data.y;
         }
       } else if (data.type === 'ballUpdate') {
-        // Sync ball position (host sends to client)
         game.ball = data.ball;
       } else if (data.type === 'scoreUpdate') {
-        // Update scores
         game.leftPaddle.score = data.leftScore;
         game.rightPaddle.score = data.rightScore;
         leftScoreEl.textContent = game.leftPaddle.score;
         rightScoreEl.textContent = game.rightPaddle.score;
       } else if (data.type === 'gameStart') {
-        // Client receives game start info
         game.rightPlayer = data.rightPlayer || "OPPONENT";
         game.playerPosition = 'right';
         startOnlineGame();
       } else if (data.type === 'gameEnd') {
         endGame();
+      } else if (data.type === 'timerUpdate') {
+        game.remainingTime = data.remainingTime;
+        game.startTime = Date.now() - (GAME_TIME * 1000 - data.remainingTime * 1000);
       }
     }
 
@@ -741,6 +868,18 @@
           type: 'scoreUpdate', 
           leftScore: game.leftPaddle.score,
           rightScore: game.rightPaddle.score
+        });
+      }
+    }
+
+    function sendTimerUpdate() {
+      if (conn && conn.open && isHost) {
+        const elapsed = Date.now() - game.startTime;
+        const remaining = Math.max(0, game.remainingTime * 1000 - elapsed);
+        
+        conn.send({
+          type: 'timerUpdate',
+          remainingTime: remaining / 1000
         });
       }
     }
@@ -791,7 +930,6 @@
       waitingScreen.style.display = 'flex';
       waitingMessage.textContent = `Share this code with your friend: ${peerId}`;
       
-      // Store game in "available games" list
       const gameInfo = {
         id: peerId,
         name: `${playerName}'s Game`,
@@ -806,8 +944,6 @@
     function refreshGameList() {
       gameList.innerHTML = '<div style="color: white; text-align: center;">Searching for games...</div>';
       
-      // In a real app, you would query a server here
-      // For this demo, we'll use localStorage to simulate game discovery
       setTimeout(() => {
         const games = getAvailableGames();
         
@@ -829,10 +965,8 @@
       }, 1000);
     }
 
-    // Simulate game discovery using localStorage
     function addGameToDiscoveryList(gameInfo) {
       const games = JSON.parse(localStorage.getItem('pongGames')) || [];
-      // Remove old games (older than 5 minutes)
       const now = Date.now();
       const freshGames = games.filter(g => now - g.timestamp < 300000);
       freshGames.push(gameInfo);
@@ -841,7 +975,6 @@
 
     function getAvailableGames() {
       const games = JSON.parse(localStorage.getItem('pongGames')) || [];
-      // Filter out games older than 5 minutes
       const now = Date.now();
       return games.filter(g => now - g.timestamp < 300000);
     }
@@ -858,7 +991,6 @@
         return;
       }
       
-      // Connect to the host
       conn = peer.connect(gameId);
       
       conn.on('open', () => {
@@ -866,7 +998,6 @@
         game.rightPlayer = playerName;
         findGameScreen.style.display = 'none';
         
-        // Tell host we're joining
         conn.send({ 
           type: 'gameStart',
           rightPlayer: playerName
@@ -880,14 +1011,14 @@
       conn.on('close', () => {
         console.log('Connection to host closed');
         if (game.gameStarted) {
-          announceCommentary("Host disconnected!", true);
+          queueCommentary("Host disconnected!", true, true);
           endGame();
         }
       });
       
       conn.on('error', (err) => {
         console.error('Connection error:', err);
-        announceCommentary("Failed to connect to game", true);
+        queueCommentary("Failed to connect to game", true, true);
       });
     }
 
@@ -896,7 +1027,6 @@
       waitingScreen.style.display = 'none';
       lobbyScreen.style.display = 'flex';
       
-      // Remove game from discovery list if host cancels
       if (isHost && currentGameId) {
         const games = JSON.parse(localStorage.getItem('pongGames')) || [];
         const updatedGames = games.filter(g => g.id !== currentGameId);
@@ -906,12 +1036,18 @@
 
     function startOnlineGame() {
       game.isOnlineGame = true;
-      game.isFourPlayer = false; // Online is always 2-player
+      game.isFourPlayer = false;
       
       titleScreen.style.display = "none";
       endScreen.style.display = "none";
       pauseScreen.style.display = "none";
       waitingScreen.style.display = "none";
+      
+      // Show D-pad for online players on mobile
+      if (game.playerPosition === 'right' && window.innerWidth <= 768) {
+        dpadControls.style.display = 'block';
+      }
+      
       resetBall();
       resetPaddles();
       
@@ -920,7 +1056,7 @@
       timerEl.textContent = "2:00.000";
       
       // Tournament introductions
-      queueCommentary(`In this online match: ${game.leftPlayer} vs ${game.rightPlayer}!`, true);
+      queueCommentary(`In this online championship match: ${game.leftPlayer} vs ${game.rightPlayer}!`, true, true);
       setTimeout(() => {
         queueCommentary("The online tournament match is about to begin!", true);
       }, 3000);
@@ -936,6 +1072,7 @@
       
       // Set up controls
       setupMobileControls();
+      setupDpadControls();
       setupKeyboardControls();
       
       // Initialize game elements
@@ -946,25 +1083,28 @@
       // Set up button event listeners
       muteBtn.addEventListener('click', toggleMute);
       pauseBtn.addEventListener('click', togglePause);
+      fullscreenBtn.addEventListener('click', toggleFullscreen);
       
-      // Start menu music
+      // Set up click handlers to initialize audio
+      document.addEventListener('click', initializeAudio, { once: true });
+      document.addEventListener('touchstart', initializeAudio, { once: true });
+      
+      // Start game loop
+      gameLoop();
+    }
+
+    function initializeAudio() {
+      if (game.audioInitialized) return;
+      
+      game.audioInitialized = true;
       try {
         menuMusic.volume = 0.5;
         menuMusic.play().catch(e => {
-          // Handle play() interrupted by pause() error
-          if (e.name === 'AbortError') {
-            console.log('Autoplay prevented, user interaction required');
-            // We'll let the user start music by clicking mute button
-          } else {
-            console.log("Music error:", e);
-          }
+          console.log('Menu music play prevented:', e);
         });
       } catch (e) {
         console.log("Music error:", e);
       }
-      
-      // Start game loop
-      gameLoop();
     }
 
     // ===== CANVAS RESIZING =====
@@ -976,19 +1116,16 @@
 
     // ===== RESPONSIVE DESIGN =====
     function handleResize() {
-      // Update control button positions for mobile
       const controlMargin = window.innerWidth * 0.05;
       document.getElementById('leftControls').style.left = `${controlMargin}px`;
       document.getElementById('rightControls').style.right = `${controlMargin}px`;
       
-      // Adjust control button size based on screen size
       const controlSize = Math.min(60, window.innerWidth * 0.12);
       document.querySelectorAll('.control-btn').forEach(btn => {
         btn.style.width = `${controlSize}px`;
         btn.style.height = `${controlSize}px`;
       });
       
-      // Reset game elements after resize
       if (game.gameStarted) {
         resizeCanvas();
         resetPaddles();
@@ -1020,7 +1157,6 @@
       updatePaddles();
       checkCollisions();
 
-      // Send paddle position to opponent in online games
       if (game.isOnlineGame && game.gameStarted && !game.isPaused) {
         sendPaddlePosition();
       }
@@ -1041,7 +1177,6 @@
       // Keyboard controls
       if (!game.isFourPlayer) {
         if (game.isOnlineGame) {
-          // Online game controls - only control your own paddle
           if (game.playerPosition === 'left') {
             if (game.keysPressed['w']) game.leftPaddle.y -= PADDLE_SPEED;
             if (game.keysPressed['s']) game.leftPaddle.y += PADDLE_SPEED;
@@ -1050,15 +1185,12 @@
             if (game.keysPressed['ArrowDown']) game.rightPaddle.y += PADDLE_SPEED;
           }
         } else {
-          // Local multiplayer controls
           if (game.keysPressed['w']) game.leftPaddle.y -= PADDLE_SPEED;
           if (game.keysPressed['s']) game.leftPaddle.y += PADDLE_SPEED;
           if (game.keysPressed['ArrowUp']) game.rightPaddle.y -= PADDLE_SPEED;
           if (game.keysPressed['ArrowDown']) game.rightPaddle.y += PADDLE_SPEED;
         }
-      } 
-      // 4-Player Keyboard Controls (not available in online mode)
-      else {
+      } else {
         if (game.keysPressed['w']) game.leftTopPaddle.y -= PADDLE_SPEED;
         if (game.keysPressed['s']) game.leftTopPaddle.y += PADDLE_SPEED;
         if (game.keysPressed['q']) game.leftBottomPaddle.y -= PADDLE_SPEED;
@@ -1089,7 +1221,6 @@
       game.rightPaddle.y = centerY;
       
       if (game.isFourPlayer) {
-        // Position top and bottom paddles for 4-player mode
         game.leftTopPaddle.y = canvas.height * 0.25 - paddleHeight/2;
         game.leftBottomPaddle.y = canvas.height * 0.75 - paddleHeight/2;
         game.rightTopPaddle.y = canvas.height * 0.25 - paddleHeight/2;
@@ -1100,11 +1231,9 @@
     function constrainPaddles() {
       const paddleHeight = game.isFourPlayer ? FOUR_PLAYER_PADDLE_HEIGHT : PADDLE_HEIGHT;
       
-      // Constrain main paddles
       game.leftPaddle.y = Math.max(0, Math.min(canvas.height - paddleHeight, game.leftPaddle.y));
       game.rightPaddle.y = Math.max(0, Math.min(canvas.height - paddleHeight, game.rightPaddle.y));
       
-      // Constrain 4-player paddles
       if (game.isFourPlayer) {
         game.leftTopPaddle.y = Math.max(0, Math.min(canvas.height/2 - paddleHeight - 10, game.leftTopPaddle.y));
         game.leftBottomPaddle.y = Math.max(canvas.height/2 + 10, Math.min(canvas.height - paddleHeight, game.leftBottomPaddle.y));
@@ -1119,16 +1248,11 @@
       const paddleHeight = game.isFourPlayer ? FOUR_PLAYER_PADDLE_HEIGHT : PADDLE_HEIGHT;
       
       if (!game.isFourPlayer) {
-        // 2-player mode
         ctx.fillRect(20, game.leftPaddle.y, PADDLE_WIDTH, paddleHeight);
         ctx.fillRect(canvas.width - 20 - PADDLE_WIDTH, game.rightPaddle.y, PADDLE_WIDTH, paddleHeight);
       } else {
-        // 4-player mode - draw all four paddles
-        // Left side paddles (top and bottom)
         ctx.fillRect(20, game.leftTopPaddle.y, PADDLE_WIDTH, paddleHeight);
         ctx.fillRect(20, game.leftBottomPaddle.y, PADDLE_WIDTH, paddleHeight);
-        
-        // Right side paddles (top and bottom)
         ctx.fillRect(canvas.width - 20 - PADDLE_WIDTH, game.rightTopPaddle.y, PADDLE_WIDTH, paddleHeight);
         ctx.fillRect(canvas.width - 20 - PADDLE_WIDTH, game.rightBottomPaddle.y, PADDLE_WIDTH, paddleHeight);
       }
@@ -1156,18 +1280,15 @@
     function updateBall() {
       if (game.isPaused) return;
       
-      // In online games, only the host updates the ball position
       if (!game.isOnlineGame || isHost) {
         game.ball.x += game.ball.dx;
         game.ball.y += game.ball.dy;
         
-        // Send ball update to client if online
         if (game.isOnlineGame && isHost) {
           sendBallUpdate();
         }
       }
 
-      // Wall collision (handled by all players)
       if (game.ball.y - BALL_RADIUS < 0 || game.ball.y + BALL_RADIUS > canvas.height) {
         game.ball.dy = -game.ball.dy;
       }
@@ -1178,9 +1299,7 @@
       
       const paddleHeight = game.isFourPlayer ? FOUR_PLAYER_PADDLE_HEIGHT : PADDLE_HEIGHT;
 
-      // Collision detection for 2-player mode
       if (!game.isFourPlayer) {
-        // Left paddle collision
         if (game.ball.x - BALL_RADIUS < 20 + PADDLE_WIDTH &&
             game.ball.y > game.leftPaddle.y &&
             game.ball.y < game.leftPaddle.y + paddleHeight) {
@@ -1191,7 +1310,6 @@
           game.lastScorer = game.leftPlayer;
         }
         
-        // Right paddle collision
         if (game.ball.x + BALL_RADIUS > canvas.width - 20 - PADDLE_WIDTH &&
             game.ball.y > game.rightPaddle.y &&
             game.ball.y < game.rightPaddle.y + paddleHeight) {
@@ -1203,7 +1321,6 @@
         }
       }
       
-      // Scoring (only host handles scoring in online games)
       if (!game.isOnlineGame || isHost) {
         if (game.ball.x - BALL_RADIUS < 0) {
           game.rightPaddle.score++;
@@ -1230,13 +1347,12 @@
         }
       }
 
-      // Deuce system - only activate when scores are tied at 5-5 or higher
       if (game.leftPaddle.score >= 5 && game.rightPaddle.score >= 5 && 
           game.leftPaddle.score === game.rightPaddle.score && !game.deuceActive) {
         game.deuceActive = true;
         game.bonusPoints++;
         bonusPointsEl.textContent = `⚡ BONUS POINT: +${game.bonusPoints}`;
-        queueCommentary(getRandomCommentary('deuce'), true);
+        queueCommentary(getRandomCommentary('deuce'), true, true);
       } else if (game.leftPaddle.score !== game.rightPaddle.score) {
         game.deuceActive = false;
       }
@@ -1245,32 +1361,26 @@
     function handleScore() {
       const winningThreshold = WINNING_SCORE + game.bonusPoints;
 
-      // Clear any pending between-points commentary
       if (game.betweenPointsTimeout) {
         clearTimeout(game.betweenPointsTimeout);
         game.betweenPointsTimeout = null;
       }
 
-      // Check for special move commentary first
       if (checkForSpecialMove()) {
-        queueCommentary(getRandomCommentary('specialMoves'), true);
+        queueCommentary(getRandomCommentary('specialMoves'), true, true);
       }
-      // Then check for match point (using the dynamic winning threshold)
       else if ((game.leftPaddle.score === winningThreshold - 1 || 
                game.rightPaddle.score === winningThreshold - 1) && !game.matchPoint) {
         game.matchPoint = true;
         const leader = game.leftPaddle.score > game.rightPaddle.score ? game.leftPlayer : game.rightPlayer;
         const commentary = getRandomCommentary('matchPoint').replace(/{player}/g, leader);
-        queueCommentary(commentary, true);
+        queueCommentary(commentary, true, true);
       }
-      // Regular score commentary
       else {
         queueCommentary(getRandomCommentary('scores'));
       }
 
-      // Check for win condition using dynamic threshold
       if (game.leftPaddle.score >= winningThreshold || game.rightPaddle.score >= winningThreshold) {
-        // In online game, host tells client the game is over
         if (game.isOnlineGame && isHost) {
           conn.send({ type: 'gameEnd' });
         }
@@ -1278,7 +1388,6 @@
         return;
       }
 
-      // Between points commentary (30% chance)
       if (Math.random() < 0.3) {
         game.betweenPointsTimeout = setTimeout(() => {
           queueCommentary(getRandomCommentary('betweenPoints'));
@@ -1308,15 +1417,18 @@
         
         timerEl.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}.${milliseconds < 100 ? (milliseconds < 10 ? '00' : '0') : ''}${milliseconds}`;
         
-        // Only announce once
+        if (game.isOnlineGame && isHost) {
+          sendTimerUpdate();
+        }
+        
         if (remaining <= 30000 && !game.hasAnnounced30) {
           game.hasAnnounced30 = true;
-          queueCommentary(getRandomCommentary('timeWarnings'), true);
+          queueCommentary(getRandomCommentary('timeWarnings'), true, true);
         }
         
         if (remaining <= 10000 && !game.hasAnnounced10) {
           game.hasAnnounced10 = true;
-          queueCommentary(getRandomCommentary('timeWarnings').replace('30', '10'), true);
+          queueCommentary(getRandomCommentary('timeWarnings').replace('30', '10'), true, true);
         }
         
         if (remaining <= 0) {
@@ -1335,10 +1447,9 @@
           game.bonusPoints++;
           bonusPointsEl.textContent = `⚡ BONUS POINT: +${game.bonusPoints}`;
         }
-        queueCommentary(getRandomCommentary('overtime'), true);
+        queueCommentary(getRandomCommentary('overtime'), true, true);
         startTimer();
       } else {
-        // In online game, host tells client the game is over
         if (game.isOnlineGame && isHost) {
           conn.send({ type: 'gameEnd' });
         }
@@ -1358,12 +1469,10 @@
         confetti.style.animation = `confetti-fall ${Math.random() * 3 + 2}s linear forwards`;
         confetti.style.animationDelay = Math.random() * 0.5 + 's';
         
-        // Random size and shape
         const size = Math.random() * 8 + 5;
         confetti.style.width = size + 'px';
         confetti.style.height = size + 'px';
         
-        // Random shape (square or circle)
         if (Math.random() > 0.5) {
           confetti.style.borderRadius = '50%';
         } else {
@@ -1372,7 +1481,6 @@
         
         document.body.appendChild(confetti);
         
-        // Remove confetti after animation completes
         setTimeout(() => {
           confetti.remove();
         }, 5000);
@@ -1402,12 +1510,20 @@
       endMessage.textContent = `${winner} WINS ${winnerScore}-${loserScore}! 🏆`;
       endScreen.style.display = "flex";
       
-      // Create confetti effect
+      // Hide D-pad if visible
+      dpadControls.style.display = 'none';
+      
+      // For online games, only show "Return to Menu" button
+      if (game.isOnlineGame) {
+        endScreenBtn.textContent = "RETURN TO MENU";
+      } else {
+        endScreenBtn.textContent = "RETURN TO MENU";
+      }
+      
       createConfetti();
       
-      // Tournament victory announcements
-      queueCommentary(`${winner} defeats ${loser} ${winnerScore}-${loserScore}!`, true);
-      queueCommentary(getRandomCommentary('victories'), true);
+      queueCommentary(`${winner} defeats ${loser} ${winnerScore}-${loserScore}!`, true, true);
+      queueCommentary(getRandomCommentary('victories').replace(/{player}/g, winner), true);
       queueCommentary("What an incredible tournament match we've witnessed today!", true);
     }
 
@@ -1420,12 +1536,11 @@
       if (game.isMuted) {
         menuMusic.volume = 0;
         gameMusic.volume = 0;
-        announceCommentary("Sound muted", true);
+        queueCommentary("Sound muted", true, true);
       } else {
         menuMusic.volume = 0.5;
         gameMusic.volume = 0.5;
-        announceCommentary("Sound unmuted", true);
-        // Try to play music if it was prevented earlier
+        queueCommentary("Sound unmuted", true, true);
         if (!game.gameStarted) {
           menuMusic.play().catch(e => console.log("Music play prevented:", e));
         } else {
@@ -1440,22 +1555,21 @@
       pauseScreen.style.display = game.isPaused ? "flex" : "none";
       
       if (game.isPaused) {
-        // When pausing, store the current time and pause music
         game.pausedTime = Date.now();
         gameMusic.pause();
-        announceCommentary("GAME PAUSED", true);
+        queueCommentary("GAME PAUSED", true, true);
       } else {
-        // When unpausing, adjust the start time to account for pause duration
         const pauseDuration = Date.now() - game.pausedTime;
         game.startTime += pauseDuration;
         gameMusic.play().catch(e => console.log("Music play prevented:", e));
-        announceCommentary("GAME RESUMED", true);
+        queueCommentary("GAME RESUMED", true, true);
       }
     }
 
     function returnToMenu() {
       game.isPaused = false;
       pauseScreen.style.display = "none";
+      endScreen.style.display = "none";
       titleScreen.style.display = "flex";
       clearInterval(game.timerInterval);
       game.gameStarted = false;
@@ -1463,11 +1577,13 @@
       gameMusic.pause();
       menuMusic.play().catch(e => console.log("Music play prevented:", e));
       
-      // Close any peer connections
+      // Hide D-pad if visible
+      dpadControls.style.display = 'none';
+      
       if (conn) conn.close();
       if (peer) peer.destroy();
       
-      announceCommentary("RETURNING TO MENU", true);
+      queueCommentary("RETURNING TO MENU", true, true);
     }
 
     // ===== COUNTDOWN FUNCTION =====
@@ -1487,7 +1603,7 @@
           count--;
         } else if (count === 0) {
           countdownEl.textContent = "GO!";
-          queueCommentary(getRandomCommentary('reactions'), true);
+          queueCommentary(getRandomCommentary('reactions'), true, true);
           if (!game.isMuted) {
             const utterance = new SpeechSynthesisUtterance("GO!");
             utterance.rate = 0.7;
@@ -1547,7 +1663,7 @@
       timerEl.textContent = "2:00.000";
       
       // Enhanced tournament introductions
-      queueCommentary(getRandomCommentary('introductions'), true);
+      queueCommentary(getRandomCommentary('introductions'), true, true);
       setTimeout(() => {
         queueCommentary(getRandomCommentary('playerIntroductions'), true);
       }, 3000);
@@ -1558,11 +1674,6 @@
       startCountdown();
     }
 
-    function restartGame() {
-      endScreen.style.display = "none";
-      startGame(game.isFourPlayer);
-    }
-
     // ===== KEYBOARD CONTROLS =====
     function setupKeyboardControls() {
       document.addEventListener('keydown', (e) => {
@@ -1570,6 +1681,8 @@
           togglePause();
         } else if (e.key === 'm' || e.key === 'M') {
           toggleMute();
+        } else if (e.key === 'f' || e.key === 'F') {
+          toggleFullscreen();
         } else {
           game.keysPressed[e.key] = true;
         }
@@ -1581,7 +1694,6 @@
     }
 
     // ===== INITIALIZE GAME =====
-    // Wait for DOM to be fully loaded before initializing
     document.addEventListener('DOMContentLoaded', () => {
       initGame();
     });
