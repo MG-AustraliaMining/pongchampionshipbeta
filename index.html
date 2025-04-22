@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>🏆 PONG ROUND OF 16 🏆</title>
+  <title>🏆 PONG ROUND OF 16 BETA 🏆</title>
   <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
@@ -214,11 +214,11 @@
       margin-bottom: 15px;
       text-align: center;
     }
-    /* Mobile Controls */
+    /* Mobile Controls - Hidden by default */
     #leftControls, #rightControls {
+      display: none;
       position: absolute;
       bottom: 30px;
-      display: flex;
       flex-direction: column;
       align-items: center;
       z-index: 5;
@@ -256,6 +256,10 @@
       100% { transform: translateY(100vh) rotate(360deg); }
     }
     @media (max-width: 768px) {
+      /* Show controls on mobile */
+      #leftControls, #rightControls {
+        display: flex;
+      }
       #leftScore, #rightScore { font-size: 1.8rem; top: 10px; }
       #timer { font-size: 1.2rem; top: 10px; }
       #bonusPoints { font-size: 1rem; top: 50px; }
@@ -280,7 +284,7 @@
   <div id="gameContainer">
     <canvas id="pongCanvas"></canvas>
     
-    <!-- Mobile Controls -->
+    <!-- Mobile Controls (only visible on small devices) -->
     <div id="leftControls">
       <div class="control-btn" id="upBtnLeft">↑</div>
       <div class="control-btn" id="downBtnLeft">↓</div>
@@ -419,7 +423,6 @@
     let peerId;
     let isHost = false;
     let currentGameId = null;
-    let peerList = {};
 
     // ===== GAME STATE =====
     let game = {
@@ -452,24 +455,17 @@
       isSpeaking: false,
       hasAnnounced30: false,
       hasAnnounced10: false,
-      activeTouches: {},
       currentUtterance: null,
       lastSpecialMoveTime: 0,
       betweenPointsTimeout: null,
-      touchControls: {
-        leftTop: false,
-        leftBottom: false,
-        rightTop: false,
-        rightBottom: false
-      },
-      isOnlineGame: false,
-      playerPosition: null, // 'left' or 'right'
       mobileControls: {
         leftUp: false,
         leftDown: false,
         rightUp: false,
         rightDown: false
-      }
+      },
+      isOnlineGame: false,
+      playerPosition: null // 'left' or 'right'
     };
 
     // ===== COMMENTARY SYSTEM =====
@@ -651,10 +647,13 @@
     function initializePeerJS() {
       // Create a new Peer with a random ID
       peer = new Peer({
-        config: {'iceServers': [
-          { url: 'stun:stun.l.google.com:19302' },
-          { url: 'stun:global.stun.twilio.com:3478?transport=udp' }
-        ]}
+        config: {
+          'iceServers': [
+            { urls: 'stun:stun.l.google.com:19302' },
+            { urls: 'stun:stun1.l.google.com:19302' },
+            { urls: 'stun:stun2.l.google.com:19302' }
+          ]
+        }
       });
 
       peer.on('open', (id) => {
@@ -951,7 +950,15 @@
       // Start menu music
       try {
         menuMusic.volume = 0.5;
-        menuMusic.play().catch(e => console.log("Autoplay prevented:", e));
+        menuMusic.play().catch(e => {
+          // Handle play() interrupted by pause() error
+          if (e.name === 'AbortError') {
+            console.log('Autoplay prevented, user interaction required');
+            // We'll let the user start music by clicking mute button
+          } else {
+            console.log("Music error:", e);
+          }
+        });
       } catch (e) {
         console.log("Music error:", e);
       }
@@ -1418,6 +1425,12 @@
         menuMusic.volume = 0.5;
         gameMusic.volume = 0.5;
         announceCommentary("Sound unmuted", true);
+        // Try to play music if it was prevented earlier
+        if (!game.gameStarted) {
+          menuMusic.play().catch(e => console.log("Music play prevented:", e));
+        } else {
+          gameMusic.play().catch(e => console.log("Music play prevented:", e));
+        }
       }
     }
 
@@ -1488,7 +1501,13 @@
           game.gameStarted = true;
           game.startTime = Date.now();
           menuMusic.pause();
-          gameMusic.play().catch(e => console.log("Game music play prevented:", e));
+          gameMusic.play().catch(e => {
+            if (e.name === 'AbortError') {
+              console.log('Game music play prevented, will try again on user interaction');
+            } else {
+              console.log("Game music error:", e);
+            }
+          });
           startTimer();
         }
       }
