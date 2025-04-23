@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>🏆 PONG ROUND OF 16 BETA 🏆</title>
+  <title>🏆 PONG CHAMPIONSHIP 🏆</title>
   <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
@@ -215,7 +215,7 @@
       margin-bottom: 15px;
       text-align: center;
     }
-    /* Mobile Controls - Hidden by default */
+    /* Mobile Controls */
     #leftControls, #rightControls {
       display: none;
       position: absolute;
@@ -243,6 +243,14 @@
       background: rgba(255,255,255,0.5);
     }
     /* D-pad controls */
+    #dpadControls {
+      display: none;
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 5;
+    }
     .dpad {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -250,13 +258,14 @@
       gap: 5px;
     }
     .dpad-btn {
-      width: 40px;
-      height: 40px;
+      width: 50px;
+      height: 50px;
       background: rgba(255,255,255,0.3);
       display: flex;
       justify-content: center;
       align-items: center;
       border-radius: 5px;
+      font-size: 1.2rem;
     }
     .dpad-up { grid-column: 2; grid-row: 1; }
     .dpad-left { grid-column: 1; grid-row: 2; }
@@ -278,7 +287,7 @@
       100% { transform: translateY(100vh) rotate(360deg); }
     }
     @media (max-width: 768px) {
-      /* Show controls on mobile */
+      /* Mobile adjustments */
       #leftControls, #rightControls {
         display: flex;
       }
@@ -292,6 +301,14 @@
       #playerNameInput { width: 200px; font-size: 1rem; }
       .game-item { font-size: 1rem; padding: 10px; }
       .control-btn { width: 50px; height: 50px; font-size: 1.2rem; }
+      #muteButton, #pauseButton, #fullscreenButton {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+      }
+      #muteButton { left: 10px; }
+      #pauseButton { left: 55px; }
+      #fullscreenButton { left: 100px; }
     }
     @media (max-height: 500px) {
       #titleScreen h1, #lobbyScreen h1 { font-size: 1.8rem; }
@@ -306,7 +323,7 @@
   <div id="gameContainer">
     <canvas id="pongCanvas"></canvas>
     
-    <!-- Mobile Controls (only visible on small devices) -->
+    <!-- Mobile Controls -->
     <div id="leftControls">
       <div class="control-btn" id="upBtnLeft">↑</div>
       <div class="control-btn" id="downBtnLeft">↓</div>
@@ -316,11 +333,22 @@
       <div class="control-btn" id="downBtnRight">↓</div>
     </div>
     
+    <!-- D-pad for online players -->
+    <div id="dpadControls">
+      <div class="dpad">
+        <div class="dpad-btn dpad-up" id="dpadUp">↑</div>
+        <div class="dpad-btn dpad-left" id="dpadLeft">←</div>
+        <div class="dpad-center"></div>
+        <div class="dpad-btn dpad-right" id="dpadRight">→</div>
+        <div class="dpad-btn dpad-down" id="dpadDown">↓</div>
+      </div>
+    </div>
+    
     <div id="leftScore">0</div>
     <div id="rightScore">0</div>
     <div id="timer">2:00.000</div>
     <div id="bonusPoints"></div>
-    <div id="commentary">WELCOME TO THE PONG ROUND OF 16!</div>
+    <div id="commentary">WELCOME TO THE PONG CHAMPIONSHIP!</div>
     <button id="muteButton">🔊</button>
     <button id="pauseButton">⏸️</button>
     <button id="fullscreenButton">⛶</button>
@@ -345,7 +373,7 @@
 
     <!-- Title Screen -->
     <div id="titleScreen">
-      <h1>🏆 PONG ROUND OF 16 🏆</h1>
+      <h1>🏆 PONG CHAMPIONSHIP 🏆</h1>
       <h2>First Match</h2>
       <button class="btn-championship" onclick="startGame(false)">2 PLAYERS</button>
       <button class="btn-championship" onclick="startGame(true)">4 PLAYERS</button>
@@ -388,18 +416,7 @@
     <!-- End Screen -->
     <div id="endScreen" style="display: none;">
       <h1 id="endMessage" style="color: gold; font-size: 2rem;"></h1>
-      <button class="btn-championship" id="endScreenBtn" onclick="returnToMenu()">RETURN TO MENU</button>
-    </div>
-
-    <!-- D-pad for online players without keyboard -->
-    <div id="dpadControls" style="display: none; position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);">
-      <div class="dpad">
-        <div class="dpad-btn dpad-up" id="dpadUp">↑</div>
-        <div class="dpad-btn dpad-left" id="dpadLeft">←</div>
-        <div class="dpad-center"></div>
-        <div class="dpad-btn dpad-right" id="dpadRight">→</div>
-        <div class="dpad-btn dpad-down" id="dpadDown">↓</div>
-      </div>
+      <button class="btn-championship" onclick="returnToMenu()">RETURN TO MENU</button>
     </div>
   </div>
 
@@ -435,7 +452,6 @@
     const titleScreen = document.getElementById('titleScreen');
     const endScreen = document.getElementById('endScreen');
     const endMessage = document.getElementById('endMessage');
-    const endScreenBtn = document.getElementById('endScreenBtn');
     const lobbyScreen = document.getElementById('lobbyScreen');
     const createGameScreen = document.getElementById('createGameScreen');
     const findGameScreen = document.getElementById('findGameScreen');
@@ -496,31 +512,32 @@
         rightDown: false
       },
       isOnlineGame: false,
-      playerPosition: null, // 'left' or 'right'
-      audioInitialized: false
+      playerPosition: null,
+      audioInitialized: false,
+      gameEnded: false
     };
 
     // ===== ENHANCED COMMENTARY SYSTEM =====
     const commentaryPhrases = {
       introductions: [
-        "Ladies and gentlemen, welcome to the Pong Championship Finals!",
-        "The moment we've all been waiting for - the Pong Championship!",
-        "This is it! The ultimate Pong battle is about to begin!"
+        "LADIES AND GENTLEMEN! WELCOME TO THE PONG CHAMPIONSHIP FINALS!",
+        "THE MOMENT WE'VE ALL BEEN WAITING FOR - THE ULTIMATE PONG SHOWDOWN!",
+        "THIS IS IT! THE BATTLE FOR PONG SUPREMACY BEGINS NOW!"
       ],
       playerIntroductions: [
-        "On the left, the formidable {leftPlayer}! On the right, the incredible {rightPlayer}!",
-        "Two legends enter the arena today: {leftPlayer} versus {rightPlayer}!",
-        "Let's meet our gladiators! In the blue corner, {leftPlayer}! In the red corner, {rightPlayer}!"
+        "IN THE BLUE CORNER, THE FORMIDABLE {leftPlayer}! IN THE RED CORNER, THE INCREDIBLE {rightPlayer}!",
+        "TWO LEGENDS ENTER THE ARENA TODAY: {leftPlayer} VERSUS {rightPlayer}!",
+        "LET'S MEET OUR GLADIATORS! ON THE LEFT, {leftPlayer}! ON THE RIGHT, {rightPlayer}!"
       ],
       countdown: [
-        "The tension is unbearable! The match begins in...",
-        "The crowd is on their feet! Starting in...",
-        "History will be made here today! Beginning in..."
+        "THE TENSION IS UNBEARABLE! THE MATCH BEGINS IN...",
+        "THE CROWD IS ON THEIR FEET! STARTING IN...",
+        "HISTORY WILL BE MADE HERE TODAY! BEGINNING IN..."
       ],
       scores: [
-        "INCREDIBLE! Point to {player}!",
-        "WHAT A SHOT! {player} scores!",
-        "UNBELIEVABLE! {player} takes the point!"
+        "UNBELIEVABLE! {player} WITH AN INCREDIBLE SHOT TO TAKE THE POINT!",
+        "WHAT A PLAY! {player} DEMONSTRATES THEIR SKILL!",
+        "MAGNIFICENT! {player} SEIZES THE ADVANTAGE!"
       ],
       deuce: [
         "WE'RE AT DEUCE! BONUS POINT ACTIVATED! NEXT POINT WINS!",
@@ -548,9 +565,9 @@
         "HISTORY HAS BEEN MADE! {player} WINS THE CHAMPIONSHIP!"
       ],
       specialMoves: [
-        "OH MY GOODNESS! WHAT A SHOT!",
-        "INCREDIBLE! DID YOU SEE THAT?",
-        "UNBELIEVABLE PLAY! THE CROWD IS IN A FRENZY!"
+        "OH MY GOODNESS! WHAT A SHOT! THE CROWD ERUPTS!",
+        "INCREDIBLE! DID YOU SEE THAT? SPECTACULAR PLAY!",
+        "UNBELIEVABLE! THAT'S GOT TO BE THE PLAY OF THE TOURNAMENT!"
       ],
       betweenPoints: [
         "THE TENSION COULD CUT A KNIFE! WHO WILL TAKE CONTROL?",
@@ -584,8 +601,9 @@
     }
 
     function queueCommentary(text, important = false, force = false) {
+      if (game.gameEnded && !text.includes("What an incredible")) return;
+      
       if (force) {
-        // Clear any current speech and queue
         window.speechSynthesis.cancel();
         game.commentaryQueue = [];
         game.isSpeaking = false;
@@ -605,7 +623,7 @@
     function announceCommentary(text, important = false) {
       commentaryEl.textContent = text;
       
-      if (!game.isMuted) {
+      if (!game.isMuted && !game.gameEnded) {
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.rate = 0.9;
         utterance.pitch = 1.2;
@@ -613,7 +631,9 @@
         
         utterance.onend = () => {
           game.isSpeaking = false;
-          speakNextCommentary();
+          if (!game.gameEnded) {
+            speakNextCommentary();
+          }
         };
         
         if (game.currentUtterance) {
@@ -627,7 +647,7 @@
     }
 
     function speakNextCommentary() {
-      if (game.commentaryQueue.length > 0 && !game.isSpeaking) {
+      if (game.commentaryQueue.length > 0 && !game.isSpeaking && !game.gameEnded) {
         const text = game.commentaryQueue.shift();
         announceCommentary(text);
       }
@@ -762,12 +782,21 @@
     // ===== FULLSCREEN FUNCTIONALITY =====
     function toggleFullscreen() {
       if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(err => {
-          console.log(`Error attempting to enable fullscreen: ${err.message}`);
-        });
+        // Try standard fullscreen
+        if (document.documentElement.requestFullscreen) {
+          document.documentElement.requestFullscreen().catch(err => {
+            console.log(`Error attempting to enable fullscreen: ${err.message}`);
+          });
+        } 
+        // iOS Safari
+        else if (document.documentElement.webkitRequestFullscreen) {
+          document.documentElement.webkitRequestFullscreen();
+        }
       } else {
         if (document.exitFullscreen) {
           document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) { // iOS Safari
+          document.webkitExitFullscreen();
         }
       }
     }
@@ -800,6 +829,12 @@
             game.playerPosition = 'left';
             game.leftPlayer = hostNameInput.value || "HOST PLAYER";
             waitingScreen.style.display = 'none';
+            
+            // Remove game from available list
+            const games = JSON.parse(localStorage.getItem('pongGames')) || [];
+            const updatedGames = games.filter(g => g.id !== currentGameId);
+            localStorage.setItem('pongGames', JSON.stringify(updatedGames));
+            
             startOnlineGame();
           }
         });
@@ -1043,8 +1078,11 @@
       pauseScreen.style.display = "none";
       waitingScreen.style.display = "none";
       
+      // Hide pause button in online games
+      pauseBtn.style.display = "none";
+      
       // Show D-pad for online players on mobile
-      if (game.playerPosition === 'right' && window.innerWidth <= 768) {
+      if (window.innerWidth <= 768) {
         dpadControls.style.display = 'block';
       }
       
@@ -1142,7 +1180,7 @@
 
     // ===== GAME LOOP =====
     function gameLoop() {
-      if (!game.gameStarted || game.isPaused) {
+      if (!game.gameStarted || game.isPaused || game.gameEnded) {
         requestAnimationFrame(gameLoop);
         return;
       }
@@ -1166,7 +1204,7 @@
 
     // ===== UPDATE PADDLES =====
     function updatePaddles() {
-      if (game.isPaused) return;
+      if (game.isPaused || game.gameEnded) return;
 
       // Mobile controls
       if (game.mobileControls.leftUp) game.leftPaddle.y -= PADDLE_SPEED;
@@ -1278,7 +1316,7 @@
 
     // ===== GAME PHYSICS =====
     function updateBall() {
-      if (game.isPaused) return;
+      if (game.isPaused || game.gameEnded) return;
       
       if (!game.isOnlineGame || isHost) {
         game.ball.x += game.ball.dx;
@@ -1295,7 +1333,7 @@
     }
 
     function checkCollisions() {
-      if (game.isPaused) return;
+      if (game.isPaused || game.gameEnded) return;
       
       const paddleHeight = game.isFourPlayer ? FOUR_PLAYER_PADDLE_HEIGHT : PADDLE_HEIGHT;
 
@@ -1406,7 +1444,7 @@
       game.startTime = Date.now();
       
       game.timerInterval = setInterval(() => {
-        if (game.isPaused) return;
+        if (game.isPaused || game.gameEnded) return;
         
         const elapsed = Date.now() - game.startTime;
         const remaining = Math.max(0, game.remainingTime * 1000 - elapsed);
@@ -1490,6 +1528,7 @@
     // ===== GAME END =====
     function endGame() {
       game.gameStarted = false;
+      game.gameEnded = true;
       clearInterval(game.timerInterval);
       gameMusic.pause();
       menuMusic.play().catch(e => console.log("Menu music play prevented:", e));
@@ -1513,18 +1552,28 @@
       // Hide D-pad if visible
       dpadControls.style.display = 'none';
       
-      // For online games, only show "Return to Menu" button
-      if (game.isOnlineGame) {
-        endScreenBtn.textContent = "RETURN TO MENU";
-      } else {
-        endScreenBtn.textContent = "RETURN TO MENU";
+      // Remove game from available list if online
+      if (game.isOnlineGame && isHost && currentGameId) {
+        const games = JSON.parse(localStorage.getItem('pongGames')) || [];
+        const updatedGames = games.filter(g => g.id !== currentGameId);
+        localStorage.setItem('pongGames', JSON.stringify(updatedGames));
       }
       
-      createConfetti();
+      // Stop all commentary except victory announcement
+      window.speechSynthesis.cancel();
+      game.commentaryQueue = [];
+      game.isSpeaking = false;
       
+      // Victory announcement
       queueCommentary(`${winner} defeats ${loser} ${winnerScore}-${loserScore}!`, true, true);
-      queueCommentary(getRandomCommentary('victories').replace(/{player}/g, winner), true);
-      queueCommentary("What an incredible tournament match we've witnessed today!", true);
+      setTimeout(() => {
+        queueCommentary(getRandomCommentary('victories').replace(/{player}/g, winner), true);
+      }, 2000);
+      setTimeout(() => {
+        queueCommentary("What an incredible tournament match we've witnessed today!", true);
+      }, 4000);
+      
+      createConfetti();
     }
 
     // ===== MUTE TOGGLE =====
@@ -1551,6 +1600,8 @@
 
     // ===== PAUSE FUNCTIONALITY =====
     function togglePause() {
+      if (game.isOnlineGame) return;
+      
       game.isPaused = !game.isPaused;
       pauseScreen.style.display = game.isPaused ? "flex" : "none";
       
@@ -1568,6 +1619,7 @@
 
     function returnToMenu() {
       game.isPaused = false;
+      game.gameEnded = false;
       pauseScreen.style.display = "none";
       endScreen.style.display = "none";
       titleScreen.style.display = "flex";
@@ -1576,6 +1628,9 @@
       game.isOnlineGame = false;
       gameMusic.pause();
       menuMusic.play().catch(e => console.log("Music play prevented:", e));
+      
+      // Show pause button again if it was hidden
+      pauseBtn.style.display = "block";
       
       // Hide D-pad if visible
       dpadControls.style.display = 'none';
@@ -1615,6 +1670,7 @@
           clearInterval(game.countdownInterval);
           countdownEl.style.display = "none";
           game.gameStarted = true;
+          game.gameEnded = false;
           game.startTime = Date.now();
           menuMusic.pause();
           gameMusic.play().catch(e => {
@@ -1636,6 +1692,7 @@
     function startGame(fourPlayerMode) {
       game.isFourPlayer = fourPlayerMode;
       game.isPaused = false;
+      game.gameEnded = false;
       game.isOnlineGame = false;
       game.leftPaddle.score = 0;
       game.rightPaddle.score = 0;
@@ -1677,6 +1734,8 @@
     // ===== KEYBOARD CONTROLS =====
     function setupKeyboardControls() {
       document.addEventListener('keydown', (e) => {
+        if (game.gameEnded) return;
+        
         if (e.key === 'p' || e.key === 'P') {
           togglePause();
         } else if (e.key === 'm' || e.key === 'M') {
