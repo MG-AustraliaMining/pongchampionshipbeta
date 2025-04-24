@@ -46,41 +46,41 @@
     }
     #leftScore, #rightScore {
       position: absolute;
-      top: 20px;
-      font-size: 3rem;
+      top: 10px;
+      font-size: 2rem;
       color: white;
       text-shadow: 0 0 10px rgba(255,255,255,0.7);
     }
-    #leftScore { left: 25%; }
-    #rightScore { right: 25%; }
+    #leftScore { left: 10%; }
+    #rightScore { right: 10%; }
     #timer {
       position: absolute;
-      top: 20px;
+      top: 10px;
       left: 50%;
       transform: translateX(-50%);
-      font-size: 2rem;
+      font-size: 1.5rem;
       color: white;
     }
     #bonusPoints {
       position: absolute;
-      top: 80px;
-      right: 20px;
+      top: 50px;
+      right: 10px;
       color: gold;
-      font-size: 1.5rem;
+      font-size: 1rem;
       text-shadow: 1px 1px 2px black;
     }
     #commentary {
       position: absolute;
-      bottom: 20px;
+      bottom: 10px;
       left: 50%;
       transform: translateX(-50%);
       background: rgba(0,0,0,0.7);
       color: white;
-      padding: 10px 20px;
+      padding: 8px 16px;
       border-radius: 20px;
       max-width: 90%;
       text-align: center;
-      font-size: 1.2rem;
+      font-size: 1rem;
     }
     #titleScreen, #endScreen, #lobbyScreen, #createGameScreen, #findGameScreen, #waitingScreen {
       position: absolute;
@@ -96,23 +96,23 @@
       z-index: 10;
     }
     #titleScreen h1, #endScreen h1, #lobbyScreen h1, #createGameScreen h1, #findGameScreen h1 {
-      font-size: 2.5rem;
+      font-size: 2rem;
       color: gold;
       text-shadow: 0 0 10px rgba(255,215,0,0.7);
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
       text-align: center;
     }
     #titleScreen h2, #lobbyScreen h2 {
-      font-size: 1.8rem;
+      font-size: 1.5rem;
       color: white;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
     .btn-championship {
       background: linear-gradient(45deg, #ff8a00, #e52e71);
       border: none;
-      font-size: 1.2rem;
-      padding: 8px 20px;
-      margin: 8px;
+      font-size: 1rem;
+      padding: 6px 15px;
+      margin: 6px;
       border-radius: 50px;
       color: white;
       box-shadow: 0 5px 15px rgba(0,0,0,0.3);
@@ -124,21 +124,21 @@
     }
     #muteButton, #pauseButton, #fullscreenButton, #dpadToggle {
       position: absolute;
-      top: 15px;
+      top: 10px;
       z-index: 20;
       background: rgba(255,255,255,0.2);
       border: none;
       border-radius: 50%;
-      width: 40px;
-      height: 40px;
+      width: 35px;
+      height: 35px;
       color: white;
-      font-size: 1.2rem;
+      font-size: 1rem;
       cursor: pointer;
     }
-    #muteButton { left: 15px; }
-    #pauseButton { left: 65px; }
-    #fullscreenButton { left: 115px; }
-    #dpadToggle { right: 15px; }
+    #muteButton { left: 10px; }
+    #pauseButton { left: 55px; }
+    #fullscreenButton { left: 100px; }
+    #dpadToggle { right: 10px; }
     #pauseScreen {
       position: absolute;
       top: 0;
@@ -152,7 +152,7 @@
       align-items: center;
       z-index: 15;
       color: white;
-      font-size: 2rem;
+      font-size: 1.5rem;
     }
     #countdown {
       position: absolute;
@@ -167,14 +167,14 @@
       align-items: center;
       z-index: 25;
       color: white;
-      font-size: 5rem;
+      font-size: 4rem;
       font-weight: bold;
     }
     #playerNameInput {
-      padding: 8px;
-      font-size: 1.2rem;
-      margin-bottom: 15px;
-      width: 250px;
+      padding: 6px;
+      font-size: 1rem;
+      margin-bottom: 10px;
+      width: 200px;
       text-align: center;
       border-radius: 20px;
       border: none;
@@ -183,60 +183,60 @@
       width: 90%;
       max-height: 50vh;
       overflow-y: auto;
-      margin: 15px 0;
+      margin: 10px 0;
     }
     .game-item {
       background: rgba(255,255,255,0.1);
-      padding: 12px;
-      margin: 8px 0;
+      padding: 10px;
+      margin: 6px 0;
       border-radius: 10px;
       cursor: pointer;
       transition: all 0.3s;
-      font-size: 1.1rem;
+      font-size: 0.9rem;
     }
     .game-item:hover {
       background: rgba(255,255,255,0.2);
     }
     #refreshButton {
       position: absolute;
-      top: 15px;
-      right: 15px;
+      top: 10px;
+      right: 55px;
       background: rgba(255,255,255,0.2);
       border: none;
       border-radius: 50%;
-      width: 40px;
-      height: 40px;
+      width: 35px;
+      height: 35px;
       color: white;
-      font-size: 1.2rem;
+      font-size: 1rem;
       cursor: pointer;
     }
     #waitingMessage {
-      font-size: 1.2rem;
+      font-size: 1rem;
       color: white;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
       text-align: center;
     }
     /* Mobile Controls - Hidden by default */
     #leftControls, #rightControls {
       display: none;
       position: absolute;
-      bottom: 30px;
+      bottom: 20px;
       flex-direction: column;
       align-items: center;
       z-index: 5;
     }
-    #leftControls { left: 20px; }
-    #rightControls { right: 20px; }
+    #leftControls { left: 15px; }
+    #rightControls { right: 15px; }
     .control-btn {
-      width: 60px;
-      height: 60px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       background: rgba(255,255,255,0.3);
       display: flex;
       justify-content: center;
       align-items: center;
       margin: 5px;
-      font-size: 1.5rem;
+      font-size: 1.2rem;
       color: white;
       user-select: none;
     }
@@ -251,8 +251,8 @@
       gap: 5px;
     }
     .dpad-btn {
-      width: 40px;
-      height: 40px;
+      width: 35px;
+      height: 35px;
       background: rgba(255,255,255,0.3);
       display: flex;
       justify-content: center;
@@ -260,15 +260,12 @@
       border-radius: 5px;
     }
     .dpad-up { grid-column: 2; grid-row: 1; }
-    .dpad-left { grid-column: 1; grid-row: 2; }
-    .dpad-center { grid-column: 2; grid-row: 2; background: transparent; }
-    .dpad-right { grid-column: 3; grid-row: 2; }
     .dpad-down { grid-column: 2; grid-row: 3; }
     /* Confetti styles */
     .confetti {
       position: absolute;
-      width: 8px;
-      height: 8px;
+      width: 6px;
+      height: 6px;
       background-color: #f00;
       border-radius: 50%;
       pointer-events: none;
@@ -279,27 +276,35 @@
       100% { transform: translateY(100vh) rotate(360deg); }
     }
     @media (max-width: 768px) {
-      /* Show controls on mobile */
-      #leftControls, #rightControls {
-        display: flex;
+      #leftScore, #rightScore { font-size: 1.5rem; top: 5px; }
+      #leftScore { left: 5%; }
+      #rightScore { right: 5%; }
+      #timer { font-size: 1rem; top: 5px; }
+      #bonusPoints { font-size: 0.8rem; top: 30px; }
+      #commentary { font-size: 0.8rem; padding: 5px 10px; bottom: 5px; }
+      .btn-championship { font-size: 0.9rem; padding: 5px 12px; }
+      #titleScreen h1, #lobbyScreen h1 { font-size: 1.5rem; }
+      #titleScreen h2, #lobbyScreen h2 { font-size: 1.2rem; }
+      #playerNameInput { width: 180px; font-size: 0.9rem; }
+      .game-item { font-size: 0.8rem; padding: 8px; }
+      .control-btn { width: 45px; height: 45px; font-size: 1rem; }
+      #muteButton, #pauseButton, #fullscreenButton, #dpadToggle, #refreshButton {
+        width: 30px;
+        height: 30px;
+        font-size: 0.9rem;
       }
-      #leftScore, #rightScore { font-size: 1.8rem; top: 10px; }
-      #timer { font-size: 1.2rem; top: 10px; }
-      #bonusPoints { font-size: 1rem; top: 50px; }
-      #commentary { font-size: 0.9rem; padding: 6px 12px; }
-      .btn-championship { font-size: 1rem; padding: 6px 15px; }
-      #titleScreen h1, #lobbyScreen h1 { font-size: 2rem; }
-      #titleScreen h2, #lobbyScreen h2 { font-size: 1.5rem; }
-      #playerNameInput { width: 200px; font-size: 1rem; }
-      .game-item { font-size: 1rem; padding: 10px; }
-      .control-btn { width: 50px; height: 50px; font-size: 1.2rem; }
+      #muteButton { left: 5px; }
+      #pauseButton { left: 40px; }
+      #fullscreenButton { left: 75px; }
+      #dpadToggle { right: 5px; }
+      #refreshButton { right: 40px; }
     }
     @media (max-height: 500px) {
-      #titleScreen h1, #lobbyScreen h1 { font-size: 1.8rem; }
-      #titleScreen h2, #lobbyScreen h2 { font-size: 1.3rem; }
-      .btn-championship { font-size: 0.9rem; padding: 5px 12px; }
-      #leftControls, #rightControls { bottom: 15px; }
-      .control-btn { width: 45px; height: 45px; font-size: 1.1rem; }
+      #titleScreen h1, #lobbyScreen h1 { font-size: 1.2rem; }
+      #titleScreen h2, #lobbyScreen h2 { font-size: 1rem; }
+      .btn-championship { font-size: 0.8rem; padding: 4px 10px; }
+      #leftControls, #rightControls { bottom: 10px; }
+      .control-btn { width: 40px; height: 40px; font-size: 0.9rem; }
     }
   </style>
 </head>
@@ -331,7 +336,7 @@
     <audio id="menuMusic" loop>
       <source src="music1.mp3" type="audio/mpeg">
     </audio>
-    <audio id="gameMusic" loop>
+    <audio id="gameMusic1" loop>
       <source src="music2.mp3" type="audio/mpeg">
     </audio>
     <audio id="gameMusic2" loop>
@@ -410,18 +415,21 @@
 
     <!-- End Screen -->
     <div id="endScreen" style="display: none;">
-      <h1 id="endMessage" style="color: gold; font-size: 2rem;"></h1>
+      <h1 id="endMessage" style="color: gold; font-size: 1.5rem;"></h1>
       <button class="btn-championship" id="endScreenBtn" onclick="returnToMenu()">RETURN TO MENU</button>
     </div>
 
-    <!-- D-pad for online players without keyboard -->
-    <div id="dpadControls" style="display: none; position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);">
+    <!-- D-pad for both players -->
+    <div id="leftDpad" style="display: none; position: absolute; bottom: 20px; left: 15px;">
       <div class="dpad">
-        <div class="dpad-btn dpad-up" id="dpadUp">↑</div>
-        <div class="dpad-btn dpad-left" id="dpadLeft">←</div>
-        <div class="dpad-center"></div>
-        <div class="dpad-btn dpad-right" id="dpadRight">→</div>
-        <div class="dpad-btn dpad-down" id="dpadDown">↓</div>
+        <div class="dpad-btn dpad-up" id="leftDpadUp">↑</div>
+        <div class="dpad-btn dpad-down" id="leftDpadDown">↓</div>
+      </div>
+    </div>
+    <div id="rightDpad" style="display: none; position: absolute; bottom: 20px; right: 15px;">
+      <div class="dpad">
+        <div class="dpad-btn dpad-up" id="rightDpadUp">↑</div>
+        <div class="dpad-btn dpad-down" id="rightDpadDown">↓</div>
       </div>
     </div>
   </div>
@@ -433,12 +441,12 @@
 
   <script>
     // ===== GAME CONSTANTS =====
-    const PADDLE_HEIGHT = 120;
-    const PADDLE_WIDTH = 15;
-    const FOUR_PLAYER_PADDLE_HEIGHT = 180;
+    let PADDLE_HEIGHT = 120;
+    let PADDLE_WIDTH = 15;
+    let FOUR_PLAYER_PADDLE_HEIGHT = 180;
     const BALL_RADIUS = 10;
-    const INITIAL_BALL_SPEED = 10;
-    const FOUR_PLAYER_BALL_SPEED = 8;
+    let INITIAL_BALL_SPEED = 10;
+    let FOUR_PLAYER_BALL_SPEED = 8;
     const PADDLE_SPEED = 8;
     const WINNING_SCORE = 10;
     const GAME_TIME = 120; // 2 minutes in seconds
@@ -471,7 +479,7 @@
     const waitingMessage = document.getElementById('waitingMessage');
     const menuMusic = document.getElementById('menuMusic');
     const gameMusic = [
-      document.getElementById('gameMusic'),
+      document.getElementById('gameMusic1'),
       document.getElementById('gameMusic2'),
       document.getElementById('gameMusic3'),
       document.getElementById('gameMusic4'),
@@ -484,9 +492,12 @@
     const downBtnLeft = document.getElementById('downBtnLeft');
     const upBtnRight = document.getElementById('upBtnRight');
     const downBtnRight = document.getElementById('downBtnRight');
-    const dpadControls = document.getElementById('dpadControls');
-    const dpadUp = document.getElementById('dpadUp');
-    const dpadDown = document.getElementById('dpadDown');
+    const leftDpad = document.getElementById('leftDpad');
+    const rightDpad = document.getElementById('rightDpad');
+    const leftDpadUp = document.getElementById('leftDpadUp');
+    const leftDpadDown = document.getElementById('leftDpadDown');
+    const rightDpadUp = document.getElementById('rightDpadUp');
+    const rightDpadDown = document.getElementById('rightDpadDown');
 
     // ===== GAME STATE =====
     let game = {
@@ -536,7 +547,8 @@
       peer: null,
       conn: null,
       isHost: false,
-      currentGameId: null
+      currentGameId: null,
+      availableGames: []
     };
 
     // ===== ENHANCED COMMENTARY SYSTEM =====
@@ -737,75 +749,59 @@
       downBtnRight.addEventListener('mouseup', () => game.mobileControls.rightDown = false);
     }
 
-    // ===== DPAD CONTROLS FOR ONLINE =====
+    // ===== DPAD CONTROLS =====
     function setupDpadControls() {
-      dpadUp.addEventListener('touchstart', (e) => {
+      // Left D-pad
+      leftDpadUp.addEventListener('touchstart', (e) => {
         e.preventDefault();
-        if (game.playerPosition === 'left') {
-          game.mobileControls.leftUp = true;
-        } else {
-          game.mobileControls.rightUp = true;
-        }
+        game.mobileControls.leftUp = true;
       });
-      dpadUp.addEventListener('touchend', (e) => {
+      leftDpadUp.addEventListener('touchend', (e) => {
         e.preventDefault();
-        if (game.playerPosition === 'left') {
-          game.mobileControls.leftUp = false;
-        } else {
-          game.mobileControls.rightUp = false;
-        }
+        game.mobileControls.leftUp = false;
       });
-      dpadDown.addEventListener('touchstart', (e) => {
+      leftDpadDown.addEventListener('touchstart', (e) => {
         e.preventDefault();
-        if (game.playerPosition === 'left') {
-          game.mobileControls.leftDown = true;
-        } else {
-          game.mobileControls.rightDown = true;
-        }
+        game.mobileControls.leftDown = true;
       });
-      dpadDown.addEventListener('touchend', (e) => {
+      leftDpadDown.addEventListener('touchend', (e) => {
         e.preventDefault();
-        if (game.playerPosition === 'left') {
-          game.mobileControls.leftDown = false;
-        } else {
-          game.mobileControls.rightDown = false;
-        }
+        game.mobileControls.leftDown = false;
+      });
+
+      // Right D-pad
+      rightDpadUp.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        game.mobileControls.rightUp = true;
+      });
+      rightDpadUp.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        game.mobileControls.rightUp = false;
+      });
+      rightDpadDown.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        game.mobileControls.rightDown = true;
+      });
+      rightDpadDown.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        game.mobileControls.rightDown = false;
       });
 
       // Mouse controls for testing
-      dpadUp.addEventListener('mousedown', () => {
-        if (game.playerPosition === 'left') {
-          game.mobileControls.leftUp = true;
-        } else {
-          game.mobileControls.rightUp = true;
-        }
-      });
-      dpadUp.addEventListener('mouseup', () => {
-        if (game.playerPosition === 'left') {
-          game.mobileControls.leftUp = false;
-        } else {
-          game.mobileControls.rightUp = false;
-        }
-      });
-      dpadDown.addEventListener('mousedown', () => {
-        if (game.playerPosition === 'left') {
-          game.mobileControls.leftDown = true;
-        } else {
-          game.mobileControls.rightDown = true;
-        }
-      });
-      dpadDown.addEventListener('mouseup', () => {
-        if (game.playerPosition === 'left') {
-          game.mobileControls.leftDown = false;
-        } else {
-          game.mobileControls.rightDown = false;
-        }
-      });
+      leftDpadUp.addEventListener('mousedown', () => game.mobileControls.leftUp = true);
+      leftDpadUp.addEventListener('mouseup', () => game.mobileControls.leftUp = false);
+      leftDpadDown.addEventListener('mousedown', () => game.mobileControls.leftDown = true);
+      leftDpadDown.addEventListener('mouseup', () => game.mobileControls.leftDown = false);
+      rightDpadUp.addEventListener('mousedown', () => game.mobileControls.rightUp = true);
+      rightDpadUp.addEventListener('mouseup', () => game.mobileControls.rightUp = false);
+      rightDpadDown.addEventListener('mousedown', () => game.mobileControls.rightDown = true);
+      rightDpadDown.addEventListener('mouseup', () => game.mobileControls.rightDown = false);
     }
 
     function toggleDpad() {
       game.dpadEnabled = !game.dpadEnabled;
-      dpadControls.style.display = game.dpadEnabled ? 'block' : 'none';
+      leftDpad.style.display = game.dpadEnabled ? 'block' : 'none';
+      rightDpad.style.display = game.dpadEnabled ? 'block' : 'none';
       dpadToggleBtn.textContent = game.dpadEnabled ? '🎮' : '🕹️';
     }
 
@@ -997,53 +993,37 @@
       waitingScreen.style.display = 'flex';
       waitingMessage.textContent = `Share this code with your friend: ${game.currentGameId}`;
       
-      const gameInfo = {
+      game.leftPlayer = playerName;
+      game.rightPlayer = "Waiting...";
+      
+      // Add to available games list (in memory only)
+      game.availableGames.push({
         id: game.currentGameId,
         name: `${playerName}'s Game`,
         timestamp: Date.now()
-      };
-      addGameToDiscoveryList(gameInfo);
-      
-      game.leftPlayer = playerName;
-      game.rightPlayer = "Waiting...";
+      });
     }
 
     function refreshGameList() {
       gameList.innerHTML = '<div style="color: white; text-align: center;">Searching for games...</div>';
       
       setTimeout(() => {
-        const games = getAvailableGames();
-        
-        if (games.length === 0) {
+        if (game.availableGames.length === 0) {
           gameList.innerHTML = '<div style="color: white; text-align: center;">No games found. Try refreshing.</div>';
         } else {
           gameList.innerHTML = '';
-          games.forEach(game => {
+          game.availableGames.forEach(gameInfo => {
             const gameItem = document.createElement('div');
             gameItem.className = 'game-item';
             gameItem.innerHTML = `
-              <div><strong>${game.name}</strong></div>
-              <div>Code: ${game.id}</div>
+              <div><strong>${gameInfo.name}</strong></div>
+              <div>Code: ${gameInfo.id}</div>
             `;
-            gameItem.onclick = () => joinGame(game.id);
+            gameItem.onclick = () => joinGame(gameInfo.id);
             gameList.appendChild(gameItem);
           });
         }
       }, 1000);
-    }
-
-    function addGameToDiscoveryList(gameInfo) {
-      const games = JSON.parse(localStorage.getItem('pongGames')) || [];
-      const now = Date.now();
-      const freshGames = games.filter(g => now - g.timestamp < 300000);
-      freshGames.push(gameInfo);
-      localStorage.setItem('pongGames', JSON.stringify(freshGames));
-    }
-
-    function getAvailableGames() {
-      const games = JSON.parse(localStorage.getItem('pongGames')) || [];
-      const now = Date.now();
-      return games.filter(g => now - g.timestamp < 300000);
     }
 
     function joinGame(gameId) {
@@ -1095,9 +1075,8 @@
       lobbyScreen.style.display = 'flex';
       
       if (game.isHost && game.currentGameId) {
-        const games = JSON.parse(localStorage.getItem('pongGames')) || [];
-        const updatedGames = games.filter(g => g.id !== game.currentGameId);
-        localStorage.setItem('pongGames', JSON.stringify(updatedGames));
+        // Remove from available games
+        game.availableGames = game.availableGames.filter(g => g.id !== game.currentGameId);
       }
     }
 
@@ -1110,9 +1089,10 @@
       pauseScreen.style.display = "none";
       waitingScreen.style.display = "none";
       
-      // Show D-pad for online players on mobile
-      if (game.playerPosition === 'right' && window.innerWidth <= 768) {
-        dpadControls.style.display = game.dpadEnabled ? 'block' : 'none';
+      // Show D-pad for both players if enabled
+      if (window.innerWidth <= 768) {
+        leftDpad.style.display = game.dpadEnabled ? 'block' : 'none';
+        rightDpad.style.display = game.dpadEnabled ? 'block' : 'none';
       }
       
       resetBall();
@@ -1185,14 +1165,24 @@
       canvas.width = width;
       canvas.height = height;
       
-      // Adjust paddle sizes for mobile
-      if (isMobile) {
-        const mobilePaddleHeight = height * 0.2;
-        PADDLE_HEIGHT = mobilePaddleHeight;
-        FOUR_PLAYER_PADDLE_HEIGHT = mobilePaddleHeight * 1.5;
-      }
+      // Adjust paddle and ball sizes based on screen size
+      const sizeFactor = Math.min(width, height) / 800; // Base size on 800px minimum dimension
       
-      resetPaddles();
+      PADDLE_HEIGHT = 120 * sizeFactor;
+      FOUR_PLAYER_PADDLE_HEIGHT = 180 * sizeFactor;
+      INITIAL_BALL_SPEED = 10 * sizeFactor;
+      FOUR_PLAYER_BALL_SPEED = 8 * sizeFactor;
+      
+      // Ensure minimum sizes
+      PADDLE_HEIGHT = Math.max(PADDLE_HEIGHT, 60);
+      FOUR_PLAYER_PADDLE_HEIGHT = Math.max(FOUR_PLAYER_PADDLE_HEIGHT, 90);
+      INITIAL_BALL_SPEED = Math.max(INITIAL_BALL_SPEED, 5);
+      FOUR_PLAYER_BALL_SPEED = Math.max(FOUR_PLAYER_BALL_SPEED, 4);
+      
+      // Update ball speed if game is in progress
+      if (game.gameStarted) {
+        game.ball.speed = game.isFourPlayer ? FOUR_PLAYER_BALL_SPEED : INITIAL_BALL_SPEED;
+      }
     }
 
     // ===== RESPONSIVE DESIGN =====
@@ -1256,29 +1246,29 @@
       if (game.mobileControls.rightUp) game.rightPaddle.y -= PADDLE_SPEED;
       if (game.mobileControls.rightDown) game.rightPaddle.y += PADDLE_SPEED;
 
-      // Keyboard controls
+      // Keyboard controls - fixed for fullscreen on iPad with keyboard
       if (!game.isFourPlayer) {
         if (game.isOnlineGame) {
           if (game.playerPosition === 'left') {
-            if (game.keysPressed['w']) game.leftPaddle.y -= PADDLE_SPEED;
-            if (game.keysPressed['s']) game.leftPaddle.y += PADDLE_SPEED;
+            if (game.keysPressed['w'] || game.keysPressed['W']) game.leftPaddle.y -= PADDLE_SPEED;
+            if (game.keysPressed['s'] || game.keysPressed['S']) game.leftPaddle.y += PADDLE_SPEED;
           } else {
             if (game.keysPressed['ArrowUp']) game.rightPaddle.y -= PADDLE_SPEED;
             if (game.keysPressed['ArrowDown']) game.rightPaddle.y += PADDLE_SPEED;
           }
         } else {
-          if (game.keysPressed['w']) game.leftPaddle.y -= PADDLE_SPEED;
-          if (game.keysPressed['s']) game.leftPaddle.y += PADDLE_SPEED;
+          if (game.keysPressed['w'] || game.keysPressed['W']) game.leftPaddle.y -= PADDLE_SPEED;
+          if (game.keysPressed['s'] || game.keysPressed['S']) game.leftPaddle.y += PADDLE_SPEED;
           if (game.keysPressed['ArrowUp']) game.rightPaddle.y -= PADDLE_SPEED;
           if (game.keysPressed['ArrowDown']) game.rightPaddle.y += PADDLE_SPEED;
         }
       } else {
-        if (game.keysPressed['w']) game.leftTopPaddle.y -= PADDLE_SPEED;
-        if (game.keysPressed['s']) game.leftTopPaddle.y += PADDLE_SPEED;
-        if (game.keysPressed['q']) game.leftBottomPaddle.y -= PADDLE_SPEED;
-        if (game.keysPressed['a']) game.leftBottomPaddle.y += PADDLE_SPEED;
-        if (game.keysPressed['o']) game.rightTopPaddle.y -= PADDLE_SPEED;
-        if (game.keysPressed['l']) game.rightTopPaddle.y += PADDLE_SPEED;
+        if (game.keysPressed['w'] || game.keysPressed['W']) game.leftTopPaddle.y -= PADDLE_SPEED;
+        if (game.keysPressed['s'] || game.keysPressed['S']) game.leftTopPaddle.y += PADDLE_SPEED;
+        if (game.keysPressed['q'] || game.keysPressed['Q']) game.leftBottomPaddle.y -= PADDLE_SPEED;
+        if (game.keysPressed['a'] || game.keysPressed['A']) game.leftBottomPaddle.y += PADDLE_SPEED;
+        if (game.keysPressed['o'] || game.keysPressed['O']) game.rightTopPaddle.y -= PADDLE_SPEED;
+        if (game.keysPressed['l'] || game.keysPressed['L']) game.rightTopPaddle.y += PADDLE_SPEED;
         if (game.keysPressed['ArrowUp']) game.rightBottomPaddle.y -= PADDLE_SPEED;
         if (game.keysPressed['ArrowDown']) game.rightBottomPaddle.y += PADDLE_SPEED;
       }
@@ -1595,7 +1585,8 @@
       endScreen.style.display = "flex";
       
       // Hide D-pad if visible
-      dpadControls.style.display = 'none';
+      leftDpad.style.display = 'none';
+      rightDpad.style.display = 'none';
       
       // For online games, only show "Return to Menu" button
       if (game.isOnlineGame) {
@@ -1645,6 +1636,7 @@
       } else {
         const pauseDuration = Date.now() - game.pausedTime;
         game.startTime += pauseDuration;
+        gameMusic[game.currentGameMusic].currentTime = 0;
         gameMusic[game.currentGameMusic].play().catch(e => console.log("Music play prevented:", e));
         queueCommentary("GAME RESUMED", true, true);
       }
@@ -1660,11 +1652,15 @@
       game.isOnlineGame = false;
       
       // Stop all game music and play menu music
-      gameMusic.forEach(music => music.pause());
+      gameMusic.forEach(music => {
+        music.pause();
+        music.currentTime = 0;
+      });
       menuMusic.play().catch(e => console.log("Music play prevented:", e));
       
       // Hide D-pad if visible
-      dpadControls.style.display = 'none';
+      leftDpad.style.display = 'none';
+      rightDpad.style.display = 'none';
       
       if (game.conn) game.conn.close();
       if (game.peer) game.peer.destroy();
@@ -1706,8 +1702,9 @@
           game.startTime = Date.now();
           menuMusic.pause();
           
-          // Select random game music
+          // Select random game music and start from beginning
           game.currentGameMusic = Math.floor(Math.random() * gameMusic.length);
+          gameMusic[game.currentGameMusic].currentTime = 0;
           gameMusic[game.currentGameMusic].play().catch(e => {
             if (e.name === 'AbortError') {
               console.log('Game music play prevented, will try again on user interaction');
