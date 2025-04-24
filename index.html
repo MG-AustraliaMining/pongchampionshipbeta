@@ -21,6 +21,8 @@
       -ms-user-select: none;
       user-select: none;
       height: 100vh;
+      width: 100vw;
+      position: fixed;
     }
     #gameContainer {
       position: fixed;
@@ -46,32 +48,36 @@
     }
     #leftScore, #rightScore {
       position: absolute;
-      top: 10px;
+      top: 20px;
       font-size: 2rem;
       color: white;
       text-shadow: 0 0 10px rgba(255,255,255,0.7);
+      z-index: 30;
     }
-    #leftScore { left: 10%; }
-    #rightScore { right: 10%; }
+    #leftScore { left: 25%; }
+    #rightScore { right: 25%; }
     #timer {
       position: absolute;
-      top: 10px;
+      top: 20px;
       left: 50%;
       transform: translateX(-50%);
       font-size: 1.5rem;
       color: white;
+      z-index: 30;
     }
     #bonusPoints {
       position: absolute;
-      top: 50px;
-      right: 10px;
+      top: 60px;
+      left: 50%;
+      transform: translateX(-50%);
       color: gold;
       font-size: 1rem;
       text-shadow: 1px 1px 2px black;
+      z-index: 30;
     }
     #commentary {
       position: absolute;
-      bottom: 10px;
+      bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
       background: rgba(0,0,0,0.7);
@@ -81,6 +87,7 @@
       max-width: 90%;
       text-align: center;
       font-size: 1rem;
+      z-index: 30;
     }
     #titleScreen, #endScreen, #lobbyScreen, #createGameScreen, #findGameScreen, #waitingScreen {
       position: absolute;
@@ -93,7 +100,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      z-index: 10;
+      z-index: 100;
     }
     #titleScreen h1, #endScreen h1, #lobbyScreen h1, #createGameScreen h1, #findGameScreen h1 {
       font-size: 2rem;
@@ -125,19 +132,19 @@
     #muteButton, #pauseButton, #fullscreenButton, #dpadToggle {
       position: absolute;
       top: 10px;
-      z-index: 20;
+      z-index: 40;
       background: rgba(255,255,255,0.2);
       border: none;
       border-radius: 50%;
-      width: 35px;
-      height: 35px;
+      width: 40px;
+      height: 40px;
       color: white;
       font-size: 1rem;
       cursor: pointer;
     }
     #muteButton { left: 10px; }
-    #pauseButton { left: 55px; }
-    #fullscreenButton { left: 100px; }
+    #pauseButton { left: 60px; }
+    #fullscreenButton { left: 110px; }
     #dpadToggle { right: 10px; }
     #pauseScreen {
       position: absolute;
@@ -150,7 +157,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      z-index: 15;
+      z-index: 150;
       color: white;
       font-size: 1.5rem;
     }
@@ -165,7 +172,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      z-index: 25;
+      z-index: 200;
       color: white;
       font-size: 4rem;
       font-weight: bold;
@@ -200,12 +207,12 @@
     #refreshButton {
       position: absolute;
       top: 10px;
-      right: 55px;
+      right: 60px;
       background: rgba(255,255,255,0.2);
       border: none;
       border-radius: 50%;
-      width: 35px;
-      height: 35px;
+      width: 40px;
+      height: 40px;
       color: white;
       font-size: 1rem;
       cursor: pointer;
@@ -223,20 +230,20 @@
       bottom: 20px;
       flex-direction: column;
       align-items: center;
-      z-index: 5;
+      z-index: 20;
     }
     #leftControls { left: 15px; }
     #rightControls { right: 15px; }
     .control-btn {
-      width: 50px;
-      height: 50px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
       background: rgba(255,255,255,0.3);
       display: flex;
       justify-content: center;
       align-items: center;
       margin: 5px;
-      font-size: 1.2rem;
+      font-size: 1.5rem;
       color: white;
       user-select: none;
     }
@@ -251,13 +258,14 @@
       gap: 5px;
     }
     .dpad-btn {
-      width: 35px;
-      height: 35px;
+      width: 50px;
+      height: 50px;
       background: rgba(255,255,255,0.3);
       display: flex;
       justify-content: center;
       align-items: center;
       border-radius: 5px;
+      font-size: 1.2rem;
     }
     .dpad-up { grid-column: 2; grid-row: 1; }
     .dpad-down { grid-column: 2; grid-row: 3; }
@@ -276,35 +284,48 @@
       100% { transform: translateY(100vh) rotate(360deg); }
     }
     @media (max-width: 768px) {
-      #leftScore, #rightScore { font-size: 1.5rem; top: 5px; }
-      #leftScore { left: 5%; }
-      #rightScore { right: 5%; }
-      #timer { font-size: 1rem; top: 5px; }
-      #bonusPoints { font-size: 0.8rem; top: 30px; }
-      #commentary { font-size: 0.8rem; padding: 5px 10px; bottom: 5px; }
+      #leftScore, #rightScore { 
+        font-size: 1.8rem; 
+        top: 15px; 
+      }
+      #leftScore { left: 20%; }
+      #rightScore { right: 20%; }
+      #timer { font-size: 1.2rem; top: 15px; }
+      #bonusPoints { font-size: 0.9rem; top: 50px; }
+      #commentary { font-size: 0.9rem; padding: 5px 10px; bottom: 15px; }
       .btn-championship { font-size: 0.9rem; padding: 5px 12px; }
-      #titleScreen h1, #lobbyScreen h1 { font-size: 1.5rem; }
-      #titleScreen h2, #lobbyScreen h2 { font-size: 1.2rem; }
+      #titleScreen h1, #lobbyScreen h1 { font-size: 1.8rem; }
+      #titleScreen h2, #lobbyScreen h2 { font-size: 1.3rem; }
       #playerNameInput { width: 180px; font-size: 0.9rem; }
       .game-item { font-size: 0.8rem; padding: 8px; }
-      .control-btn { width: 45px; height: 45px; font-size: 1rem; }
+      .control-btn { width: 55px; height: 55px; font-size: 1.3rem; }
       #muteButton, #pauseButton, #fullscreenButton, #dpadToggle, #refreshButton {
-        width: 30px;
-        height: 30px;
+        width: 35px;
+        height: 35px;
         font-size: 0.9rem;
       }
       #muteButton { left: 5px; }
-      #pauseButton { left: 40px; }
-      #fullscreenButton { left: 75px; }
+      #pauseButton { left: 45px; }
+      #fullscreenButton { left: 85px; }
       #dpadToggle { right: 5px; }
-      #refreshButton { right: 40px; }
+      #refreshButton { right: 45px; }
+      .dpad-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+      }
     }
     @media (max-height: 500px) {
-      #titleScreen h1, #lobbyScreen h1 { font-size: 1.2rem; }
-      #titleScreen h2, #lobbyScreen h2 { font-size: 1rem; }
+      #titleScreen h1, #lobbyScreen h1 { font-size: 1.5rem; }
+      #titleScreen h2, #lobbyScreen h2 { font-size: 1.1rem; }
       .btn-championship { font-size: 0.8rem; padding: 4px 10px; }
-      #leftControls, #rightControls { bottom: 10px; }
-      .control-btn { width: 40px; height: 40px; font-size: 0.9rem; }
+      #leftControls, #rightControls { bottom: 15px; }
+      .control-btn { width: 45px; height: 45px; font-size: 1.1rem; }
+      .dpad-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 0.9rem;
+      }
     }
   </style>
 </head>
@@ -441,10 +462,10 @@
 
   <script>
     // ===== GAME CONSTANTS =====
-    let PADDLE_HEIGHT = 120;
-    let PADDLE_WIDTH = 15;
-    let FOUR_PLAYER_PADDLE_HEIGHT = 180;
-    const BALL_RADIUS = 10;
+    let PADDLE_HEIGHT = 150;
+    let PADDLE_WIDTH = 20;
+    let FOUR_PLAYER_PADDLE_HEIGHT = 200;
+    const BALL_RADIUS = 12;
     let INITIAL_BALL_SPEED = 10;
     let FOUR_PLAYER_BALL_SPEED = 8;
     const PADDLE_SPEED = 8;
@@ -643,13 +664,9 @@
       }
       
       // Skip less important commentary if there's new important ones
-      if (important && game.commentaryQueue.length > 0 && !game.commentaryQueue[0].important) {
-        game.commentaryQueue = [];
-      }
-      
       if (important) {
-        game.commentaryQueue.unshift({text, important});
-      } else {
+        game.commentaryQueue = [{text, important}];
+      } else if (!game.commentaryQueue.some(item => item.important)) {
         game.commentaryQueue.push({text, important});
       }
       
@@ -1159,8 +1176,8 @@
     function resizeCanvas() {
       // Adjust for fullscreen on mobile devices
       const isMobile = window.innerWidth <= 768;
-      const width = isMobile ? window.screen.width : window.innerWidth;
-      const height = isMobile ? window.screen.height : window.innerHeight;
+      const width = isMobile ? window.innerWidth : window.innerWidth;
+      const height = isMobile ? window.innerHeight : window.innerHeight;
       
       canvas.width = width;
       canvas.height = height;
@@ -1168,14 +1185,14 @@
       // Adjust paddle and ball sizes based on screen size
       const sizeFactor = Math.min(width, height) / 800; // Base size on 800px minimum dimension
       
-      PADDLE_HEIGHT = 120 * sizeFactor;
-      FOUR_PLAYER_PADDLE_HEIGHT = 180 * sizeFactor;
+      PADDLE_HEIGHT = 150 * sizeFactor;
+      FOUR_PLAYER_PADDLE_HEIGHT = 200 * sizeFactor;
       INITIAL_BALL_SPEED = 10 * sizeFactor;
       FOUR_PLAYER_BALL_SPEED = 8 * sizeFactor;
       
       // Ensure minimum sizes
-      PADDLE_HEIGHT = Math.max(PADDLE_HEIGHT, 60);
-      FOUR_PLAYER_PADDLE_HEIGHT = Math.max(FOUR_PLAYER_PADDLE_HEIGHT, 90);
+      PADDLE_HEIGHT = Math.max(PADDLE_HEIGHT, 80);
+      FOUR_PLAYER_PADDLE_HEIGHT = Math.max(FOUR_PLAYER_PADDLE_HEIGHT, 100);
       INITIAL_BALL_SPEED = Math.max(INITIAL_BALL_SPEED, 5);
       FOUR_PLAYER_BALL_SPEED = Math.max(FOUR_PLAYER_BALL_SPEED, 4);
       
@@ -1565,7 +1582,10 @@
       clearInterval(game.timerInterval);
       
       // Stop all game music
-      gameMusic.forEach(music => music.pause());
+      gameMusic.forEach(music => {
+        music.pause();
+        music.currentTime = 0;
+      });
       menuMusic.play().catch(e => console.log("Menu music play prevented:", e));
       
       let winner, loser, winnerScore, loserScore;
@@ -1706,11 +1726,7 @@
           game.currentGameMusic = Math.floor(Math.random() * gameMusic.length);
           gameMusic[game.currentGameMusic].currentTime = 0;
           gameMusic[game.currentGameMusic].play().catch(e => {
-            if (e.name === 'AbortError') {
-              console.log('Game music play prevented, will try again on user interaction');
-            } else {
-              console.log("Game music error:", e);
-            }
+            console.log("Game music error:", e);
           });
           startTimer();
         }
