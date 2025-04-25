@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>🏆 PONG ROUND OF 16 🏆</title>
+  <!-- Favicon -->
+  <link rel="icon" href="image1.png" type="image/png">
   <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
@@ -89,7 +91,7 @@
       font-size: 1rem;
       z-index: 30;
     }
-    #titleScreen, #endScreen, #lobbyScreen, #createGameScreen, #findGameScreen, #waitingScreen {
+    #titleScreen, #endScreen, #lobbyScreen, #createGameScreen, #findGameScreen, #waitingScreen, #musicConsentScreen {
       position: absolute;
       top: 0;
       left: 0;
@@ -284,6 +286,15 @@
       0% { transform: translateY(-100px) rotate(0deg); }
       100% { transform: translateY(100vh) rotate(360deg); }
     }
+    /* Music consent screen */
+    #musicConsentScreen {
+      z-index: 250;
+    }
+    #musicConsentScreen h1 {
+      color: white;
+      margin-bottom: 20px;
+      text-align: center;
+    }
     @media (max-width: 768px) {
       #leftScore, #rightScore { 
         font-size: 1.8rem; 
@@ -332,6 +343,15 @@
   </style>
 </head>
 <body>
+  <!-- Music Consent Screen -->
+  <div id="musicConsentScreen">
+    <h1>Welcome to Pong Championship!</h1>
+    <p style="color: white; margin-bottom: 20px;">Would you like to enable music and sound effects?</p>
+    <button class="btn-championship" onclick="enableAudio(true)">Yes, with music</button>
+    <button class="btn-championship" onclick="enableAudio(false)">No, just sound effects</button>
+    <button class="btn-championship" onclick="enableAudio(null)">No sound at all</button>
+  </div>
+
   <div id="gameContainer">
     <canvas id="pongCanvas"></canvas>
     
@@ -396,7 +416,7 @@
     </div>
 
     <!-- Title Screen -->
-    <div id="titleScreen">
+    <div id="titleScreen" style="display: none;">
       <h1>🏆 PONG ROUND OF 16 🏆</h1>
       <h2>First Match</h2>
       <button class="btn-championship" onclick="startGame(false)">2 PLAYERS</button>
@@ -523,6 +543,7 @@
     const leftDpadDown = document.getElementById('leftDpadDown');
     const rightDpadUp = document.getElementById('rightDpadUp');
     const rightDpadDown = document.getElementById('rightDpadDown');
+    const musicConsentScreen = document.getElementById('musicConsentScreen');
 
     // ===== GAME STATE =====
     let game = {
@@ -573,12 +594,37 @@
       socket: null,
       isHost: false,
       currentGameId: null,
-      availableGames: []
+      availableGames: [],
+      musicEnabled: null // null = no sound, false = sound effects only, true = music and sound
     };
+
+    // ===== MUSIC CONSENT =====
+    function enableAudio(withMusic) {
+      game.musicEnabled = withMusic;
+      musicConsentScreen.style.display = 'none';
+      titleScreen.style.display = 'flex';
+      
+      if (withMusic !== null) {
+        game.audioInitialized = true;
+        if (withMusic) {
+          menuMusic.volume = 0.5;
+          menuMusic.play().catch(e => console.log('Menu music play prevented:', e));
+        }
+        game.isMuted = false;
+        muteBtn.textContent = "🔊";
+      } else {
+        game.isMuted = true;
+        muteBtn.textContent = "🔇";
+      }
+    }
 
     // ===== SOCKET.IO INITIALIZATION =====
     function initializeSocketIO() {
-      game.socket = io('https://pong-championship-server.onrender.com'); // Replace with your server URL
+      // Use local server for testing to avoid CORS issues
+      game.socket = io('http://localhost:3000', {
+        transports: ['websocket'], // Force WebSocket to avoid CORS with polling
+        withCredentials: true
+      });
       
       game.socket.on('connect', () => {
         console.log('Connected to server');
@@ -744,7 +790,7 @@
     function announceCommentary(text, important = false) {
       commentaryEl.textContent = text;
       
-      if (!game.isMuted) {
+      if (!game.isMuted && game.musicEnabled !== null) {
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.rate = 0.9;
         utterance.pitch = 1.2;
@@ -1070,26 +1116,8 @@
       dpadToggleBtn.addEventListener('click', toggleDpad);
       musicMuteBtn.addEventListener('click', toggleMusicMute);
       
-      // Set up click handlers to initialize audio
-      document.addEventListener('click', initializeAudio, { once: true });
-      document.addEventListener('touchstart', initializeAudio, { once: true });
-      
       // Start game loop
       gameLoop();
-    }
-
-    function initializeAudio() {
-      if (game.audioInitialized) return;
-      
-      game.audioInitialized = true;
-      try {
-        menuMusic.volume = 0.5;
-        menuMusic.play().catch(e => {
-          console.log('Menu music play prevented:', e);
-        });
-      } catch (e) {
-        console.log("Music error:", e);
-      }
     }
 
     // ===== CANVAS RESIZING =====
@@ -1107,8 +1135,8 @@
       
       PADDLE_HEIGHT = 150 * sizeFactor;
       FOUR_PLAYER_PADDLE_HEIGHT = 100 * sizeFactor; // Smaller paddles for 4-player mode
-      INITIAL_BALL_SPEED = 15 * sizeFactor; // Faster ball
-      FOUR_PLAYER_BALL_SPEED = 12 * sizeFactor; // Faster ball
+      INITIAL_BALL_SPEED = 15 * Math.sqrt(sizeFactor); // Scale speed with square root for better feel
+      FOUR_PLAYER_BALL_SPEED = 12 * Math.sqrt(sizeFactor); // Scale speed with square root for better feel
       
       // Ensure minimum sizes
       PADDLE_HEIGHT = Math.max(PADDLE_HEIGHT, 80);
@@ -1546,7 +1574,10 @@
         music.pause();
         music.currentTime = 0;
       });
-      menuMusic.play().catch(e => console.log("Menu music play prevented:", e));
+      
+      if (game.musicEnabled) {
+        menuMusic.play().catch(e => console.log("Menu music play prevented:", e));
+      }
       
       let winner, loser, winnerScore, loserScore;
       if (game.leftPaddle.score > game.rightPaddle.score) {
@@ -1584,6 +1615,8 @@
 
     // ===== MUTE TOGGLE =====
     function toggleMute() {
+      if (game.musicEnabled === null) return;
+      
       game.isMuted = !game.isMuted;
       muteBtn.textContent = game.isMuted ? "🔇" : "🔊";
       window.speechSynthesis.cancel();
@@ -1596,6 +1629,8 @@
     }
 
     function toggleMusicMute() {
+      if (game.musicEnabled === null || !game.musicEnabled) return;
+      
       game.isMusicMuted = !game.isMusicMuted;
       musicMuteBtn.textContent = game.isMusicMuted ? "🔇" : "🎵";
       
@@ -1622,13 +1657,17 @@
       
       if (game.isPaused) {
         game.pausedTime = Date.now();
-        gameMusic[game.currentGameMusic].pause();
+        if (game.musicEnabled) {
+          gameMusic[game.currentGameMusic].pause();
+        }
         queueCommentary("GAME PAUSED", true, true);
       } else {
         const pauseDuration = Date.now() - game.pausedTime;
         game.startTime += pauseDuration;
-        gameMusic[game.currentGameMusic].currentTime = 0;
-        gameMusic[game.currentGameMusic].play().catch(e => console.log("Music play prevented:", e));
+        if (game.musicEnabled) {
+          gameMusic[game.currentGameMusic].currentTime = 0;
+          gameMusic[game.currentGameMusic].play().catch(e => console.log("Music play prevented:", e));
+        }
         queueCommentary("GAME RESUMED", true, true);
       }
     }
@@ -1647,7 +1686,10 @@
         music.pause();
         music.currentTime = 0;
       });
-      menuMusic.play().catch(e => console.log("Music play prevented:", e));
+      
+      if (game.musicEnabled) {
+        menuMusic.play().catch(e => console.log("Music play prevented:", e));
+      }
       
       // Hide D-pad if visible
       leftDpad.style.display = 'none';
@@ -1667,7 +1709,7 @@
       function updateCountdown() {
         if (count > 0) {
           countdownEl.textContent = count;
-          if (!game.isMuted) {
+          if (!game.isMuted && game.musicEnabled !== null) {
             const utterance = new SpeechSynthesisUtterance(count.toString());
             utterance.rate = 0.8;
             utterance.pitch = 1.3;
@@ -1677,7 +1719,7 @@
         } else if (count === 0) {
           countdownEl.textContent = "GO!";
           queueCommentary(getRandomCommentary('reactions'), true, true);
-          if (!game.isMuted) {
+          if (!game.isMuted && game.musicEnabled !== null) {
             const utterance = new SpeechSynthesisUtterance("GO!");
             utterance.rate = 0.7;
             utterance.pitch = 1.5;
@@ -1692,11 +1734,13 @@
           menuMusic.pause();
           
           // Select random game music and start from beginning
-          game.currentGameMusic = Math.floor(Math.random() * gameMusic.length);
-          gameMusic[game.currentGameMusic].currentTime = 0;
-          gameMusic[game.currentGameMusic].play().catch(e => {
-            console.log("Game music error:", e);
-          });
+          if (game.musicEnabled) {
+            game.currentGameMusic = Math.floor(Math.random() * gameMusic.length);
+            gameMusic[game.currentGameMusic].currentTime = 0;
+            gameMusic[game.currentGameMusic].play().catch(e => {
+              console.log("Game music error:", e);
+            });
+          }
           startTimer();
         }
       }
