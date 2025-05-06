@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>🏆 PONG ROUND OF 16 🏆</title>
+  <title>🏆 PONG CHAMPIONSHIP 🏆</title>
   <!-- Favicon -->
   <link rel="icon" href="image1.png" type="image/png">
   <!-- Bootstrap 5 CSS -->
@@ -55,6 +55,7 @@
       color: white;
       text-shadow: 0 0 10px rgba(255,255,255,0.7);
       z-index: 30;
+      font-weight: bold;
     }
     #leftScore { left: 25%; }
     #rightScore { right: 25%; }
@@ -66,6 +67,7 @@
       font-size: 1.5rem;
       color: white;
       z-index: 30;
+      font-weight: bold;
     }
     #bonusPoints {
       position: absolute;
@@ -76,6 +78,7 @@
       font-size: 1rem;
       text-shadow: 1px 1px 2px black;
       z-index: 30;
+      font-weight: bold;
     }
     #commentary {
       position: absolute;
@@ -90,8 +93,11 @@
       text-align: center;
       font-size: 1rem;
       z-index: 30;
+      font-weight: bold;
+      border: 2px solid gold;
+      box-shadow: 0 0 15px rgba(255,215,0,0.5);
     }
-    #titleScreen, #endScreen, #lobbyScreen, #createGameScreen, #findGameScreen, #waitingScreen, #musicConsentScreen {
+    #titleScreen, #endScreen, #lobbyScreen, #createGameScreen, #findGameScreen, #waitingScreen {
       position: absolute;
       top: 0;
       left: 0;
@@ -105,27 +111,31 @@
       z-index: 100;
     }
     #titleScreen h1, #endScreen h1, #lobbyScreen h1, #createGameScreen h1, #findGameScreen h1 {
-      font-size: 2rem;
+      font-size: 2.5rem;
       color: gold;
       text-shadow: 0 0 10px rgba(255,215,0,0.7);
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
       text-align: center;
     }
     #titleScreen h2, #lobbyScreen h2 {
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       color: white;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 0 5px rgba(255,255,255,0.5);
     }
     .btn-championship {
       background: linear-gradient(45deg, #ff8a00, #e52e71);
       border: none;
-      font-size: 1rem;
-      padding: 6px 15px;
-      margin: 6px;
+      font-size: 1.2rem;
+      padding: 10px 25px;
+      margin: 10px;
       border-radius: 50px;
       color: white;
       box-shadow: 0 5px 15px rgba(0,0,0,0.3);
       transition: all 0.3s;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
     .btn-championship:hover {
       transform: scale(1.05);
@@ -143,6 +153,9 @@
       color: white;
       font-size: 1rem;
       cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     #muteButton { left: 10px; }
     #pauseButton { left: 60px; }
@@ -179,52 +192,50 @@
       color: white;
       font-size: 4rem;
       font-weight: bold;
+      text-shadow: 0 0 20px rgba(255,255,255,0.8);
     }
     #playerNameInput {
-      padding: 6px;
-      font-size: 1rem;
-      margin-bottom: 10px;
-      width: 200px;
+      padding: 10px;
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      width: 80%;
+      max-width: 300px;
       text-align: center;
       border-radius: 20px;
-      border: none;
+      border: 2px solid gold;
+      background: rgba(0,0,0,0.7);
+      color: white;
     }
     #gameList {
       width: 90%;
       max-height: 50vh;
       overflow-y: auto;
-      margin: 10px 0;
+      margin: 20px 0;
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 10px;
     }
     .game-item {
       background: rgba(255,255,255,0.1);
-      padding: 10px;
-      margin: 6px 0;
+      padding: 12px;
+      margin: 8px 0;
       border-radius: 10px;
       cursor: pointer;
       transition: all 0.3s;
-      font-size: 0.9rem;
+      font-size: 1rem;
+      color: white;
+      border: 1px solid rgba(255,255,255,0.2);
     }
     .game-item:hover {
       background: rgba(255,255,255,0.2);
-    }
-    #refreshButton {
-      position: absolute;
-      top: 10px;
-      right: 110px;
-      background: rgba(255,255,255,0.2);
-      border: none;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      color: white;
-      font-size: 1rem;
-      cursor: pointer;
+      transform: scale(1.02);
     }
     #waitingMessage {
-      font-size: 1rem;
+      font-size: 1.2rem;
       color: white;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
       text-align: center;
+      padding: 0 20px;
     }
     /* Mobile Controls - Hidden by default */
     #leftControls, #rightControls {
@@ -238,45 +249,51 @@
     #leftControls { left: 15px; }
     #rightControls { right: 15px; }
     .control-btn {
-      width: 60px;
-      height: 60px;
+      width: 70px;
+      height: 70px;
       border-radius: 50%;
       background: rgba(255,255,255,0.3);
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: 5px;
-      font-size: 1.5rem;
+      margin: 8px;
+      font-size: 1.8rem;
       color: white;
       user-select: none;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     }
     .control-btn:active {
       background: rgba(255,255,255,0.5);
+      transform: scale(0.95);
     }
     /* D-pad controls */
     .dpad {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       grid-template-rows: repeat(3, 1fr);
-      gap: 5px;
+      gap: 8px;
     }
     .dpad-btn {
-      width: 50px;
-      height: 50px;
+      width: 60px;
+      height: 60px;
       background: rgba(255,255,255,0.3);
       display: flex;
       justify-content: center;
       align-items: center;
-      border-radius: 5px;
-      font-size: 1.2rem;
+      border-radius: 10px;
+      font-size: 1.5rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+    .dpad-btn:active {
+      background: rgba(255,255,255,0.5);
     }
     .dpad-up { grid-column: 2; grid-row: 1; }
     .dpad-down { grid-column: 2; grid-row: 3; }
     /* Confetti styles */
     .confetti {
       position: absolute;
-      width: 6px;
-      height: 6px;
+      width: 8px;
+      height: 8px;
       background-color: #f00;
       border-radius: 50%;
       pointer-events: none;
@@ -286,14 +303,60 @@
       0% { transform: translateY(-100px) rotate(0deg); }
       100% { transform: translateY(100vh) rotate(360deg); }
     }
-    /* Music consent screen */
-    #musicConsentScreen {
-      z-index: 250;
+    /* Name prompt modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 300;
     }
-    #musicConsentScreen h1 {
-      color: white;
-      margin-bottom: 20px;
+    .modal-content {
+      background: linear-gradient(135deg, #1a2a6c, #b21f1f);
+      padding: 30px;
+      border-radius: 20px;
       text-align: center;
+      max-width: 90%;
+      width: 400px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.5);
+      border: 3px solid gold;
+    }
+    .modal-title {
+      color: gold;
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px rgba(255,215,0,0.7);
+    }
+    .modal-input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      border: 2px solid gold;
+      font-size: 1.2rem;
+      text-align: center;
+      background: rgba(0,0,0,0.7);
+      color: white;
+    }
+    .modal-btn {
+      padding: 10px 25px;
+      margin: 0 10px;
+      border-radius: 50px;
+      border: none;
+      background: gold;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .modal-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(255,215,0,0.7);
     }
     @media (max-width: 768px) {
       #leftScore, #rightScore { 
@@ -305,13 +368,13 @@
       #timer { font-size: 1.2rem; top: 15px; }
       #bonusPoints { font-size: 0.9rem; top: 50px; }
       #commentary { font-size: 0.9rem; padding: 5px 10px; bottom: 15px; }
-      .btn-championship { font-size: 0.9rem; padding: 5px 12px; }
-      #titleScreen h1, #lobbyScreen h1 { font-size: 1.8rem; }
+      .btn-championship { font-size: 1rem; padding: 8px 20px; }
+      #titleScreen h1, #lobbyScreen h1 { font-size: 2rem; }
       #titleScreen h2, #lobbyScreen h2 { font-size: 1.3rem; }
-      #playerNameInput { width: 180px; font-size: 0.9rem; }
-      .game-item { font-size: 0.8rem; padding: 8px; }
-      .control-btn { width: 55px; height: 55px; font-size: 1.3rem; }
-      #muteButton, #pauseButton, #fullscreenButton, #dpadToggle, #musicMuteButton, #refreshButton {
+      #playerNameInput { width: 80%; font-size: 1rem; }
+      .game-item { font-size: 0.9rem; padding: 10px; }
+      .control-btn { width: 60px; height: 60px; font-size: 1.5rem; }
+      #muteButton, #pauseButton, #fullscreenButton, #dpadToggle, #musicMuteButton {
         width: 35px;
         height: 35px;
         font-size: 0.9rem;
@@ -321,37 +384,34 @@
       #fullscreenButton { left: 85px; }
       #dpadToggle { right: 5px; }
       #musicMuteButton { right: 45px; }
-      #refreshButton { right: 85px; }
+      .dpad-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 1.2rem;
+      }
+      .modal-content {
+        width: 90%;
+        padding: 20px;
+      }
+      .modal-title {
+        font-size: 1.5rem;
+      }
+    }
+    @media (max-height: 500px) {
+      #titleScreen h1, #lobbyScreen h1 { font-size: 1.5rem; }
+      #titleScreen h2, #lobbyScreen h2 { font-size: 1.1rem; }
+      .btn-championship { font-size: 0.8rem; padding: 6px 15px; }
+      #leftControls, #rightControls { bottom: 10px; }
+      .control-btn { width: 50px; height: 50px; font-size: 1.3rem; }
       .dpad-btn {
         width: 40px;
         height: 40px;
         font-size: 1rem;
       }
     }
-    @media (max-height: 500px) {
-      #titleScreen h1, #lobbyScreen h1 { font-size: 1.5rem; }
-      #titleScreen h2, #lobbyScreen h2 { font-size: 1.1rem; }
-      .btn-championship { font-size: 0.8rem; padding: 4px 10px; }
-      #leftControls, #rightControls { bottom: 15px; }
-      .control-btn { width: 45px; height: 45px; font-size: 1.1rem; }
-      .dpad-btn {
-        width: 35px;
-        height: 35px;
-        font-size: 0.9rem;
-      }
-    }
   </style>
 </head>
 <body>
-  <!-- Music Consent Screen -->
-  <div id="musicConsentScreen">
-    <h1>Welcome to Pong Championship!</h1>
-    <p style="color: white; margin-bottom: 20px;">Would you like to enable music and sound effects?</p>
-    <button class="btn-championship" onclick="enableAudio(true)">Yes, with music</button>
-    <button class="btn-championship" onclick="enableAudio(false)">No, just sound effects</button>
-    <button class="btn-championship" onclick="enableAudio(null)">No sound at all</button>
-  </div>
-
   <div id="gameContainer">
     <canvas id="pongCanvas"></canvas>
     
@@ -369,7 +429,7 @@
     <div id="rightScore">0</div>
     <div id="timer">2:00.000</div>
     <div id="bonusPoints"></div>
-    <div id="commentary">WELCOME TO THE PONG ROUND OF 16!</div>
+    <div id="commentary">WELCOME TO THE PONG CHAMPIONSHIP!</div>
     <button id="muteButton">🔊</button>
     <button id="pauseButton">⏸️</button>
     <button id="fullscreenButton">⛶</button>
@@ -416,45 +476,12 @@
     </div>
 
     <!-- Title Screen -->
-    <div id="titleScreen" style="display: none;">
-      <h1>🏆 PONG ROUND OF 16 🏆</h1>
-      <h2>First Match</h2>
-      <button class="btn-championship" onclick="startGame(false)">2 PLAYERS</button>
-      <button class="btn-championship" onclick="startGame(true)">4 PLAYERS</button>
-      <button class="btn-championship" onclick="showLobbyScreen()">ONLINE PLAY</button>
-    </div>
-
-    <!-- Lobby Screen -->
-    <div id="lobbyScreen" style="display: none;">
-      <h1>ONLINE MULTIPLAYER</h1>
-      <h2>Select an option</h2>
-      <button class="btn-championship" onclick="showCreateGameScreen()">CREATE A GAME</button>
-      <button class="btn-championship" onclick="showFindGameScreen()">FIND A GAME</button>
-      <button class="btn-championship" onclick="returnToTitleScreen()">BACK</button>
-    </div>
-
-    <!-- Create Game Screen -->
-    <div id="createGameScreen" style="display: none;">
-      <h1>CREATE GAME</h1>
-      <input type="text" id="hostNameInput" placeholder="Enter your team name" maxlength="20">
-      <button class="btn-championship" onclick="createGame()">START GAME</button>
-      <button class="btn-championship" onclick="cancelCreateGame()">CANCEL</button>
-    </div>
-
-    <!-- Find Game Screen -->
-    <div id="findGameScreen" style="display: none;">
-      <h1>FIND GAME</h1>
-      <input type="text" id="playerNameInput" placeholder="Enter your team name" maxlength="20">
-      <div id="gameList"></div>
-      <button id="refreshButton" onclick="refreshGameList()">🔄</button>
-      <button class="btn-championship" onclick="returnToLobbyScreen()">BACK</button>
-    </div>
-
-    <!-- Waiting Screen -->
-    <div id="waitingScreen" style="display: none;">
-      <h1>WAITING FOR PLAYER</h1>
-      <div id="waitingMessage">Share this code with your friend: <span id="gameCode"></span></div>
-      <button class="btn-championship" onclick="cancelWaiting()">CANCEL</button>
+    <div id="titleScreen">
+      <h1>🏆 PONG CHAMPIONSHIP 🏆</h1>
+      <h2>CHOOSE YOUR GAME MODE</h2>
+      <button class="btn-championship" onclick="showNamePrompt(false)">2 PLAYERS</button>
+      <button class="btn-championship" onclick="showNamePrompt(true)">4 PLAYERS</button>
+      <button class="btn-championship" onclick="startLocalMultiplayer()">LOCAL MULTIPLAYER</button>
     </div>
 
     <!-- End Screen -->
@@ -478,10 +505,18 @@
     </div>
   </div>
 
+  <!-- Name Prompt Modal -->
+  <div id="namePrompt" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-title">ENTER TEAM NAMES</div>
+      <input type="text" id="leftPlayerName" class="modal-input" placeholder="Left Team Name" maxlength="20">
+      <input type="text" id="rightPlayerName" class="modal-input" placeholder="Right Team Name" maxlength="20">
+      <button class="modal-btn" onclick="submitNames()">START GAME</button>
+    </div>
+  </div>
+
   <!-- Bootstrap JS + Popper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- Socket.io for real-time multiplayer -->
-  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 
   <script>
     // ===== GAME CONSTANTS =====
@@ -493,8 +528,8 @@
     let FOUR_PLAYER_BALL_SPEED = 12; // Increased ball speed
     const PADDLE_SPEED = 12;
     const WINNING_SCORE = 10;
-    const GAME_TIME = 100; // 2 minutes in seconds
-    const OVERTIME_TIME = 20; // 30 seconds overtime
+    const GAME_TIME = 120; // 2 minutes in seconds
+    const OVERTIME_TIME = 30; // 30 seconds overtime
     const canvas = document.getElementById('pongCanvas');
     const ctx = canvas.getContext('2d');
     const leftScoreEl = document.getElementById('leftScore');
@@ -513,15 +548,16 @@
     const endScreen = document.getElementById('endScreen');
     const endMessage = document.getElementById('endMessage');
     const endScreenBtn = document.getElementById('endScreenBtn');
-    const lobbyScreen = document.getElementById('lobbyScreen');
-    const createGameScreen = document.getElementById('createGameScreen');
-    const findGameScreen = document.getElementById('findGameScreen');
-    const waitingScreen = document.getElementById('waitingScreen');
-    const hostNameInput = document.getElementById('hostNameInput');
-    const playerNameInput = document.getElementById('playerNameInput');
-    const gameList = document.getElementById('gameList');
-    const gameCodeEl = document.getElementById('gameCode');
-    const waitingMessage = document.getElementById('waitingMessage');
+    const upBtnLeft = document.getElementById('upBtnLeft');
+    const downBtnLeft = document.getElementById('downBtnLeft');
+    const upBtnRight = document.getElementById('upBtnRight');
+    const downBtnRight = document.getElementById('downBtnRight');
+    const leftDpad = document.getElementById('leftDpad');
+    const rightDpad = document.getElementById('rightDpad');
+    const leftDpadUp = document.getElementById('leftDpadUp');
+    const leftDpadDown = document.getElementById('leftDpadDown');
+    const rightDpadUp = document.getElementById('rightDpadUp');
+    const rightDpadDown = document.getElementById('rightDpadDown');
     const menuMusic = document.getElementById('menuMusic');
     const gameMusic = [
       document.getElementById('gameMusic1'),
@@ -533,17 +569,9 @@
       document.getElementById('gameMusic7'),
       document.getElementById('gameMusic8')
     ];
-    const upBtnLeft = document.getElementById('upBtnLeft');
-    const downBtnLeft = document.getElementById('downBtnLeft');
-    const upBtnRight = document.getElementById('upBtnRight');
-    const downBtnRight = document.getElementById('downBtnRight');
-    const leftDpad = document.getElementById('leftDpad');
-    const rightDpad = document.getElementById('rightDpad');
-    const leftDpadUp = document.getElementById('leftDpadUp');
-    const leftDpadDown = document.getElementById('leftDpadDown');
-    const rightDpadUp = document.getElementById('rightDpadUp');
-    const rightDpadDown = document.getElementById('rightDpadDown');
-    const musicConsentScreen = document.getElementById('musicConsentScreen');
+    const namePrompt = document.getElementById('namePrompt');
+    const leftPlayerNameInput = document.getElementById('leftPlayerName');
+    const rightPlayerNameInput = document.getElementById('rightPlayerName');
 
     // ===== GAME STATE =====
     let game = {
@@ -572,7 +600,7 @@
       startTime: 0,
       elapsedPausedTime: 0,
       pausedTime: 0,
-      tournamentRound: "Round of 16",
+      tournamentRound: "Championship",
       commentaryQueue: [],
       isSpeaking: false,
       hasAnnounced30: false,
@@ -586,160 +614,72 @@
         rightUp: false,
         rightDown: false
       },
-      isOnlineGame: false,
-      playerPosition: null, // 'left' or 'right'
-      audioInitialized: false,
       currentGameMusic: 0,
       dpadEnabled: false,
-      socket: null,
-      isHost: false,
-      currentGameId: null,
-      availableGames: [],
-      musicEnabled: null // null = no sound, false = sound effects only, true = music and sound
+      musicEnabled: true,
+      isLocalMultiplayer: false
     };
-
-    // ===== MUSIC CONSENT =====
-    function enableAudio(withMusic) {
-      game.musicEnabled = withMusic;
-      musicConsentScreen.style.display = 'none';
-      titleScreen.style.display = 'flex';
-      
-      if (withMusic !== null) {
-        game.audioInitialized = true;
-        if (withMusic) {
-          menuMusic.volume = 0.5;
-          menuMusic.play().catch(e => console.log('Menu music play prevented:', e));
-        }
-        game.isMuted = false;
-        muteBtn.textContent = "🔊";
-      } else {
-        game.isMuted = true;
-        muteBtn.textContent = "🔇";
-      }
-    }
-
-    // ===== SOCKET.IO INITIALIZATION =====
-    function initializeSocketIO() {
-      // Use local server for testing to avoid CORS issues
-      game.socket = io('http://localhost:3000', {
-        transports: ['websocket'], // Force WebSocket to avoid CORS with polling
-        withCredentials: true
-      });
-      
-      game.socket.on('connect', () => {
-        console.log('Connected to server');
-      });
-      
-      game.socket.on('disconnect', () => {
-        console.log('Disconnected from server');
-        if (game.gameStarted) {
-          queueCommentary("Connection lost!", true, true);
-          endGame();
-        }
-      });
-      
-      game.socket.on('gameCreated', (gameId) => {
-        game.currentGameId = gameId;
-        gameCodeEl.textContent = gameId;
-        waitingMessage.textContent = `Share this code with your friend: ${gameId}`;
-      });
-      
-      game.socket.on('gameList', (games) => {
-        game.availableGames = games;
-        updateGameList();
-      });
-      
-      game.socket.on('gameStart', (data) => {
-        game.rightPlayer = data.rightPlayer || "OPPONENT";
-        game.playerPosition = 'right';
-        startOnlineGame();
-      });
-      
-      game.socket.on('paddleMove', (data) => {
-        if (game.playerPosition === 'left') {
-          game.rightPaddle.y = data.y;
-        } else {
-          game.leftPaddle.y = data.y;
-        }
-      });
-      
-      game.socket.on('ballUpdate', (data) => {
-        game.ball = data.ball;
-      });
-      
-      game.socket.on('scoreUpdate', (data) => {
-        game.leftPaddle.score = data.leftScore;
-        game.rightPaddle.score = data.rightScore;
-        leftScoreEl.textContent = game.leftPaddle.score;
-        rightScoreEl.textContent = game.rightPaddle.score;
-      });
-      
-      game.socket.on('timerUpdate', (data) => {
-        game.remainingTime = data.remainingTime;
-        game.startTime = Date.now() - (GAME_TIME * 1000 - data.remainingTime * 1000);
-      });
-      
-      game.socket.on('gameEnd', () => {
-        endGame();
-      });
-    }
 
     // ===== ENHANCED COMMENTARY SYSTEM =====
     const commentaryPhrases = {
       introductions: [
-        "Ladies and gentlemen, welcome to the Pong Championship Finals!",
-        "The moment we've all been waiting for - the Pong Championship!",
-        "This is it! The ultimate Pong battle is about to begin!"
+        "LADIES AND GENTLEMEN! WELCOME TO THE PONG CHAMPIONSHIP FINALS!",
+        "THE MOMENT WE'VE ALL BEEN WAITING FOR - THE PONG WORLD CHAMPIONSHIP!",
+        "THIS IS IT! THE ULTIMATE PONG BATTLE FOR THE CHAMPIONSHIP TITLE!"
       ],
       playerIntroductions: [
-        "On the left, the formidable {leftPlayer}! On the right, the incredible {rightPlayer}!",
-        "Two legends enter the arena today: {leftPlayer} versus {rightPlayer}!",
-        "Let's meet our gladiators! In the blue corner, {leftPlayer}! In the red corner, {rightPlayer}!"
+        "IN THE BLUE CORNER, THE FORMIDABLE {leftPlayer}! IN THE RED CORNER, THE INCREDIBLE {rightPlayer}!",
+        "TWO LEGENDS ENTER THE ARENA TODAY: {leftPlayer} VERSUS {rightPlayer}!",
+        "LET'S MEET OUR GLADIATORS! ON THE LEFT, {leftPlayer}! ON THE RIGHT, {rightPlayer}!"
       ],
       countdown: [
-        "The tension is unbearable! The match begins in...",
-        "The crowd is on their feet! Starting in...",
-        "History will be made here today! Beginning in..."
+        "THE TENSION IS UNBEARABLE! THE CHAMPIONSHIP MATCH BEGINS IN...",
+        "THE CROWD IS ON THEIR FEET! THE TITLE MATCH STARTS IN...",
+        "HISTORY WILL BE MADE HERE TODAY! THE CHAMPIONSHIP BEGINS IN..."
       ],
       scores: [
-        "INCREDIBLE! Point to {player}!",
-        "WHAT A SHOT! {player} scores!",
-        "UNBELIEVABLE! {player} takes the point!"
+        "INCREDIBLE SHOT! POINT TO {player}!",
+        "WHAT A PLAY! {player} SCORES!",
+        "UNBELIEVABLE! {player} TAKES THE POINT!",
+        "MAGNIFICENT! {player} WINS THE POINT!"
       ],
       deuce: [
-        "WE'RE AT DEUCE! BONUS POINT ACTIVATED! NEXT POINT WINS!",
-        "IT'S ALL TIED UP! SUDDEN DEATH POINT!",
-        "THE TENSION IS PALPABLE! DEUCE! NEXT POINT TAKES IT ALL!"
+        "WE'RE AT DEUCE! BONUS POINT ACTIVATED! NEXT POINT WINS THE CHAMPIONSHIP!",
+        "IT'S ALL TIED UP! SUDDEN DEATH POINT FOR THE TITLE!",
+        "THE TENSION IS PALPABLE! DEUCE! NEXT POINT TAKES THE CHAMPIONSHIP!"
       ],
       matchPoint: [
-        "THIS IS IT! MATCH POINT FOR {player}!",
+        "THIS IS IT! CHAMPIONSHIP POINT FOR {player}!",
         "{player} IS ONE POINT AWAY FROM GLORY!",
-        "CAN {player} CLINCH THE CHAMPIONSHIP HERE?"
+        "CAN {player} CLINCH THE CHAMPIONSHIP HERE?",
+        "THE CROWD IS SILENT! CHAMPIONSHIP POINT FOR {player}!"
       ],
       timeWarnings: [
-        "ONLY 30 SECONDS REMAINING! THE CLOCK IS TICKING!",
-        "THE SANDS OF TIME ARE RUNNING OUT! 30 SECONDS LEFT!",
+        "ONLY 30 SECONDS REMAINING IN THE CHAMPIONSHIP MATCH! THE CLOCK IS TICKING!",
+        "THE SANDS OF TIME ARE RUNNING OUT! 30 SECONDS LEFT IN THE TITLE MATCH!",
         "THE FINAL COUNTDOWN! 30 SECONDS TO DECIDE THE CHAMPION!"
       ],
       overtime: [
-        "WE'RE GOING TO OVERTIME! NEXT POINT WINS!",
+        "WE'RE GOING TO OVERTIME IN THE CHAMPIONSHIP! NEXT POINT WINS THE TITLE!",
         "SUDDEN DEATH OVERTIME! THE CROWD IS GOING WILD!",
-        "IT'S ALL COME DOWN TO THIS! OVERTIME!"
+        "IT'S ALL COME DOWN TO THIS! OVERTIME IN THE CHAMPIONSHIP MATCH!"
       ],
       victories: [
-        "WHAT A PERFORMANCE! {player} IS THE CHAMPION!",
-        "ABSOLUTELY DOMINANT! {player} TAKES THE TITLE!",
-        "HISTORY HAS BEEN MADE! {player} WINS THE CHAMPIONSHIP!"
+        "WHAT A PERFORMANCE! {player} IS THE PONG CHAMPION!",
+        "ABSOLUTELY DOMINANT! {player} TAKES THE CHAMPIONSHIP TITLE!",
+        "HISTORY HAS BEEN MADE! {player} WINS THE WORLD CHAMPIONSHIP!",
+        "THE CROWD ERUPTS! {player} IS CROWNED CHAMPION!"
       ],
       specialMoves: [
-        "OH MY GOODNESS! WHAT A SHOT!",
-        "INCREDIBLE! DID YOU SEE THAT?",
-        "UNBELIEVABLE PLAY! THE CROWD IS IN A FRENZY!"
+        "OH MY GOODNESS! WHAT AN INCREDIBLE SHOT!",
+        "INCREDIBLE! DID YOU SEE THAT CHAMPIONSHIP-LEVEL PLAY?",
+        "UNBELIEVABLE PLAY! THE CROWD IS IN A FRENZY!",
+        "THAT WAS CHAMPIONSHIP-LEVEL SKILL RIGHT THERE!"
       ],
       betweenPoints: [
-        "THE TENSION COULD CUT A KNIFE! WHO WILL TAKE CONTROL?",
-        "THIS MATCH IS HEATING UP! THE NEXT POINT IS CRUCIAL!",
-        "EVERY POINT MATTERS IN THIS EPIC BATTLE!"
+        "THE TENSION COULD CUT A KNIFE! WHO WILL TAKE CONTROL OF THIS CHAMPIONSHIP MATCH?",
+        "THIS CHAMPIONSHIP MATCH IS HEATING UP! THE NEXT POINT IS CRUCIAL!",
+        "EVERY POINT MATTERS IN THIS EPIC CHAMPIONSHIP BATTLE!"
       ],
       reactions: [
         "WOW!",
@@ -750,8 +690,8 @@
       ],
       crowdChants: [
         "THE CROWD IS CHANTING {player}'S NAME!",
-        "THE STADIUM IS ROCKING!",
-        "THE FANS ARE GOING WILD!"
+        "THE STADIUM IS ROCKING WITH EXCITEMENT!",
+        "THE FANS ARE GOING WILD FOR THIS CHAMPIONSHIP MATCH!"
       ]
     };
 
@@ -790,7 +730,7 @@
     function announceCommentary(text, important = false) {
       commentaryEl.textContent = text;
       
-      if (!game.isMuted && game.musicEnabled !== null) {
+      if (!game.isMuted && game.musicEnabled) {
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.rate = 0.9;
         utterance.pitch = 1.2;
@@ -957,144 +897,42 @@
       }
     });
 
-    // ===== ONLINE GAME FUNCTIONS =====
-    function showLobbyScreen() {
-      titleScreen.style.display = 'none';
-      lobbyScreen.style.display = 'flex';
-      initializeSocketIO();
+    // ===== NAME PROMPT =====
+    function showNamePrompt(fourPlayerMode) {
+      game.isFourPlayer = fourPlayerMode;
+      namePrompt.style.display = 'flex';
+      leftPlayerNameInput.focus();
     }
 
-    function returnToLobbyScreen() {
-      createGameScreen.style.display = 'none';
-      findGameScreen.style.display = 'none';
-      lobbyScreen.style.display = 'flex';
-    }
-
-    function returnToTitleScreen() {
-      lobbyScreen.style.display = 'none';
-      titleScreen.style.display = 'flex';
-      if (game.socket) game.socket.disconnect();
-      game.socket = null;
-    }
-
-    function showCreateGameScreen() {
-      lobbyScreen.style.display = 'none';
-      createGameScreen.style.display = 'flex';
-      hostNameInput.focus();
-    }
-
-    function cancelCreateGame() {
-      createGameScreen.style.display = 'none';
-      lobbyScreen.style.display = 'flex';
-    }
-
-    function showFindGameScreen() {
-      lobbyScreen.style.display = 'none';
-      findGameScreen.style.display = 'flex';
-      playerNameInput.focus();
-      refreshGameList();
-    }
-
-    function createGame() {
-      const playerName = hostNameInput.value.trim();
-      if (!playerName) {
-        alert("Please enter your team name");
-        return;
-      }
+    function submitNames() {
+      const leftName = leftPlayerNameInput.value.trim() || "TEAM ONE";
+      const rightName = rightPlayerNameInput.value.trim() || "TEAM TWO";
       
-      game.isHost = true;
-      game.leftPlayer = playerName;
-      game.rightPlayer = "Waiting...";
+      game.leftPlayer = leftName;
+      game.rightPlayer = rightName;
       
-      game.socket.emit('createGame', {
-        playerName: playerName
-      });
-      
-      createGameScreen.style.display = 'none';
-      waitingScreen.style.display = 'flex';
+      namePrompt.style.display = 'none';
+      startGame();
     }
 
-    function updateGameList() {
-      gameList.innerHTML = '';
-      
-      if (game.availableGames.length === 0) {
-        gameList.innerHTML = '<div style="color: white; text-align: center;">No games found. Try refreshing.</div>';
-      } else {
-        game.availableGames.forEach(gameInfo => {
-          const gameItem = document.createElement('div');
-          gameItem.className = 'game-item';
-          gameItem.innerHTML = `
-            <div><strong>${gameInfo.name}</strong></div>
-            <div>Code: ${gameInfo.id}</div>
-          `;
-          gameItem.onclick = () => joinGame(gameInfo.id);
-          gameList.appendChild(gameItem);
-        });
-      }
-    }
-
-    function refreshGameList() {
-      gameList.innerHTML = '<div style="color: white; text-align: center;">Searching for games...</div>';
-      game.socket.emit('requestGameList');
-    }
-
-    function joinGame(gameId) {
-      const playerName = playerNameInput.value.trim();
-      if (!playerName) {
-        alert("Please enter your team name");
-        return;
-      }
-      
-      game.rightPlayer = playerName;
-      game.socket.emit('joinGame', {
-        gameId: gameId,
-        playerName: playerName
-      });
-      
-      findGameScreen.style.display = 'none';
-    }
-
-    function cancelWaiting() {
-      if (game.isHost) {
-        game.socket.emit('cancelGame', game.currentGameId);
-      }
-      waitingScreen.style.display = 'none';
-      lobbyScreen.style.display = 'flex';
-    }
-
-    function startOnlineGame() {
-      game.isOnlineGame = true;
+    // ===== LOCAL MULTIPLAYER =====
+    function startLocalMultiplayer() {
+      game.isLocalMultiplayer = true;
       game.isFourPlayer = false;
       
-      titleScreen.style.display = "none";
-      endScreen.style.display = "none";
-      pauseScreen.style.display = "none";
-      waitingScreen.style.display = "none";
+      // Set default names for local multiplayer
+      game.leftPlayer = "PLAYER 1";
+      game.rightPlayer = "PLAYER 2";
       
-      // Show D-pad for both players if enabled
-      if (window.innerWidth <= 768) {
-        leftDpad.style.display = game.dpadEnabled ? 'block' : 'none';
-        rightDpad.style.display = game.dpadEnabled ? 'block' : 'none';
-      }
-      
-      resetBall();
-      resetPaddles();
-      
-      leftScoreEl.textContent = "0";
-      rightScoreEl.textContent = "0";
-      timerEl.textContent = "2:00.000";
-      
-      // Tournament introductions
-      queueCommentary(`In this online championship match: ${game.leftPlayer} vs ${game.rightPlayer}!`, true, true);
-      setTimeout(() => {
-        queueCommentary("The online tournament match is about to begin!", true);
-      }, 3000);
-      
-      startCountdown();
+      startGame();
     }
 
     // ===== GAME INITIALIZATION =====
     function initGame() {
+      // Start menu music
+      menuMusic.volume = 0.5;
+      menuMusic.play().catch(e => console.log('Menu music play prevented:', e));
+      
       // Set up responsive design
       handleResize();
       window.addEventListener('resize', handleResize);
@@ -1194,10 +1032,6 @@
       updatePaddles();
       checkCollisions();
 
-      if (game.isOnlineGame && game.gameStarted && !game.isPaused) {
-        sendPaddlePosition();
-      }
-
       requestAnimationFrame(gameLoop);
     }
 
@@ -1213,21 +1047,22 @@
 
       // Keyboard controls - fixed for fullscreen on iPad with keyboard
       if (!game.isFourPlayer) {
-        if (game.isOnlineGame) {
-          if (game.playerPosition === 'left') {
-            if (game.keysPressed['w'] || game.keysPressed['W']) game.leftPaddle.y -= PADDLE_SPEED;
-            if (game.keysPressed['s'] || game.keysPressed['S']) game.leftPaddle.y += PADDLE_SPEED;
-          } else {
-            if (game.keysPressed['ArrowUp']) game.rightPaddle.y -= PADDLE_SPEED;
-            if (game.keysPressed['ArrowDown']) game.rightPaddle.y += PADDLE_SPEED;
-          }
+        if (game.isLocalMultiplayer) {
+          // Player 1: W/S keys
+          if (game.keysPressed['w'] || game.keysPressed['W']) game.leftPaddle.y -= PADDLE_SPEED;
+          if (game.keysPressed['s'] || game.keysPressed['S']) game.leftPaddle.y += PADDLE_SPEED;
+          // Player 2: Arrow Up/Down keys
+          if (game.keysPressed['ArrowUp']) game.rightPaddle.y -= PADDLE_SPEED;
+          if (game.keysPressed['ArrowDown']) game.rightPaddle.y += PADDLE_SPEED;
         } else {
+          // Single player controls (both paddles can be controlled)
           if (game.keysPressed['w'] || game.keysPressed['W']) game.leftPaddle.y -= PADDLE_SPEED;
           if (game.keysPressed['s'] || game.keysPressed['S']) game.leftPaddle.y += PADDLE_SPEED;
           if (game.keysPressed['ArrowUp']) game.rightPaddle.y -= PADDLE_SPEED;
           if (game.keysPressed['ArrowDown']) game.rightPaddle.y += PADDLE_SPEED;
         }
       } else {
+        // 4-player mode controls
         if (game.keysPressed['w'] || game.keysPressed['W']) game.leftTopPaddle.y -= PADDLE_SPEED;
         if (game.keysPressed['s'] || game.keysPressed['S']) game.leftTopPaddle.y += PADDLE_SPEED;
         if (game.keysPressed['q'] || game.keysPressed['Q']) game.leftBottomPaddle.y -= PADDLE_SPEED;
@@ -1324,14 +1159,8 @@
     function updateBall() {
       if (game.isPaused) return;
       
-      if (!game.isOnlineGame || game.isHost) {
-        game.ball.x += game.ball.dx;
-        game.ball.y += game.ball.dy;
-        
-        if (game.isOnlineGame && game.isHost) {
-          game.socket.emit('ballUpdate', game.ball);
-        }
-      }
+      game.ball.x += game.ball.dx;
+      game.ball.y += game.ball.dy;
 
       if (game.ball.y - BALL_RADIUS < 0 || game.ball.y + BALL_RADIUS > canvas.height) {
         game.ball.dy = -game.ball.dy;
@@ -1390,36 +1219,18 @@
         }
       }
       
-      if (!game.isOnlineGame || game.isHost) {
-        if (game.ball.x - BALL_RADIUS < 0) {
-          game.rightPaddle.score++;
-          rightScoreEl.textContent = game.rightPaddle.score;
-          game.lastScorer = game.rightPlayer;
-          
-          if (game.isOnlineGame) {
-            game.socket.emit('scoreUpdate', {
-              leftScore: game.leftPaddle.score,
-              rightScore: game.rightPaddle.score
-            });
-          }
-          
-          handleScore();
-        }
+      if (game.ball.x - BALL_RADIUS < 0) {
+        game.rightPaddle.score++;
+        rightScoreEl.textContent = game.rightPaddle.score;
+        game.lastScorer = game.rightPlayer;
+        handleScore();
+      }
 
-        if (game.ball.x + BALL_RADIUS > canvas.width) {
-          game.leftPaddle.score++;
-          leftScoreEl.textContent = game.leftPaddle.score;
-          game.lastScorer = game.leftPlayer;
-          
-          if (game.isOnlineGame) {
-            game.socket.emit('scoreUpdate', {
-              leftScore: game.leftPaddle.score,
-              rightScore: game.rightPaddle.score
-            });
-          }
-          
-          handleScore();
-        }
+      if (game.ball.x + BALL_RADIUS > canvas.width) {
+        game.leftPaddle.score++;
+        leftScoreEl.textContent = game.leftPaddle.score;
+        game.lastScorer = game.leftPlayer;
+        handleScore();
       }
 
       if (game.leftPaddle.score >= 5 && game.rightPaddle.score >= 5 && 
@@ -1456,9 +1267,6 @@
       }
 
       if (game.leftPaddle.score >= winningThreshold || game.rightPaddle.score >= winningThreshold) {
-        if (game.isOnlineGame && game.isHost) {
-          game.socket.emit('gameEnd');
-        }
         endGame();
         return;
       }
@@ -1492,12 +1300,6 @@
         
         timerEl.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}.${milliseconds < 100 ? (milliseconds < 10 ? '00' : '0') : ''}${milliseconds}`;
         
-        if (game.isOnlineGame && game.isHost) {
-          game.socket.emit('timerUpdate', {
-            remainingTime: remaining / 1000
-          });
-        }
-        
         if (remaining <= 30000 && !game.hasAnnounced30) {
           game.hasAnnounced30 = true;
           queueCommentary(getRandomCommentary('timeWarnings'), true, true);
@@ -1527,9 +1329,6 @@
         queueCommentary(getRandomCommentary('overtime'), true, true);
         startTimer();
       } else {
-        if (game.isOnlineGame && game.isHost) {
-          game.socket.emit('gameEnd');
-        }
         endGame();
       }
     }
@@ -1599,24 +1398,15 @@
       leftDpad.style.display = 'none';
       rightDpad.style.display = 'none';
       
-      // For online games, only show "Return to Menu" button
-      if (game.isOnlineGame) {
-        endScreenBtn.textContent = "RETURN TO MENU";
-      } else {
-        endScreenBtn.textContent = "RETURN TO MENU";
-      }
-      
       createConfetti();
       
       queueCommentary(`${winner} defeats ${loser} ${winnerScore}-${loserScore}!`, true, true);
       queueCommentary(getRandomCommentary('victories').replace(/{player}/g, winner), true);
-      queueCommentary("What an incredible tournament match we've witnessed today!", true);
+      queueCommentary("What an incredible championship match we've witnessed today!", true);
     }
 
     // ===== MUTE TOGGLE =====
     function toggleMute() {
-      if (game.musicEnabled === null) return;
-      
       game.isMuted = !game.isMuted;
       muteBtn.textContent = game.isMuted ? "🔇" : "🔊";
       window.speechSynthesis.cancel();
@@ -1629,8 +1419,6 @@
     }
 
     function toggleMusicMute() {
-      if (game.musicEnabled === null || !game.musicEnabled) return;
-      
       game.isMusicMuted = !game.isMusicMuted;
       musicMuteBtn.textContent = game.isMusicMuted ? "🔇" : "🎵";
       
@@ -1679,7 +1467,7 @@
       titleScreen.style.display = "flex";
       clearInterval(game.timerInterval);
       game.gameStarted = false;
-      game.isOnlineGame = false;
+      game.isLocalMultiplayer = false;
       
       // Stop all game music and play menu music
       gameMusic.forEach(music => {
@@ -1695,9 +1483,6 @@
       leftDpad.style.display = 'none';
       rightDpad.style.display = 'none';
       
-      if (game.socket) game.socket.disconnect();
-      game.socket = null;
-      
       queueCommentary("RETURNING TO MENU", true, true);
     }
 
@@ -1709,7 +1494,7 @@
       function updateCountdown() {
         if (count > 0) {
           countdownEl.textContent = count;
-          if (!game.isMuted && game.musicEnabled !== null) {
+          if (!game.isMuted && game.musicEnabled) {
             const utterance = new SpeechSynthesisUtterance(count.toString());
             utterance.rate = 0.8;
             utterance.pitch = 1.3;
@@ -1719,7 +1504,7 @@
         } else if (count === 0) {
           countdownEl.textContent = "GO!";
           queueCommentary(getRandomCommentary('reactions'), true, true);
-          if (!game.isMuted && game.musicEnabled !== null) {
+          if (!game.isMuted && game.musicEnabled) {
             const utterance = new SpeechSynthesisUtterance("GO!");
             utterance.rate = 0.7;
             utterance.pitch = 1.5;
@@ -1750,10 +1535,8 @@
     }
 
     // ===== START/RESTART GAME =====
-    function startGame(fourPlayerMode) {
-      game.isFourPlayer = fourPlayerMode;
+    function startGame() {
       game.isPaused = false;
-      game.isOnlineGame = false;
       game.leftPaddle.score = 0;
       game.rightPaddle.score = 0;
       game.remainingTime = GAME_TIME;
@@ -1766,9 +1549,6 @@
       bonusPointsEl.textContent = "";
       game.ball.speed = game.isFourPlayer ? FOUR_PLAYER_BALL_SPEED : INITIAL_BALL_SPEED;
 
-      game.leftPlayer = prompt("Left Team's Name:", "TEAM ONE") || "TEAM ONE";
-      game.rightPlayer = prompt("Right Team's Name:", "TEAM TWO") || "TEAM TWO";
-
       titleScreen.style.display = "none";
       endScreen.style.display = "none";
       pauseScreen.style.display = "none";
@@ -1778,6 +1558,12 @@
       leftScoreEl.textContent = "0";
       rightScoreEl.textContent = "0";
       timerEl.textContent = "2:00.000";
+      
+      // Show D-pad for both players if enabled
+      if (window.innerWidth <= 768) {
+        leftDpad.style.display = game.dpadEnabled ? 'block' : 'none';
+        rightDpad.style.display = game.dpadEnabled ? 'block' : 'none';
+      }
       
       // Enhanced tournament introductions
       queueCommentary(getRandomCommentary('introductions'), true, true);
@@ -1808,13 +1594,6 @@
       document.addEventListener('keyup', (e) => {
         game.keysPressed[e.key] = false;
       });
-    }
-
-    function sendPaddlePosition() {
-      if (game.socket && game.gameStarted && !game.isPaused) {
-        const y = game.playerPosition === 'left' ? game.leftPaddle.y : game.rightPaddle.y;
-        game.socket.emit('paddleMove', { y: y });
-      }
     }
 
     // ===== INITIALIZE GAME =====
