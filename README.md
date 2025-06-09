@@ -6,4 +6,4 @@ _____________________________________________________
 
 Pong Championship is a remastered version and future version of the original Pong which dates all the way back to 1972, the video game was a massive success which sold a whopping 2 million units from 1972 to 1980 both Home and Arcade editions
 
-If you want to play this game on your web browser, the url link is pongchampionship.github.io/pongchampionship
+If you want to play this game on your web browser, the url link is pongchampionship.github.io/pongchampionshipbeta/
