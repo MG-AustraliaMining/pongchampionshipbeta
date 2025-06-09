@@ -8,7 +8,7 @@
   <style>
     :root {
       --paddle-width: 15px;
-      --ball-radius: 10px;
+      --ball-radius: 8px;
       --paddle-speed: 10;
       --initial-ball-speed: 6;
       --four-player-ball-speed: 8;
@@ -38,9 +38,6 @@
       width: 100vw;
       height: 100vh;
       overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
     
     canvas {
@@ -51,10 +48,7 @@
       touch-action: none;
       width: 100%;
       height: 100%;
-      max-width: 1000px;
-      max-height: 600px;
-      border-radius: 10px;
-      box-shadow: 0 0 30px rgba(0,0,0,0.7);
+      border-radius: 0;
     }
     
     @keyframes gradientBG {
@@ -101,7 +95,7 @@
     
     #commentary {
       position: absolute;
-      bottom: 20px;
+      bottom: 100px;
       left: 50%;
       transform: translateX(-50%);
       background: rgba(0,0,0,0.7);
@@ -304,6 +298,81 @@
       box-shadow: 0 0 15px rgba(255,215,0,0.7);
     }
     
+    /* Power-up styles */
+    .power-up {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      z-index: 20;
+      animation: float 2s ease-in-out infinite;
+      display: none;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .power-up-effect {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 25;
+    }
+    
+    #powerUpBar {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+      height: 10px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 5px;
+      overflow: hidden;
+      display: none;
+    }
+    
+    #powerUpProgress {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ff00ff, #00ffff);
+      transition: width 0.1s linear;
+    }
+    
+    #countdown {
+      font-size: 8rem;
+      font-weight: bold;
+      color: gold;
+      text-shadow: 0 0 20px rgba(255,215,0,0.8);
+      animation: pulse 0.5s infinite alternate;
+    }
+    
+    @keyframes pulse {
+      from { transform: scale(1); opacity: 1; }
+      to { transform: scale(1.2); opacity: 0.8; }
+    }
+    
+    #goText {
+      font-size: 8rem;
+      font-weight: bold;
+      color: gold;
+      text-shadow: 0 0 20px rgba(255,215,0,0.8);
+      animation: goPulse 0.3s infinite alternate, fadeOut 1s 1s forwards;
+      display: none;
+    }
+    
+    @keyframes goPulse {
+      from { transform: scale(1); text-shadow: 0 0 20px rgba(255,215,0,0.8); }
+      to { transform: scale(1.3); text-shadow: 0 0 40px rgba(255,215,0,1); }
+    }
+    
+    @keyframes fadeOut {
+      to { opacity: 0; }
+    }
+    
     @media (max-width: 768px) {
       .score { 
         font-size: 1.8rem; 
@@ -313,7 +382,7 @@
       #rightScore { right: 20%; }
       #timer { font-size: 1.2rem; top: 15px; }
       #bonusPoints { font-size: 0.9rem; top: 50px; }
-      #commentary { font-size: 0.9rem; padding: 5px 10px; bottom: 15px; }
+      #commentary { font-size: 0.9rem; padding: 5px 10px; bottom: 80px; }
       .btn-championship { font-size: 1rem; padding: 8px 20px; }
       .control-btn {
         width: 35px;
@@ -337,6 +406,9 @@
       .modal-title {
         font-size: 1.5rem;
       }
+      #countdown, #goText {
+        font-size: 5rem;
+      }
     }
     
     @media (max-height: 500px) {
@@ -344,6 +416,10 @@
       .btn-championship { font-size: 0.8rem; padding: 6px 15px; }
       #mobileControls { bottom: 10px; }
       .mobile-btn { width: 50px; height: 50px; font-size: 1.3rem; }
+      #commentary { bottom: 60px; }
+      #countdown, #goText {
+        font-size: 3rem;
+      }
     }
   </style>
 </head>
@@ -375,6 +451,7 @@
     </div>
 
     <div id="countdown" class="screen"></div>
+    <div id="goText" class="screen">GO!</div>
 
     <div id="pauseScreen" class="screen">
       <h1>GAME PAUSED</h1>
@@ -384,14 +461,27 @@
 
     <div id="titleScreen" class="screen">
       <h1>🏆 PONG CHAMPIONSHIP 🏆</h1>
+      <button class="btn-championship" onclick="startLocalMultiplayer()">2 PLAYERS</button>
       <button class="btn-championship" onclick="showNamePrompt(false)">1 PLAYER VS BOT</button>
       <button class="btn-championship" onclick="showNamePrompt(true)">4 PLAYERS</button>
-      <button class="btn-championship" onclick="startLocalMultiplayer()">2 PLAYERS</button>
     </div>
 
     <div id="endScreen" class="screen" style="display: none;">
       <h1 id="endMessage" style="color: gold; font-size: 1.5rem;"></h1>
       <button class="btn-championship" id="endScreenBtn" onclick="returnToMenu()">RETURN TO MENU</button>
+    </div>
+
+    <!-- Power-up elements -->
+    <div id="powerUp1" class="power-up"></div>
+    <div id="powerUp2" class="power-up"></div>
+    <div id="powerUp3" class="power-up"></div>
+    
+    <!-- Power-up effect elements -->
+    <div id="powerUpEffect" class="power-up-effect"></div>
+    
+    <!-- Power-up duration bar -->
+    <div id="powerUpBar">
+      <div id="powerUpProgress"></div>
     </div>
   </div>
 
@@ -404,26 +494,118 @@
     </div>
   </div>
 
+  <audio id="backgroundMusic" loop></audio>
+  <audio id="paddleSound"></audio>
+  <audio id="scoreSound"></audio>
+  <audio id="powerUpSound"></audio>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     // Game Constants
     const PADDLE_HEIGHT_RATIO = 0.2;
     const FOUR_PLAYER_PADDLE_HEIGHT_RATIO = 0.15;
-    const BALL_RADIUS_RATIO = 0.02;
-    const INITIAL_BALL_SPEED = 16;
-    const FOUR_PLAYER_BALL_SPEED = 9;
+    const BALL_RADIUS_RATIO = 0.015;
+    const INITIAL_BALL_SPEED = 8;
+    const FOUR_PLAYER_BALL_SPEED = 6;
     const PADDLE_SPEED = 10;
     const WINNING_SCORE = 10;
     const GAME_TIME = 120;
     const OVERTIME_TIME = 15;
     
+    // Power-up types
+    const POWER_UP_TYPES = {
+      WIDE_PADDLE: { 
+        name: 'WIDE PADDLE', 
+        color: '#00ff00', 
+        duration: 10000,
+        apply: function(paddle) {
+          paddle.originalWidth = game.paddleWidth;
+          game.paddleWidth = game.paddleWidth * 2;
+        },
+        remove: function(paddle) {
+          game.paddleWidth = paddle.originalWidth;
+        }
+      },
+      FAST_BALL: { 
+        name: 'FAST BALL', 
+        color: '#ff0000', 
+        duration: 8000,
+        apply: function() {
+          game.ball.originalSpeed = game.ball.speed;
+          game.ball.speed = game.ball.speed * 1.8;
+          game.ball.dx = game.ball.dx > 0 ? game.ball.speed : -game.ball.speed;
+          game.ball.dy = game.ball.dy > 0 ? game.ball.speed * (Math.abs(game.ball.dy)/game.ball.speed) : 
+                                           -game.ball.speed * (Math.abs(game.ball.dy)/game.ball.speed);
+        },
+        remove: function() {
+          game.ball.speed = game.ball.originalSpeed;
+          game.ball.dx = game.ball.dx > 0 ? game.ball.speed : -game.ball.speed;
+          game.ball.dy = game.ball.dy > 0 ? game.ball.speed * (Math.abs(game.ball.dy)/game.ball.speed) : 
+                                           -game.ball.speed * (Math.abs(game.ball.dy)/game.ball.speed);
+        }
+      },
+      MULTI_BALL: { 
+        name: 'MULTI BALL', 
+        color: '#ffff00', 
+        duration: 12000,
+        apply: function() {
+          // Create extra balls
+          for (let i = 0; i < 2; i++) {
+            const extraBall = {
+              x: canvas.width / 2,
+              y: canvas.height / 2,
+              dx: Math.random() > 0.5 ? game.ball.speed : -game.ball.speed,
+              dy: (Math.random() * 2 - 1) * game.ball.speed,
+              speed: game.ball.speed,
+              radius: game.ballRadius
+            };
+            game.extraBalls.push(extraBall);
+          }
+        },
+        remove: function() {
+          game.extraBalls = [];
+        }
+      },
+      SLOW_PADDLE: { 
+        name: 'SLOW PADDLE', 
+        color: '#0000ff', 
+        duration: 10000,
+        target: 'opponent',
+        apply: function(paddle) {
+          paddle.originalSpeed = PADDLE_SPEED;
+          PADDLE_SPEED = PADDLE_SPEED * 0.5;
+        },
+        remove: function(paddle) {
+          PADDLE_SPEED = paddle.originalSpeed;
+        }
+      }
+    };
+    
     // Game Elements
     const canvas = document.getElementById('pongCanvas');
     const ctx = canvas.getContext('2d');
     
+    // Audio Elements
+    const backgroundMusic = document.getElementById('backgroundMusic');
+    const paddleSound = document.getElementById('paddleSound');
+    const scoreSound = document.getElementById('scoreSound');
+    const powerUpSound = document.getElementById('powerUpSound');
+    
+    // Music tracks
+    const MUSIC_TRACKS = [
+      'music2.mp3',
+      'music3.mp3',
+      'music4.mp3',
+      'music5.mp3',
+      'music6.mp3',
+      'music7.mp3',
+      'music8.mp3',
+      'music9.mp3'
+    ];
+    
     // Game State
     const game = {
-      ball: { x: 0, y: 0, dx: 0, dy: 0, speed: INITIAL_BALL_SPEED },
+      ball: { x: 0, y: 0, dx: 0, dy: 0, speed: INITIAL_BALL_SPEED, originalSpeed: INITIAL_BALL_SPEED },
       leftPaddle: { y: 0, score: 0 },
       rightPaddle: { y: 0, score: 0 },
       leftTopPaddle: { y: 0 },
@@ -465,7 +647,13 @@
       paddleWidth: 0,
       paddleHeight: 0,
       fourPlayerPaddleHeight: 0,
-      ballRadius: 0
+      ballRadius: 0,
+      extraBalls: [],
+      powerUps: [],
+      activePowerUps: [],
+      lastPowerUpTime: 0,
+      powerUpSpawnInterval: 15000,
+      currentMusicTrack: null
     };
 
     // Commentary phrases
@@ -488,6 +676,17 @@
       "This is what we came to see!"
     ];
 
+    // Power-up commentary
+    const powerUpCommentary = [
+      "Power-up activated! Game changer!",
+      "Special ability unlocked!",
+      "Whoa! That's a game changer!",
+      "The game just got more interesting!",
+      "Power-up in play! Things are heating up!",
+      "That's going to shake things up!",
+      "Special move! This could turn the tide!"
+    ];
+
     // Initialize Game
     function initGame() {
       resizeCanvas();
@@ -495,11 +694,7 @@
       setupMobileControls();
       setupKeyboardControls();
       setupControlButtons();
-      
-      // Start with random music if music is enabled
-      if (!game.isMusicMuted) {
-        playRandomMusic();
-      }
+      loadAudioFiles();
       
       // Start the game loop
       gameLoop();
@@ -507,28 +702,15 @@
 
     // Setup functions
     function resizeCanvas() {
-      // Set canvas dimensions based on window size with max constraints
-      const maxWidth = 1000;
-      const maxHeight = 600;
-      const aspectRatio = maxWidth / maxHeight;
-      
-      let width = window.innerWidth;
-      let height = window.innerHeight;
-      
-      if (width / height > aspectRatio) {
-        width = height * aspectRatio;
-      } else {
-        height = width / aspectRatio;
-      }
-      
-      canvas.width = width;
-      canvas.height = height;
+      // Set canvas to full window size
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
       
       // Calculate dynamic sizes based on canvas dimensions
-      game.paddleWidth = Math.max(10, width * 0.015);
-      game.paddleHeight = height * PADDLE_HEIGHT_RATIO;
-      game.fourPlayerPaddleHeight = height * FOUR_PLAYER_PADDLE_HEIGHT_RATIO;
-      game.ballRadius = Math.max(8, width * BALL_RADIUS_RATIO);
+      game.paddleWidth = Math.max(10, canvas.width * 0.015);
+      game.paddleHeight = canvas.height * PADDLE_HEIGHT_RATIO;
+      game.fourPlayerPaddleHeight = canvas.height * FOUR_PLAYER_PADDLE_HEIGHT_RATIO;
+      game.ballRadius = Math.max(6, canvas.width * BALL_RADIUS_RATIO);
       
       // Reset game elements if game is already started
       if (game.gameStarted) {
@@ -672,6 +854,30 @@
       document.getElementById('musicMuteButton').addEventListener('click', toggleMusicMute);
     }
 
+    function loadAudioFiles() {
+      // Preload sound effects
+      paddleSound.src = 'paddle.wav';
+      scoreSound.src = 'score.wav';
+      powerUpSound.src = 'powerup.wav';
+      
+      // Load random music track
+      playRandomMusic();
+    }
+
+    function playRandomMusic() {
+      if (game.isMusicMuted) return;
+      
+      const randomTrack = MUSIC_TRACKS[Math.floor(Math.random() * MUSIC_TRACKS.length)];
+      backgroundMusic.src = randomTrack;
+      backgroundMusic.volume = 0.3;
+      backgroundMusic.play().catch(e => console.log("Audio play error:", e));
+      
+      // When music ends, play another random track
+      backgroundMusic.onended = function() {
+        playRandomMusic();
+      };
+    }
+
     // Game control functions
     function toggleMobileControls() {
       const mobileControls = document.getElementById('mobileControls');
@@ -697,8 +903,13 @@
       game.ball.x = canvas.width / 2;
       game.ball.y = canvas.height / 2;
       game.ball.speed = game.isFourPlayer ? FOUR_PLAYER_BALL_SPEED : INITIAL_BALL_SPEED;
-      game.ball.dx = Math.random() > 0.5 ? game.ball.speed : -game.ball.speed;
-      game.ball.dy = (Math.random() * 2 - 1) * game.ball.speed;
+      game.ball.dx = Math.random() > 0.5 ? game.ball.speed * 0.5 : -game.ball.speed * 0.5; // Start slower after score
+      game.ball.dy = (Math.random() * 2 - 1) * game.ball.speed * 0.5;
+      
+      // Reset speed to normal after first hit
+      setTimeout(() => {
+        game.ball.speed = game.isFourPlayer ? FOUR_PLAYER_BALL_SPEED : INITIAL_BALL_SPEED;
+      }, 1000);
     }
 
     function resetPaddles() {
@@ -730,6 +941,130 @@
       }
     }
 
+    // Power-up functions
+    function spawnPowerUp() {
+      if (!game.gameStarted || game.isPaused || Date.now() - game.lastPowerUpTime < game.powerUpSpawnInterval) {
+        return;
+      }
+      
+      // Don't spawn if there are already 3 power-ups on screen
+      if (game.powerUps.length >= 3) {
+        return;
+      }
+      
+      const powerUpTypes = Object.values(POWER_UP_TYPES);
+      const randomType = powerUpTypes[Math.floor(Math.random() * powerUpTypes.length)];
+      
+      const powerUp = {
+        x: Math.random() * (canvas.width - 100) + 50,
+        y: Math.random() * (canvas.height - 100) + 50,
+        type: randomType,
+        element: document.getElementById(`powerUp${game.powerUps.length + 1}`),
+        collected: false
+      };
+      
+      // Style the power-up element
+      powerUp.element.style.left = `${powerUp.x - 15}px`;
+      powerUp.element.style.top = `${powerUp.y - 15}px`;
+      powerUp.element.style.backgroundColor = randomType.color;
+      powerUp.element.style.display = 'block';
+      powerUp.element.style.boxShadow = `0 0 15px ${randomType.color}`;
+      
+      game.powerUps.push(powerUp);
+      game.lastPowerUpTime = Date.now();
+    }
+
+    function checkPowerUpCollisions() {
+      for (let i = 0; i < game.powerUps.length; i++) {
+        const powerUp = game.powerUps[i];
+        
+        // Check if ball collides with power-up
+        const dx = game.ball.x - powerUp.x;
+        const dy = game.ball.y - powerUp.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        if (distance < game.ballRadius + 15 && !powerUp.collected) {
+          collectPowerUp(powerUp, i);
+        }
+      }
+    }
+
+    function collectPowerUp(powerUp, index) {
+      powerUp.collected = true;
+      powerUp.element.style.display = 'none';
+      
+      // Play power-up sound
+      if (!game.isMuted) {
+        powerUpSound.play().catch(e => console.log("Audio play error:", e));
+      }
+      
+      // Apply power-up effect
+      const powerUpEffect = {
+        type: powerUp.type,
+        startTime: Date.now(),
+        endTime: Date.now() + powerUp.type.duration,
+        target: game.ball.x < canvas.width / 2 ? 'left' : 'right'
+      };
+      
+      game.activePowerUps.push(powerUpEffect);
+      
+      // Show power-up bar
+      document.getElementById('powerUpBar').style.display = 'block';
+      
+      // Apply the power-up effect
+      applyPowerUpEffect(powerUpEffect);
+      
+      // Remove from power-ups array
+      game.powerUps.splice(index, 1);
+      
+      // Queue commentary
+      queueCommentary(`${powerUpEffect.target === 'left' ? game.leftPlayer : game.rightPlayer} GOT ${powerUp.type.name}! ${powerUpCommentary[Math.floor(Math.random() * powerUpCommentary.length)]}`, true);
+    }
+
+    function applyPowerUpEffect(powerUpEffect) {
+      const paddle = powerUpEffect.target === 'left' ? game.leftPaddle : game.rightPaddle;
+      powerUpEffect.type.apply(paddle);
+    }
+
+    function removePowerUpEffect(powerUpEffect) {
+      const paddle = powerUpEffect.target === 'left' ? game.leftPaddle : game.rightPaddle;
+      powerUpEffect.type.remove(paddle);
+    }
+
+    function updatePowerUps() {
+      const now = Date.now();
+      
+      // Spawn new power-ups
+      if (now - game.lastPowerUpTime > game.powerUpSpawnInterval) {
+        spawnPowerUp();
+      }
+      
+      // Update active power-ups
+      for (let i = 0; i < game.activePowerUps.length; i++) {
+        const powerUp = game.activePowerUps[i];
+        
+        // Update power-up bar
+        if (i === 0) { // Only show the first power-up in the bar
+          const remaining = powerUp.endTime - now;
+          const progress = (remaining / powerUp.type.duration) * 100;
+          document.getElementById('powerUpProgress').style.width = `${progress}%`;
+          document.getElementById('powerUpProgress').style.background = powerUp.type.color;
+        }
+        
+        // Remove expired power-ups
+        if (now >= powerUp.endTime) {
+          removePowerUpEffect(powerUp);
+          game.activePowerUps.splice(i, 1);
+          i--;
+          
+          // Hide power-up bar if no more active power-ups
+          if (game.activePowerUps.length === 0) {
+            document.getElementById('powerUpBar').style.display = 'none';
+          }
+        }
+      }
+    }
+
     // Drawing functions
     function drawPaddles() {
       ctx.fillStyle = 'white';
@@ -747,10 +1082,19 @@
     }
 
     function drawBall() {
+      // Draw main ball
       ctx.beginPath();
       ctx.arc(game.ball.x, game.ball.y, game.ballRadius, 0, Math.PI * 2);
       ctx.fillStyle = 'white';
       ctx.fill();
+      
+      // Draw extra balls if multi-ball power-up is active
+      for (const extraBall of game.extraBalls) {
+        ctx.beginPath();
+        ctx.arc(extraBall.x, extraBall.y, extraBall.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'yellow';
+        ctx.fill();
+      }
     }
 
     function drawNet() {
@@ -762,6 +1106,34 @@
       ctx.lineWidth = 2;
       ctx.stroke();
       ctx.setLineDash([]);
+    }
+
+    function drawPowerUps() {
+      for (const powerUp of game.powerUps) {
+        if (!powerUp.collected) {
+          ctx.beginPath();
+          ctx.arc(powerUp.x, powerUp.y, 15, 0, Math.PI * 2);
+          ctx.fillStyle = powerUp.type.color;
+          ctx.fill();
+          ctx.strokeStyle = 'white';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+          
+          // Draw power-up icon
+          ctx.fillStyle = 'white';
+          ctx.font = 'bold 16px Arial';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          
+          let symbol = '?';
+          if (powerUp.type.name === 'WIDE PADDLE') symbol = '⇆';
+          else if (powerUp.type.name === 'FAST BALL') symbol = '⚡';
+          else if (powerUp.type.name === 'MULTI BALL') symbol = '✖';
+          else if (powerUp.type.name === 'SLOW PADDLE') symbol = '🐢';
+          
+          ctx.fillText(symbol, powerUp.x, powerUp.y);
+        }
+      }
     }
 
     // Game loop functions
@@ -776,10 +1148,13 @@
       drawPaddles();
       drawBall();
       drawNet();
+      drawPowerUps();
 
       updateBall();
       updatePaddles();
       checkCollisions();
+      updatePowerUps();
+      checkPowerUpCollisions();
 
       requestAnimationFrame(gameLoop);
     }
@@ -787,12 +1162,31 @@
     function updateBall() {
       if (game.isPaused) return;
       
+      // Update main ball
       game.ball.x += game.ball.dx;
       game.ball.y += game.ball.dy;
 
       // Ball collision with top and bottom
       if (game.ball.y - game.ballRadius < 0 || game.ball.y + game.ballRadius > canvas.height) {
         game.ball.dy = -game.ball.dy;
+      }
+      
+      // Update extra balls
+      for (let i = 0; i < game.extraBalls.length; i++) {
+        const ball = game.extraBalls[i];
+        ball.x += ball.dx;
+        ball.y += ball.dy;
+        
+        // Extra ball collision with top and bottom
+        if (ball.y - ball.radius < 0 || ball.y + ball.radius > canvas.height) {
+          ball.dy = -ball.dy;
+        }
+        
+        // Extra ball out of bounds - remove it
+        if (ball.x - ball.radius < 0 || ball.x + ball.radius > canvas.width) {
+          game.extraBalls.splice(i, 1);
+          i--;
+        }
       }
     }
 
@@ -854,7 +1248,6 @@
           const angle = getBallAngle(game.leftPaddle.y, game.ball.y, paddleHeight);
           game.ball.dx = Math.abs(Math.cos(angle)) * game.ball.speed;
           game.ball.dy = Math.sin(angle) * game.ball.speed;
-          game.ball.speed *= 1.05;
           game.lastScorer = game.leftPlayer;
           playPaddleSound();
         }
@@ -866,7 +1259,6 @@
           const angle = getBallAngle(game.rightPaddle.y, game.ball.y, paddleHeight);
           game.ball.dx = -Math.abs(Math.cos(angle)) * game.ball.speed;
           game.ball.dy = Math.sin(angle) * game.ball.speed;
-          game.ball.speed *= 1.05;
           game.lastScorer = game.rightPlayer;
           playPaddleSound();
         }
@@ -880,7 +1272,6 @@
             const angle = getBallAngle(paddle.y, game.ball.y, paddleHeight);
             game.ball.dx = Math.abs(Math.cos(angle)) * game.ball.speed;
             game.ball.dy = Math.sin(angle) * game.ball.speed;
-            game.ball.speed *= 1.05;
             game.lastScorer = game.leftPlayer;
             playPaddleSound();
           }
@@ -894,10 +1285,32 @@
             const angle = getBallAngle(paddle.y, game.ball.y, paddleHeight);
             game.ball.dx = -Math.abs(Math.cos(angle)) * game.ball.speed;
             game.ball.dy = Math.sin(angle) * game.ball.speed;
-            game.ball.speed *= 1.05;
             game.lastScorer = game.rightPlayer;
             playPaddleSound();
           }
+        }
+      }
+      
+      // Check collisions for extra balls
+      for (const extraBall of game.extraBalls) {
+        // Left paddle collision
+        if (extraBall.x - extraBall.radius < 20 + game.paddleWidth &&
+            extraBall.y > game.leftPaddle.y &&
+            extraBall.y < game.leftPaddle.y + paddleHeight) {
+          const angle = getBallAngle(game.leftPaddle.y, extraBall.y, paddleHeight);
+          extraBall.dx = Math.abs(Math.cos(angle)) * extraBall.speed;
+          extraBall.dy = Math.sin(angle) * extraBall.speed;
+          playPaddleSound();
+        }
+        
+        // Right paddle collision
+        if (extraBall.x + extraBall.radius > canvas.width - 20 - game.paddleWidth &&
+            extraBall.y > game.rightPaddle.y &&
+            extraBall.y < game.rightPaddle.y + paddleHeight) {
+          const angle = getBallAngle(game.rightPaddle.y, extraBall.y, paddleHeight);
+          extraBall.dx = -Math.abs(Math.cos(angle)) * extraBall.speed;
+          extraBall.dy = Math.sin(angle) * extraBall.speed;
+          playPaddleSound();
         }
       }
       
@@ -940,6 +1353,11 @@
       if (game.betweenPointsTimeout) {
         clearTimeout(game.betweenPointsTimeout);
         game.betweenPointsTimeout = null;
+      }
+
+      // Play score sound
+      if (!game.isMuted) {
+        scoreSound.play().catch(e => console.log("Audio play error:", e));
       }
 
       if (checkForSpecialMove()) {
@@ -987,25 +1405,7 @@
     function playPaddleSound() {
       if (game.isMuted) return;
       
-      // Create a simple sound effect using the Web Audio API
-      try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-        
-        oscillator.type = 'square';
-        oscillator.frequency.value = 200 + Math.random() * 200;
-        gainNode.gain.value = 0.1;
-        
-        oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-        
-        oscillator.start();
-        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
-        oscillator.stop(audioCtx.currentTime + 0.1);
-      } catch (e) {
-        console.log("Audio error:", e);
-      }
+      paddleSound.play().catch(e => console.log("Audio play error:", e));
     }
 
     // Game management functions
@@ -1045,7 +1445,11 @@
       game.commentaryQueue = [];
       game.hasAnnounced30 = false;
       game.hasAnnounced10 = false;
+      game.powerUps = [];
+      game.activePowerUps = [];
+      game.extraBalls = [];
       document.getElementById('bonusPoints').textContent = "";
+      document.getElementById('powerUpBar').style.display = "none";
       
       document.getElementById('titleScreen').style.display = "none";
       document.getElementById('endScreen').style.display = "none";
@@ -1066,6 +1470,7 @@
     function startCountdown() {
       let count = 3;
       document.getElementById('countdown').style.display = "flex";
+      document.getElementById('goText').style.display = "none";
       
       function updateCountdown() {
         if (count > 0) {
@@ -1078,7 +1483,8 @@
           }
           count--;
         } else if (count === 0) {
-          document.getElementById('countdown').textContent = "GO!";
+          document.getElementById('countdown').style.display = "none";
+          document.getElementById('goText').style.display = "flex";
           if (!game.isMuted) {
             const utterance = new SpeechSynthesisUtterance("GO!");
             utterance.rate = 0.7;
@@ -1088,7 +1494,7 @@
           count--;
         } else {
           clearInterval(game.countdownInterval);
-          document.getElementById('countdown').style.display = "none";
+          document.getElementById('goText').style.display = "none";
           game.gameStarted = true;
           game.startTime = Date.now();
           
@@ -1201,37 +1607,6 @@
       game.isSpeaking = true;
     }
 
-    function playRandomMusic() {
-      // Simple music implementation - in a real game you'd use actual music files
-      if (game.isMusicMuted) return;
-      
-      try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-        
-        oscillator.type = 'sine';
-        oscillator.frequency.value = 220;
-        gainNode.gain.value = 0.05;
-        
-        oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-        
-        oscillator.start();
-        
-        // Return a simple object to represent the music
-        return {
-          stop: () => {
-            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
-            oscillator.stop(audioCtx.currentTime + 0.5);
-          }
-        };
-      } catch (e) {
-        console.log("Music error:", e);
-        return { stop: () => {} };
-      }
-    }
-
     function createConfetti() {
       const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffffff'];
       
@@ -1305,14 +1680,10 @@
       document.getElementById('musicMuteButton').textContent = game.isMusicMuted ? "🔇" : "🎵";
       
       if (game.isMusicMuted) {
-        // Stop any playing music
-        if (game.currentGameMusic) {
-          game.currentGameMusic.stop();
-          game.currentGameMusic = null;
-        }
+        backgroundMusic.pause();
         queueCommentary("Music muted", true, true);
       } else {
-        game.currentGameMusic = playRandomMusic();
+        backgroundMusic.play().catch(e => console.log("Audio play error:", e));
         queueCommentary("Music unmuted", true, true);
       }
     }
@@ -1323,10 +1694,14 @@
       
       if (game.isPaused) {
         game.pausedTime = Date.now();
+        backgroundMusic.pause();
         queueCommentary("GAME PAUSED", true, true);
       } else {
         const pauseDuration = Date.now() - game.pausedTime;
         game.startTime += pauseDuration;
+        if (!game.isMusicMuted) {
+          backgroundMusic.play().catch(e => console.log("Audio play error:", e));
+        }
         queueCommentary("GAME RESUMED", true, true);
       }
     }
@@ -1347,6 +1722,14 @@
         rightUp: false,
         rightDown: false
       };
+      
+      // Reset power-ups
+      game.powerUps = [];
+      game.activePowerUps = [];
+      document.getElementById('powerUpBar').style.display = "none";
+      document.getElementById('powerUp1').style.display = "none";
+      document.getElementById('powerUp2').style.display = "none";
+      document.getElementById('powerUp3').style.display = "none";
       
       queueCommentary("RETURNING TO MENU", true, true);
     }
