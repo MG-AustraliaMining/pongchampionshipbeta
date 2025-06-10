@@ -8,9 +8,9 @@
   <style>
     :root {
       --paddle-width: 15px;
-      --ball-radius: 8px;
+      --ball-radius: 6px;
       --paddle-speed: 10;
-      --initial-ball-speed: 6;
+      --initial-ball-speed: 7;
       --four-player-ball-speed: 8;
     }
     
@@ -60,11 +60,12 @@
     .score {
       position: absolute;
       top: 20px;
-      font-size: 2rem;
+      font-size: 3rem;
       color: white;
-      text-shadow: 0 0 10px rgba(255,255,255,0.7);
+      text-shadow: 0 0 15px rgba(255,255,255,0.9);
       z-index: 30;
       font-weight: bold;
+      font-family: 'Impact', sans-serif;
     }
     
     #leftScore { left: 25%; }
@@ -75,10 +76,11 @@
       top: 20px;
       left: 50%;
       transform: translateX(-50%);
-      font-size: 1.5rem;
-      color: white;
+      font-size: 1.8rem;
+      color: gold;
       z-index: 30;
       font-weight: bold;
+      text-shadow: 0 0 10px rgba(255,215,0,0.7);
     }
     
     #bonusPoints {
@@ -87,29 +89,30 @@
       left: 50%;
       transform: translateX(-50%);
       color: gold;
-      font-size: 1rem;
-      text-shadow: 1px 1px 2px black;
+      font-size: 1.2rem;
+      text-shadow: 1px 1px 3px black;
       z-index: 30;
       font-weight: bold;
     }
     
     #commentary {
       position: absolute;
-      bottom: 100px;
+      bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
       background: rgba(0,0,0,0.7);
       color: white;
-      padding: 8px 16px;
-      border-radius: 20px;
+      padding: 12px 24px;
+      border-radius: 25px;
       max-width: 90%;
       text-align: center;
-      font-size: 1rem;
+      font-size: 1.2rem;
       z-index: 30;
       font-weight: bold;
-      border: 2px solid gold;
-      box-shadow: 0 0 15px rgba(255,215,0,0.5);
+      border: 3px solid gold;
+      box-shadow: 0 0 20px rgba(255,215,0,0.7);
       transition: all 0.3s;
+      font-family: 'Arial Black', sans-serif;
     }
     
     .screen {
@@ -127,63 +130,67 @@
     }
     
     .screen h1 {
-      font-size: 2.5rem;
+      font-size: 3rem;
       color: gold;
-      text-shadow: 0 0 10px rgba(255,215,0,0.7);
-      margin-bottom: 1.5rem;
+      text-shadow: 0 0 15px rgba(255,215,0,0.9);
+      margin-bottom: 2rem;
       text-align: center;
+      font-family: 'Impact', sans-serif;
+      letter-spacing: 2px;
     }
     
     .btn-championship {
       background: linear-gradient(45deg, #ff8a00, #e52e71);
       border: none;
-      font-size: 1.2rem;
-      padding: 10px 25px;
-      margin: 10px;
+      font-size: 1.5rem;
+      padding: 15px 35px;
+      margin: 15px;
       border-radius: 50px;
       color: white;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
       transition: all 0.3s;
       font-weight: bold;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 2px;
+      font-family: 'Arial Black', sans-serif;
     }
     
     .btn-championship:hover {
-      transform: scale(1.05);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      transform: scale(1.1);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.5);
     }
     
     .control-btn {
       position: absolute;
       z-index: 40;
-      background: rgba(255,255,255,0.2);
-      border: none;
+      background: rgba(255,255,255,0.3);
+      border: 2px solid white;
       border-radius: 50%;
-      width: 40px;
-      height: 40px;
+      width: 50px;
+      height: 50px;
       color: white;
-      font-size: 1rem;
+      font-size: 1.2rem;
       cursor: pointer;
       display: flex;
       justify-content: center;
       align-items: center;
       transition: all 0.2s;
+      box-shadow: 0 0 10px rgba(255,255,255,0.5);
     }
     
     .control-btn:hover {
-      background: rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.4);
+      transform: scale(1.1);
     }
     
     .control-btn:active {
       transform: scale(0.9);
     }
     
-    #muteButton { top: 10px; left: 10px; }
-    #pauseButton { top: 10px; left: 60px; }
-    #fullscreenButton { top: 10px; left: 110px; }
-    #dpadToggle { top: 10px; right: 10px; }
-    #musicMuteButton { top: 10px; right: 60px; }
+    #muteButton { top: 20px; left: 20px; }
+    #pauseButton { top: 20px; left: 80px; }
+    #fullscreenButton { top: 20px; left: 140px; }
+    #musicMuteButton { top: 20px; right: 20px; }
     
     #pauseScreen, #countdown {
       display: none;
@@ -191,42 +198,45 @@
     
     #mobileControls {
       position: absolute;
-      bottom: 20px;
+      bottom: 30px;
       width: 100%;
       display: flex;
       justify-content: space-between;
-      padding: 0 20px;
+      padding: 0 30px;
       z-index: 20;
     }
     
     .mobile-paddle-controls {
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 20px;
     }
     
     .mobile-btn {
-      width: 70px;
-      height: 70px;
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
       background: rgba(255,255,255,0.3);
       display: flex;
       justify-content: center;
       align-items: center;
       color: white;
-      font-size: 1.5rem;
+      font-size: 2rem;
       user-select: none;
       touch-action: manipulation;
+      border: 2px solid white;
+      box-shadow: 0 0 15px rgba(255,255,255,0.5);
     }
     
     .mobile-btn:active {
       background: rgba(255,255,255,0.5);
+      transform: scale(0.95);
     }
     
     .confetti {
       position: absolute;
-      width: 8px;
-      height: 8px;
+      width: 10px;
+      height: 10px;
       background-color: #f00;
       border-radius: 50%;
       pointer-events: none;
@@ -244,7 +254,7 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0,0,0,0.8);
+      background: rgba(0,0,0,0.9);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -253,37 +263,39 @@
     
     .modal-content {
       background: linear-gradient(135deg, #1a2a6c, #b21f1f);
-      padding: 30px;
-      border-radius: 20px;
+      padding: 40px;
+      border-radius: 25px;
       text-align: center;
       max-width: 90%;
-      width: 400px;
-      box-shadow: 0 0 30px rgba(0,0,0,0.5);
-      border: 3px solid gold;
+      width: 500px;
+      box-shadow: 0 0 40px rgba(0,0,0,0.7);
+      border: 4px solid gold;
     }
     
     .modal-title {
       color: gold;
-      font-size: 1.8rem;
-      margin-bottom: 20px;
-      text-shadow: 0 0 10px rgba(255,215,0,0.7);
+      font-size: 2.2rem;
+      margin-bottom: 30px;
+      text-shadow: 0 0 15px rgba(255,215,0,0.9);
+      font-family: 'Impact', sans-serif;
     }
     
     .modal-input {
       width: 100%;
-      padding: 12px;
-      margin-bottom: 20px;
-      border-radius: 10px;
-      border: 2px solid gold;
-      font-size: 1.2rem;
+      padding: 15px;
+      margin-bottom: 25px;
+      border-radius: 15px;
+      border: 3px solid gold;
+      font-size: 1.5rem;
       text-align: center;
       background: rgba(0,0,0,0.7);
       color: white;
+      font-family: 'Arial', sans-serif;
     }
     
     .modal-btn {
-      padding: 10px 25px;
-      margin: 0 10px;
+      padding: 15px 35px;
+      margin: 0 15px;
       border-radius: 50px;
       border: none;
       background: gold;
@@ -291,82 +303,40 @@
       font-weight: bold;
       cursor: pointer;
       transition: all 0.3s;
+      font-size: 1.2rem;
+      font-family: 'Arial Black', sans-serif;
     }
     
     .modal-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 15px rgba(255,215,0,0.7);
-    }
-    
-    /* Power-up styles */
-    .power-up {
-      position: absolute;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      z-index: 20;
-      animation: float 2s ease-in-out infinite;
-      display: none;
-    }
-    
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-    
-    .power-up-effect {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 25;
-    }
-    
-    #powerUpBar {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80%;
-      height: 10px;
-      background: rgba(255,255,255,0.2);
-      border-radius: 5px;
-      overflow: hidden;
-      display: none;
-    }
-    
-    #powerUpProgress {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #ff00ff, #00ffff);
-      transition: width 0.1s linear;
+      transform: scale(1.1);
+      box-shadow: 0 0 20px rgba(255,215,0,0.9);
     }
     
     #countdown {
-      font-size: 8rem;
+      font-size: 10rem;
       font-weight: bold;
       color: gold;
-      text-shadow: 0 0 20px rgba(255,215,0,0.8);
+      text-shadow: 0 0 30px rgba(255,215,0,0.9);
       animation: pulse 0.5s infinite alternate;
     }
     
     @keyframes pulse {
       from { transform: scale(1); opacity: 1; }
-      to { transform: scale(1.2); opacity: 0.8; }
+      to { transform: scale(1.3); opacity: 0.8; }
     }
     
     #goText {
-      font-size: 8rem;
+      font-size: 10rem;
       font-weight: bold;
       color: gold;
-      text-shadow: 0 0 20px rgba(255,215,0,0.8);
+      text-shadow: 0 0 30px rgba(255,215,0,0.9);
       animation: goPulse 0.3s infinite alternate, fadeOut 1s 1s forwards;
       display: none;
     }
     
     @keyframes goPulse {
-      from { transform: scale(1); text-shadow: 0 0 20px rgba(255,215,0,0.8); }
-      to { transform: scale(1.3); text-shadow: 0 0 40px rgba(255,215,0,1); }
+      from { transform: scale(1); text-shadow: 0 0 30px rgba(255,215,0,0.9); }
+      to { transform: scale(1.5); text-shadow: 0 0 60px rgba(255,215,0,1); }
     }
     
     @keyframes fadeOut {
@@ -375,50 +345,73 @@
     
     @media (max-width: 768px) {
       .score { 
-        font-size: 1.8rem; 
+        font-size: 2.5rem; 
         top: 15px; 
       }
       #leftScore { left: 20%; }
       #rightScore { right: 20%; }
-      #timer { font-size: 1.2rem; top: 15px; }
-      #bonusPoints { font-size: 0.9rem; top: 50px; }
-      #commentary { font-size: 0.9rem; padding: 5px 10px; bottom: 80px; }
-      .btn-championship { font-size: 1rem; padding: 8px 20px; }
-      .control-btn {
-        width: 35px;
-        height: 35px;
-        font-size: 0.9rem;
+      #timer { font-size: 1.5rem; top: 15px; }
+      #bonusPoints { font-size: 1rem; top: 50px; }
+      #commentary { 
+        font-size: 1rem; 
+        padding: 10px 20px; 
+        bottom: 15px; 
+        max-width: 95%;
       }
-      #muteButton { left: 5px; }
-      #pauseButton { left: 45px; }
-      #fullscreenButton { left: 85px; }
-      #dpadToggle { right: 5px; }
-      #musicMuteButton { right: 45px; }
+      .btn-championship { 
+        font-size: 1.2rem; 
+        padding: 12px 25px; 
+        margin: 10px;
+      }
+      .control-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 1rem;
+      }
+      #muteButton { left: 10px; top: 10px; }
+      #pauseButton { left: 65px; top: 10px; }
+      #fullscreenButton { left: 120px; top: 10px; }
+      #musicMuteButton { right: 10px; top: 10px; }
       .mobile-btn {
-        width: 60px;
-        height: 60px;
-        font-size: 1.3rem;
+        width: 70px;
+        height: 70px;
+        font-size: 1.8rem;
       }
       .modal-content {
         width: 90%;
-        padding: 20px;
+        padding: 30px;
       }
       .modal-title {
-        font-size: 1.5rem;
+        font-size: 1.8rem;
+      }
+      .modal-input {
+        font-size: 1.2rem;
+        padding: 12px;
       }
       #countdown, #goText {
-        font-size: 5rem;
+        font-size: 6rem;
       }
     }
     
     @media (max-height: 500px) {
-      .screen h1 { font-size: 1.5rem; }
-      .btn-championship { font-size: 0.8rem; padding: 6px 15px; }
-      #mobileControls { bottom: 10px; }
-      .mobile-btn { width: 50px; height: 50px; font-size: 1.3rem; }
-      #commentary { bottom: 60px; }
+      .screen h1 { font-size: 2rem; }
+      .btn-championship { 
+        font-size: 1rem; 
+        padding: 10px 20px;
+        margin: 8px;
+      }
+      #mobileControls { bottom: 15px; }
+      .mobile-btn { 
+        width: 60px; 
+        height: 60px; 
+        font-size: 1.5rem;
+      }
+      #commentary { 
+        bottom: 10px;
+        font-size: 0.9rem;
+      }
       #countdown, #goText {
-        font-size: 3rem;
+        font-size: 4rem;
       }
     }
   </style>
@@ -436,7 +429,6 @@
     <button id="muteButton" class="control-btn">🔊</button>
     <button id="pauseButton" class="control-btn">⏸️</button>
     <button id="fullscreenButton" class="control-btn">⛶</button>
-    <button id="dpadToggle" class="control-btn" title="Toggle Controls">🎮</button>
     <button id="musicMuteButton" class="control-btn">🎵</button>
     
     <div id="mobileControls" style="display: none;">
@@ -461,125 +453,63 @@
 
     <div id="titleScreen" class="screen">
       <h1>🏆 PONG CHAMPIONSHIP 🏆</h1>
-      <button class="btn-championship" onclick="startLocalMultiplayer()">2 PLAYERS</button>
-      <button class="btn-championship" onclick="showNamePrompt(false)">1 PLAYER VS BOT</button>
-      <button class="btn-championship" onclick="showNamePrompt(true)">4 PLAYERS</button>
+      <button class="btn-championship" onclick="startTwoPlayerGame()">2 PLAYERS</button>
+      <button class="btn-championship" onclick="startSinglePlayerGame()">1 PLAYER VS BOT</button>
+      <button class="btn-championship" onclick="startFourPlayerGame()">4 PLAYERS</button>
     </div>
 
     <div id="endScreen" class="screen" style="display: none;">
-      <h1 id="endMessage" style="color: gold; font-size: 1.5rem;"></h1>
+      <h1 id="endMessage" style="color: gold; font-size: 2rem;"></h1>
       <button class="btn-championship" id="endScreenBtn" onclick="returnToMenu()">RETURN TO MENU</button>
-    </div>
-
-    <!-- Power-up elements -->
-    <div id="powerUp1" class="power-up"></div>
-    <div id="powerUp2" class="power-up"></div>
-    <div id="powerUp3" class="power-up"></div>
-    
-    <!-- Power-up effect elements -->
-    <div id="powerUpEffect" class="power-up-effect"></div>
-    
-    <!-- Power-up duration bar -->
-    <div id="powerUpBar">
-      <div id="powerUpProgress"></div>
     </div>
   </div>
 
-  <div id="namePrompt" class="modal-overlay" style="display: none;">
+  <div id="twoPlayerPrompt" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-title">ENTER PLAYER NAMES</div>
+      <input type="text" id="leftPlayerName" class="modal-input" placeholder="Left Player Name" maxlength="20">
+      <input type="text" id="rightPlayerName" class="modal-input" placeholder="Right Player Name" maxlength="20">
+      <button class="modal-btn" onclick="submitTwoPlayerNames()">START GAME</button>
+    </div>
+  </div>
+
+  <div id="fourPlayerPrompt" class="modal-overlay" style="display: none;">
     <div class="modal-content">
       <div class="modal-title">ENTER TEAM NAMES</div>
-      <input type="text" id="leftPlayerName" class="modal-input" placeholder="Left Team Name" maxlength="20">
-      <input type="text" id="rightPlayerName" class="modal-input" placeholder="Right Team Name" maxlength="20">
-      <button class="modal-btn" onclick="submitNames()">START GAME</button>
+      <input type="text" id="leftTeamName" class="modal-input" placeholder="Left Team Name" maxlength="20">
+      <input type="text" id="rightTeamName" class="modal-input" placeholder="Right Team Name" maxlength="20">
+      <button class="modal-btn" onclick="submitFourPlayerNames()">START GAME</button>
+    </div>
+  </div>
+
+  <div id="singlePlayerPrompt" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-title">WHAT IS YOUR NAME?</div>
+      <input type="text" id="playerName" class="modal-input" placeholder="Your Name" maxlength="20">
+      <button class="modal-btn" onclick="submitSinglePlayerName()">START GAME</button>
     </div>
   </div>
 
   <audio id="backgroundMusic" loop></audio>
   <audio id="paddleSound"></audio>
   <audio id="scoreSound"></audio>
-  <audio id="powerUpSound"></audio>
+  <audio id="scoreSound1"></audio>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     // Game Constants
     const PADDLE_HEIGHT_RATIO = 0.2;
     const FOUR_PLAYER_PADDLE_HEIGHT_RATIO = 0.15;
-    const BALL_RADIUS_RATIO = 0.015;
-    const INITIAL_BALL_SPEED = 8;
-    const FOUR_PLAYER_BALL_SPEED = 6;
+    const BALL_RADIUS_RATIO = 0.012;
+    const INITIAL_BALL_SPEED = 7;
+    const FOUR_PLAYER_BALL_SPEED = 8;
     const PADDLE_SPEED = 10;
     const WINNING_SCORE = 10;
     const GAME_TIME = 120;
     const OVERTIME_TIME = 15;
     
-    // Power-up types
-    const POWER_UP_TYPES = {
-      WIDE_PADDLE: { 
-        name: 'WIDE PADDLE', 
-        color: '#00ff00', 
-        duration: 10000,
-        apply: function(paddle) {
-          paddle.originalWidth = game.paddleWidth;
-          game.paddleWidth = game.paddleWidth * 2;
-        },
-        remove: function(paddle) {
-          game.paddleWidth = paddle.originalWidth;
-        }
-      },
-      FAST_BALL: { 
-        name: 'FAST BALL', 
-        color: '#ff0000', 
-        duration: 8000,
-        apply: function() {
-          game.ball.originalSpeed = game.ball.speed;
-          game.ball.speed = game.ball.speed * 1.8;
-          game.ball.dx = game.ball.dx > 0 ? game.ball.speed : -game.ball.speed;
-          game.ball.dy = game.ball.dy > 0 ? game.ball.speed * (Math.abs(game.ball.dy)/game.ball.speed) : 
-                                           -game.ball.speed * (Math.abs(game.ball.dy)/game.ball.speed);
-        },
-        remove: function() {
-          game.ball.speed = game.ball.originalSpeed;
-          game.ball.dx = game.ball.dx > 0 ? game.ball.speed : -game.ball.speed;
-          game.ball.dy = game.ball.dy > 0 ? game.ball.speed * (Math.abs(game.ball.dy)/game.ball.speed) : 
-                                           -game.ball.speed * (Math.abs(game.ball.dy)/game.ball.speed);
-        }
-      },
-      MULTI_BALL: { 
-        name: 'MULTI BALL', 
-        color: '#ffff00', 
-        duration: 12000,
-        apply: function() {
-          // Create extra balls
-          for (let i = 0; i < 2; i++) {
-            const extraBall = {
-              x: canvas.width / 2,
-              y: canvas.height / 2,
-              dx: Math.random() > 0.5 ? game.ball.speed : -game.ball.speed,
-              dy: (Math.random() * 2 - 1) * game.ball.speed,
-              speed: game.ball.speed,
-              radius: game.ballRadius
-            };
-            game.extraBalls.push(extraBall);
-          }
-        },
-        remove: function() {
-          game.extraBalls = [];
-        }
-      },
-      SLOW_PADDLE: { 
-        name: 'SLOW PADDLE', 
-        color: '#0000ff', 
-        duration: 10000,
-        target: 'opponent',
-        apply: function(paddle) {
-          paddle.originalSpeed = PADDLE_SPEED;
-          PADDLE_SPEED = PADDLE_SPEED * 0.5;
-        },
-        remove: function(paddle) {
-          PADDLE_SPEED = paddle.originalSpeed;
-        }
-      }
-    };
+    // Music tracks
+    const MUSIC_TRACKS = ['music1.mp3', 'music2.mp3'];
     
     // Game Elements
     const canvas = document.getElementById('pongCanvas');
@@ -589,23 +519,11 @@
     const backgroundMusic = document.getElementById('backgroundMusic');
     const paddleSound = document.getElementById('paddleSound');
     const scoreSound = document.getElementById('scoreSound');
-    const powerUpSound = document.getElementById('powerUpSound');
-    
-    // Music tracks
-    const MUSIC_TRACKS = [
-      'music2.mp3',
-      'music3.mp3',
-      'music4.mp3',
-      'music5.mp3',
-      'music6.mp3',
-      'music7.mp3',
-      'music8.mp3',
-      'music9.mp3'
-    ];
+    const scoreSound1 = document.getElementById('scoreSound1');
     
     // Game State
     const game = {
-      ball: { x: 0, y: 0, dx: 0, dy: 0, speed: INITIAL_BALL_SPEED, originalSpeed: INITIAL_BALL_SPEED },
+      ball: { x: 0, y: 0, dx: 0, dy: 0, speed: INITIAL_BALL_SPEED },
       leftPaddle: { y: 0, score: 0 },
       rightPaddle: { y: 0, score: 0 },
       leftTopPaddle: { y: 0 },
@@ -620,8 +538,8 @@
       remainingTime: GAME_TIME,
       lastScorer: null,
       matchPoint: false,
-      leftPlayer: "TEAM ONE",
-      rightPlayer: "TEAM TWO",
+      leftPlayer: "PLAYER 1",
+      rightPlayer: "PLAYER 2",
       timerInterval: null,
       countdownInterval: null,
       keysPressed: {},
@@ -648,12 +566,7 @@
       paddleHeight: 0,
       fourPlayerPaddleHeight: 0,
       ballRadius: 0,
-      extraBalls: [],
-      powerUps: [],
-      activePowerUps: [],
-      lastPowerUpTime: 0,
-      powerUpSpawnInterval: 15000,
-      currentMusicTrack: null
+      musicStarted: false
     };
 
     // Commentary phrases
@@ -673,18 +586,41 @@
       "The stakes couldn't be higher!",
       "What a display of skill!",
       "The championship is on the line!",
-      "This is what we came to see!"
-    ];
-
-    // Power-up commentary
-    const powerUpCommentary = [
-      "Power-up activated! Game changer!",
-      "Special ability unlocked!",
-      "Whoa! That's a game changer!",
-      "The game just got more interesting!",
-      "Power-up in play! Things are heating up!",
-      "That's going to shake things up!",
-      "Special move! This could turn the tide!"
+      "This is what we came to see!",
+      "The intensity is through the roof!",
+      "Absolutely breathtaking play!",
+      "The crowd can't believe their eyes!",
+      "This is edge-of-your-seat action!",
+      "The players are in the zone!",
+      "What a back-and-forth battle!",
+      "The energy in the arena is electric!",
+      "This is pong perfection!",
+      "The skill level is off the charts!",
+      "Neither player is backing down!",
+      "The determination is incredible!",
+      "This is a clash of titans!",
+      "The focus is laser-sharp!",
+      "Every point is a masterpiece!",
+      "The competition is fierce!",
+      "This is next-level pong!",
+      "The players are pushing their limits!",
+      "The crowd is on their feet!",
+      "This is a legendary match!",
+      "The speed is mind-blowing!",
+      "The precision is surgical!",
+      "This is pong at warp speed!",
+      "The reflexes are superhuman!",
+      "The crowd is losing their minds!",
+      "This is the match of the century!",
+      "The players are unstoppable!",
+      "The excitement is unbearable!",
+      "This is pong poetry in motion!",
+      "The anticipation is killing me!",
+      "The players are putting on a clinic!",
+      "This is a masterclass in competition!",
+      "The drama is intense!",
+      "The crowd is roaring with excitement!",
+      "This is pong at its absolute best!"
     ];
 
     // Initialize Game
@@ -696,8 +632,18 @@
       setupControlButtons();
       loadAudioFiles();
       
+      // Set up click event to start music
+      document.addEventListener('click', startMusicOnInteraction, { once: true });
+      
       // Start the game loop
       gameLoop();
+    }
+
+    function startMusicOnInteraction() {
+      if (!game.musicStarted) {
+        game.musicStarted = true;
+        playRandomMusic();
+      }
     }
 
     // Setup functions
@@ -710,7 +656,7 @@
       game.paddleWidth = Math.max(10, canvas.width * 0.015);
       game.paddleHeight = canvas.height * PADDLE_HEIGHT_RATIO;
       game.fourPlayerPaddleHeight = canvas.height * FOUR_PLAYER_PADDLE_HEIGHT_RATIO;
-      game.ballRadius = Math.max(6, canvas.width * BALL_RADIUS_RATIO);
+      game.ballRadius = Math.max(5, canvas.width * BALL_RADIUS_RATIO);
       
       // Reset game elements if game is already started
       if (game.gameStarted) {
@@ -757,7 +703,7 @@
       downBtnRight.addEventListener('mouseup', () => game.mobileControls.rightDown = false);
       
       // Show mobile controls on mobile devices
-      if (/Mobi|Android/i.test(navigator.userAgent)) {
+      if (/Mobi|Android/i.test(navigator.userAgent) && !game.isFourPlayer) {
         document.getElementById('mobileControls').style.display = 'flex';
       }
     }
@@ -850,22 +796,18 @@
       document.getElementById('muteButton').addEventListener('click', toggleMute);
       document.getElementById('pauseButton').addEventListener('click', togglePause);
       document.getElementById('fullscreenButton').addEventListener('click', toggleFullscreen);
-      document.getElementById('dpadToggle').addEventListener('click', toggleMobileControls);
       document.getElementById('musicMuteButton').addEventListener('click', toggleMusicMute);
     }
 
     function loadAudioFiles() {
       // Preload sound effects
       paddleSound.src = 'paddle.wav';
-      scoreSound.src = 'score.wav';
-      powerUpSound.src = 'powerup.wav';
-      
-      // Load random music track
-      playRandomMusic();
+      scoreSound.src = 'score.mp3';
+      scoreSound1.src = 'score1.mp3';
     }
 
     function playRandomMusic() {
-      if (game.isMusicMuted) return;
+      if (game.isMusicMuted || !game.musicStarted) return;
       
       const randomTrack = MUSIC_TRACKS[Math.floor(Math.random() * MUSIC_TRACKS.length)];
       backgroundMusic.src = randomTrack;
@@ -878,14 +820,15 @@
       };
     }
 
-    // Game control functions
-    function toggleMobileControls() {
-      const mobileControls = document.getElementById('mobileControls');
-      game.dpadEnabled = !game.dpadEnabled;
-      mobileControls.style.display = game.dpadEnabled ? 'flex' : 'none';
-      document.getElementById('dpadToggle').textContent = game.dpadEnabled ? '🕹️' : '🎮';
+    function playRandomScoreSound() {
+      if (game.isMuted) return;
+      
+      const sounds = [scoreSound, scoreSound1];
+      const randomSound = sounds[Math.floor(Math.random() * sounds.length)];
+      randomSound.play().catch(e => console.log("Audio play error:", e));
     }
 
+    // Game control functions
     function toggleFullscreen() {
       if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen().catch(err => {
@@ -903,8 +846,8 @@
       game.ball.x = canvas.width / 2;
       game.ball.y = canvas.height / 2;
       game.ball.speed = game.isFourPlayer ? FOUR_PLAYER_BALL_SPEED : INITIAL_BALL_SPEED;
-      game.ball.dx = Math.random() > 0.5 ? game.ball.speed * 0.5 : -game.ball.speed * 0.5; // Start slower after score
-      game.ball.dy = (Math.random() * 2 - 1) * game.ball.speed * 0.5;
+      game.ball.dx = Math.random() > 0.5 ? game.ball.speed * 0.6 : -game.ball.speed * 0.6;
+      game.ball.dy = (Math.random() * 2 - 1) * game.ball.speed * 0.6;
       
       // Reset speed to normal after first hit
       setTimeout(() => {
@@ -941,130 +884,6 @@
       }
     }
 
-    // Power-up functions
-    function spawnPowerUp() {
-      if (!game.gameStarted || game.isPaused || Date.now() - game.lastPowerUpTime < game.powerUpSpawnInterval) {
-        return;
-      }
-      
-      // Don't spawn if there are already 3 power-ups on screen
-      if (game.powerUps.length >= 3) {
-        return;
-      }
-      
-      const powerUpTypes = Object.values(POWER_UP_TYPES);
-      const randomType = powerUpTypes[Math.floor(Math.random() * powerUpTypes.length)];
-      
-      const powerUp = {
-        x: Math.random() * (canvas.width - 100) + 50,
-        y: Math.random() * (canvas.height - 100) + 50,
-        type: randomType,
-        element: document.getElementById(`powerUp${game.powerUps.length + 1}`),
-        collected: false
-      };
-      
-      // Style the power-up element
-      powerUp.element.style.left = `${powerUp.x - 15}px`;
-      powerUp.element.style.top = `${powerUp.y - 15}px`;
-      powerUp.element.style.backgroundColor = randomType.color;
-      powerUp.element.style.display = 'block';
-      powerUp.element.style.boxShadow = `0 0 15px ${randomType.color}`;
-      
-      game.powerUps.push(powerUp);
-      game.lastPowerUpTime = Date.now();
-    }
-
-    function checkPowerUpCollisions() {
-      for (let i = 0; i < game.powerUps.length; i++) {
-        const powerUp = game.powerUps[i];
-        
-        // Check if ball collides with power-up
-        const dx = game.ball.x - powerUp.x;
-        const dy = game.ball.y - powerUp.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        
-        if (distance < game.ballRadius + 15 && !powerUp.collected) {
-          collectPowerUp(powerUp, i);
-        }
-      }
-    }
-
-    function collectPowerUp(powerUp, index) {
-      powerUp.collected = true;
-      powerUp.element.style.display = 'none';
-      
-      // Play power-up sound
-      if (!game.isMuted) {
-        powerUpSound.play().catch(e => console.log("Audio play error:", e));
-      }
-      
-      // Apply power-up effect
-      const powerUpEffect = {
-        type: powerUp.type,
-        startTime: Date.now(),
-        endTime: Date.now() + powerUp.type.duration,
-        target: game.ball.x < canvas.width / 2 ? 'left' : 'right'
-      };
-      
-      game.activePowerUps.push(powerUpEffect);
-      
-      // Show power-up bar
-      document.getElementById('powerUpBar').style.display = 'block';
-      
-      // Apply the power-up effect
-      applyPowerUpEffect(powerUpEffect);
-      
-      // Remove from power-ups array
-      game.powerUps.splice(index, 1);
-      
-      // Queue commentary
-      queueCommentary(`${powerUpEffect.target === 'left' ? game.leftPlayer : game.rightPlayer} GOT ${powerUp.type.name}! ${powerUpCommentary[Math.floor(Math.random() * powerUpCommentary.length)]}`, true);
-    }
-
-    function applyPowerUpEffect(powerUpEffect) {
-      const paddle = powerUpEffect.target === 'left' ? game.leftPaddle : game.rightPaddle;
-      powerUpEffect.type.apply(paddle);
-    }
-
-    function removePowerUpEffect(powerUpEffect) {
-      const paddle = powerUpEffect.target === 'left' ? game.leftPaddle : game.rightPaddle;
-      powerUpEffect.type.remove(paddle);
-    }
-
-    function updatePowerUps() {
-      const now = Date.now();
-      
-      // Spawn new power-ups
-      if (now - game.lastPowerUpTime > game.powerUpSpawnInterval) {
-        spawnPowerUp();
-      }
-      
-      // Update active power-ups
-      for (let i = 0; i < game.activePowerUps.length; i++) {
-        const powerUp = game.activePowerUps[i];
-        
-        // Update power-up bar
-        if (i === 0) { // Only show the first power-up in the bar
-          const remaining = powerUp.endTime - now;
-          const progress = (remaining / powerUp.type.duration) * 100;
-          document.getElementById('powerUpProgress').style.width = `${progress}%`;
-          document.getElementById('powerUpProgress').style.background = powerUp.type.color;
-        }
-        
-        // Remove expired power-ups
-        if (now >= powerUp.endTime) {
-          removePowerUpEffect(powerUp);
-          game.activePowerUps.splice(i, 1);
-          i--;
-          
-          // Hide power-up bar if no more active power-ups
-          if (game.activePowerUps.length === 0) {
-            document.getElementById('powerUpBar').style.display = 'none';
-          }
-        }
-      }
-    }
-
     // Drawing functions
     function drawPaddles() {
       ctx.fillStyle = 'white';
@@ -1082,19 +901,10 @@
     }
 
     function drawBall() {
-      // Draw main ball
       ctx.beginPath();
       ctx.arc(game.ball.x, game.ball.y, game.ballRadius, 0, Math.PI * 2);
       ctx.fillStyle = 'white';
       ctx.fill();
-      
-      // Draw extra balls if multi-ball power-up is active
-      for (const extraBall of game.extraBalls) {
-        ctx.beginPath();
-        ctx.arc(extraBall.x, extraBall.y, extraBall.radius, 0, Math.PI * 2);
-        ctx.fillStyle = 'yellow';
-        ctx.fill();
-      }
     }
 
     function drawNet() {
@@ -1106,34 +916,6 @@
       ctx.lineWidth = 2;
       ctx.stroke();
       ctx.setLineDash([]);
-    }
-
-    function drawPowerUps() {
-      for (const powerUp of game.powerUps) {
-        if (!powerUp.collected) {
-          ctx.beginPath();
-          ctx.arc(powerUp.x, powerUp.y, 15, 0, Math.PI * 2);
-          ctx.fillStyle = powerUp.type.color;
-          ctx.fill();
-          ctx.strokeStyle = 'white';
-          ctx.lineWidth = 2;
-          ctx.stroke();
-          
-          // Draw power-up icon
-          ctx.fillStyle = 'white';
-          ctx.font = 'bold 16px Arial';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          
-          let symbol = '?';
-          if (powerUp.type.name === 'WIDE PADDLE') symbol = '⇆';
-          else if (powerUp.type.name === 'FAST BALL') symbol = '⚡';
-          else if (powerUp.type.name === 'MULTI BALL') symbol = '✖';
-          else if (powerUp.type.name === 'SLOW PADDLE') symbol = '🐢';
-          
-          ctx.fillText(symbol, powerUp.x, powerUp.y);
-        }
-      }
     }
 
     // Game loop functions
@@ -1148,13 +930,10 @@
       drawPaddles();
       drawBall();
       drawNet();
-      drawPowerUps();
 
       updateBall();
       updatePaddles();
       checkCollisions();
-      updatePowerUps();
-      checkPowerUpCollisions();
 
       requestAnimationFrame(gameLoop);
     }
@@ -1162,31 +941,12 @@
     function updateBall() {
       if (game.isPaused) return;
       
-      // Update main ball
       game.ball.x += game.ball.dx;
       game.ball.y += game.ball.dy;
 
       // Ball collision with top and bottom
       if (game.ball.y - game.ballRadius < 0 || game.ball.y + game.ballRadius > canvas.height) {
         game.ball.dy = -game.ball.dy;
-      }
-      
-      // Update extra balls
-      for (let i = 0; i < game.extraBalls.length; i++) {
-        const ball = game.extraBalls[i];
-        ball.x += ball.dx;
-        ball.y += ball.dy;
-        
-        // Extra ball collision with top and bottom
-        if (ball.y - ball.radius < 0 || ball.y + ball.radius > canvas.height) {
-          ball.dy = -ball.dy;
-        }
-        
-        // Extra ball out of bounds - remove it
-        if (ball.x - ball.radius < 0 || ball.x + ball.radius > canvas.width) {
-          game.extraBalls.splice(i, 1);
-          i--;
-        }
       }
     }
 
@@ -1291,29 +1051,6 @@
         }
       }
       
-      // Check collisions for extra balls
-      for (const extraBall of game.extraBalls) {
-        // Left paddle collision
-        if (extraBall.x - extraBall.radius < 20 + game.paddleWidth &&
-            extraBall.y > game.leftPaddle.y &&
-            extraBall.y < game.leftPaddle.y + paddleHeight) {
-          const angle = getBallAngle(game.leftPaddle.y, extraBall.y, paddleHeight);
-          extraBall.dx = Math.abs(Math.cos(angle)) * extraBall.speed;
-          extraBall.dy = Math.sin(angle) * extraBall.speed;
-          playPaddleSound();
-        }
-        
-        // Right paddle collision
-        if (extraBall.x + extraBall.radius > canvas.width - 20 - game.paddleWidth &&
-            extraBall.y > game.rightPaddle.y &&
-            extraBall.y < game.rightPaddle.y + paddleHeight) {
-          const angle = getBallAngle(game.rightPaddle.y, extraBall.y, paddleHeight);
-          extraBall.dx = -Math.abs(Math.cos(angle)) * extraBall.speed;
-          extraBall.dy = Math.sin(angle) * extraBall.speed;
-          playPaddleSound();
-        }
-      }
-      
       // Ball out of bounds - scoring
       if (game.ball.x - game.ballRadius < 0) {
         game.rightPaddle.score++;
@@ -1355,10 +1092,8 @@
         game.betweenPointsTimeout = null;
       }
 
-      // Play score sound
-      if (!game.isMuted) {
-        scoreSound.play().catch(e => console.log("Audio play error:", e));
-      }
+      // Play random score sound
+      playRandomScoreSound();
 
       if (checkForSpecialMove()) {
         queueCommentary("OH MY GOODNESS! WHAT AN INCREDIBLE SHOT!", true, true);
@@ -1409,28 +1144,57 @@
     }
 
     // Game management functions
-    function showNamePrompt(fourPlayerMode) {
-      game.isFourPlayer = fourPlayerMode;
-      document.getElementById('namePrompt').style.display = 'flex';
+    function startTwoPlayerGame() {
+      document.getElementById('twoPlayerPrompt').style.display = 'flex';
       document.getElementById('leftPlayerName').focus();
     }
 
-    function submitNames() {
-      const leftName = document.getElementById('leftPlayerName').value.trim() || "TEAM ONE";
-      const rightName = document.getElementById('rightPlayerName').value.trim() || "TEAM TWO";
+    function submitTwoPlayerNames() {
+      const leftName = document.getElementById('leftPlayerName').value.trim() || "PLAYER 1";
+      const rightName = document.getElementById('rightPlayerName').value.trim() || "PLAYER 2";
       
       game.leftPlayer = leftName.toUpperCase();
       game.rightPlayer = rightName.toUpperCase();
+      game.isLocalMultiplayer = true;
+      game.isFourPlayer = false;
       
-      document.getElementById('namePrompt').style.display = 'none';
+      document.getElementById('twoPlayerPrompt').style.display = 'none';
       startGame();
     }
 
-    function startLocalMultiplayer() {
-      game.isLocalMultiplayer = true;
+    function startSinglePlayerGame() {
+      document.getElementById('singlePlayerPrompt').style.display = 'flex';
+      document.getElementById('playerName').focus();
+    }
+
+    function submitSinglePlayerName() {
+      const playerName = document.getElementById('playerName').value.trim() || "PLAYER";
+      
+      game.leftPlayer = playerName.toUpperCase();
+      game.rightPlayer = "BOT";
+      game.isLocalMultiplayer = false;
       game.isFourPlayer = false;
-      game.leftPlayer = "PLAYER 1";
-      game.rightPlayer = "PLAYER 2";
+      
+      document.getElementById('singlePlayerPrompt').style.display = 'none';
+      startGame();
+    }
+
+    function startFourPlayerGame() {
+      document.getElementById('fourPlayerPrompt').style.display = 'flex';
+      document.getElementById('leftTeamName').focus();
+    }
+
+    function submitFourPlayerNames() {
+      const leftName = document.getElementById('leftTeamName').value.trim() || "TEAM ONE";
+      const rightName = document.getElementById('rightTeamName').value.trim() || "TEAM TWO";
+      
+      game.leftPlayer = leftName.toUpperCase();
+      game.rightPlayer = rightName.toUpperCase();
+      game.isLocalMultiplayer = true;
+      game.isFourPlayer = true;
+      
+      document.getElementById('fourPlayerPrompt').style.display = 'none';
+      document.getElementById('mobileControls').style.display = 'none';
       startGame();
     }
 
@@ -1445,11 +1209,6 @@
       game.commentaryQueue = [];
       game.hasAnnounced30 = false;
       game.hasAnnounced10 = false;
-      game.powerUps = [];
-      game.activePowerUps = [];
-      game.extraBalls = [];
-      document.getElementById('bonusPoints').textContent = "";
-      document.getElementById('powerUpBar').style.display = "none";
       
       document.getElementById('titleScreen').style.display = "none";
       document.getElementById('endScreen').style.display = "none";
@@ -1458,6 +1217,7 @@
       document.getElementById('leftScore').textContent = "0";
       document.getElementById('rightScore').textContent = "0";
       document.getElementById('timer').textContent = "2:00.000";
+      document.getElementById('bonusPoints').textContent = "";
       
       resetBall();
       resetPaddles();
@@ -1566,9 +1326,8 @@
         game.isSpeaking = false;
       }
       
-      if (important) {
-        game.commentaryQueue.unshift({text, important});
-      } else {
+      // Always add to queue, but skip unimportant ones if there are many
+      if (important || game.commentaryQueue.length < 3) {
         game.commentaryQueue.push({text, important});
       }
       
@@ -1618,7 +1377,7 @@
         confetti.style.animation = `confetti-fall ${Math.random() * 3 + 2}s linear forwards`;
         confetti.style.animationDelay = Math.random() * 0.5 + 's';
         
-        const size = Math.random() * 8 + 5;
+        const size = Math.random() * 10 + 5;
         confetti.style.width = size + 'px';
         confetti.style.height = size + 'px';
         
@@ -1683,7 +1442,9 @@
         backgroundMusic.pause();
         queueCommentary("Music muted", true, true);
       } else {
-        backgroundMusic.play().catch(e => console.log("Audio play error:", e));
+        if (game.musicStarted) {
+          backgroundMusic.play().catch(e => console.log("Audio play error:", e));
+        }
         queueCommentary("Music unmuted", true, true);
       }
     }
@@ -1699,7 +1460,7 @@
       } else {
         const pauseDuration = Date.now() - game.pausedTime;
         game.startTime += pauseDuration;
-        if (!game.isMusicMuted) {
+        if (!game.isMusicMuted && game.musicStarted) {
           backgroundMusic.play().catch(e => console.log("Audio play error:", e));
         }
         queueCommentary("GAME RESUMED", true, true);
@@ -1714,6 +1475,7 @@
       clearInterval(game.timerInterval);
       game.gameStarted = false;
       game.isLocalMultiplayer = false;
+      game.isFourPlayer = false;
       
       // Reset mobile controls
       game.mobileControls = {
@@ -1723,13 +1485,10 @@
         rightDown: false
       };
       
-      // Reset power-ups
-      game.powerUps = [];
-      game.activePowerUps = [];
-      document.getElementById('powerUpBar').style.display = "none";
-      document.getElementById('powerUp1').style.display = "none";
-      document.getElementById('powerUp2').style.display = "none";
-      document.getElementById('powerUp3').style.display = "none";
+      // Show mobile controls if on mobile
+      if (/Mobi|Android/i.test(navigator.userAgent)) {
+        document.getElementById('mobileControls').style.display = 'flex';
+      }
       
       queueCommentary("RETURNING TO MENU", true, true);
     }
