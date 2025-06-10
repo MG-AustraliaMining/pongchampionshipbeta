@@ -11,6 +11,7 @@
       --ball-radius: 6px;
       --paddle-speed: 10;
       --initial-ball-speed: 7;
+      --max-ball-speed: 11;
       --four-player-ball-speed: 8;
     }
     
@@ -501,12 +502,14 @@
     const PADDLE_HEIGHT_RATIO = 0.2;
     const FOUR_PLAYER_PADDLE_HEIGHT_RATIO = 0.15;
     const BALL_RADIUS_RATIO = 0.012;
-    const INITIAL_BALL_SPEED = 11;
+    const INITIAL_BALL_SPEED = 7;
+    const MAX_BALL_SPEED = 11;
     const FOUR_PLAYER_BALL_SPEED = 8;
     const PADDLE_SPEED = 10;
     const WINNING_SCORE = 10;
     const GAME_TIME = 120;
     const OVERTIME_TIME = 15;
+    const BALL_SPEED_INCREMENT = 0.2;
     
     // Music tracks
     const MUSIC_TRACKS = ['music1.mp3', 'music2.mp3'];
@@ -709,88 +712,92 @@
     }
 
     function setupKeyboardControls() {
-      document.addEventListener('keydown', (e) => {
-        switch(e.key) {
-          case 'p':
-          case 'P':
-            togglePause();
-            break;
-          case 'm':
-          case 'M':
-            toggleMute();
-            break;
-          case 'f':
-          case 'F':
-            toggleFullscreen();
-            break;
-          case 'w':
-          case 'W':
-            game.keysPressed['w'] = true;
-            break;
-          case 's':
-          case 'S':
-            game.keysPressed['s'] = true;
-            break;
-          case 'ArrowUp':
-            game.keysPressed['ArrowUp'] = true;
-            break;
-          case 'ArrowDown':
-            game.keysPressed['ArrowDown'] = true;
-            break;
-          case 'q':
-          case 'Q':
-            game.keysPressed['q'] = true;
-            break;
-          case 'a':
-          case 'A':
-            game.keysPressed['a'] = true;
-            break;
-          case 'o':
-          case 'O':
-            game.keysPressed['o'] = true;
-            break;
-          case 'l':
-          case 'L':
-            game.keysPressed['l'] = true;
-            break;
-        }
-      });
-
-      document.addEventListener('keyup', (e) => {
-        switch(e.key) {
-          case 'w':
-          case 'W':
-            game.keysPressed['w'] = false;
-            break;
-          case 's':
-          case 'S':
-            game.keysPressed['s'] = false;
-            break;
-          case 'ArrowUp':
-            game.keysPressed['ArrowUp'] = false;
-            break;
-          case 'ArrowDown':
-            game.keysPressed['ArrowDown'] = false;
-            break;
-          case 'q':
-          case 'Q':
-            game.keysPressed['q'] = false;
-            break;
-          case 'a':
-          case 'A':
-            game.keysPressed['a'] = false;
-            break;
-          case 'o':
-          case 'O':
-            game.keysPressed['o'] = false;
-            break;
-          case 'l':
-          case 'L':
-            game.keysPressed['l'] = false;
-            break;
-        }
-      });
+      // Handle both keydown and keypress events for better iPad compatibility
+      document.addEventListener('keydown', handleKeyEvent);
+      document.addEventListener('keypress', handleKeyEvent);
     }
+
+    function handleKeyEvent(e) {
+      switch(e.key) {
+        case 'p':
+        case 'P':
+          togglePause();
+          break;
+        case 'm':
+        case 'M':
+          toggleMute();
+          break;
+        case 'f':
+        case 'F':
+          toggleFullscreen();
+          break;
+        case 'w':
+        case 'W':
+          game.keysPressed['w'] = true;
+          break;
+        case 's':
+        case 'S':
+          game.keysPressed['s'] = true;
+          break;
+        case 'ArrowUp':
+          game.keysPressed['ArrowUp'] = true;
+          break;
+        case 'ArrowDown':
+          game.keysPressed['ArrowDown'] = true;
+          break;
+        case 'q':
+        case 'Q':
+          game.keysPressed['q'] = true;
+          break;
+        case 'a':
+        case 'A':
+          game.keysPressed['a'] = true;
+          break;
+        case 'o':
+        case 'O':
+          game.keysPressed['o'] = true;
+          break;
+        case 'l':
+        case 'L':
+          game.keysPressed['l'] = true;
+          break;
+      }
+    }
+
+    document.addEventListener('keyup', (e) => {
+      switch(e.key) {
+        case 'w':
+        case 'W':
+          game.keysPressed['w'] = false;
+          break;
+        case 's':
+        case 'S':
+          game.keysPressed['s'] = false;
+          break;
+        case 'ArrowUp':
+          game.keysPressed['ArrowUp'] = false;
+          break;
+        case 'ArrowDown':
+          game.keysPressed['ArrowDown'] = false;
+          break;
+        case 'q':
+        case 'Q':
+          game.keysPressed['q'] = false;
+          break;
+        case 'a':
+        case 'A':
+          game.keysPressed['a'] = false;
+          break;
+        case 'o':
+        case 'O':
+          game.keysPressed['o'] = false;
+          break;
+        case 'l':
+        case 'L':
+          game.keysPressed['l'] = false;
+          break;
+      }
+    });
 
     function setupControlButtons() {
       document.getElementById('muteButton').addEventListener('click', toggleMute);
@@ -1008,6 +1015,12 @@
           const angle = getBallAngle(game.leftPaddle.y, game.ball.y, paddleHeight);
           game.ball.dx = Math.abs(Math.cos(angle)) * game.ball.speed;
           game.ball.dy = Math.sin(angle) * game.ball.speed;
+          
+          // Increase ball speed but cap at MAX_BALL_SPEED
+          if (game.ball.speed < MAX_BALL_SPEED) {
+            game.ball.speed += BALL_SPEED_INCREMENT;
+          }
+          
           game.lastScorer = game.leftPlayer;
           playPaddleSound();
         }
@@ -1019,6 +1032,12 @@
           const angle = getBallAngle(game.rightPaddle.y, game.ball.y, paddleHeight);
           game.ball.dx = -Math.abs(Math.cos(angle)) * game.ball.speed;
           game.ball.dy = Math.sin(angle) * game.ball.speed;
+          
+          // Increase ball speed but cap at MAX_BALL_SPEED
+          if (game.ball.speed < MAX_BALL_SPEED) {
+            game.ball.speed += BALL_SPEED_INCREMENT;
+          }
+          
           game.lastScorer = game.rightPlayer;
           playPaddleSound();
         }
@@ -1032,6 +1051,12 @@
             const angle = getBallAngle(paddle.y, game.ball.y, paddleHeight);
             game.ball.dx = Math.abs(Math.cos(angle)) * game.ball.speed;
             game.ball.dy = Math.sin(angle) * game.ball.speed;
+            
+            // Increase ball speed but cap at MAX_BALL_SPEED
+            if (game.ball.speed < MAX_BALL_SPEED) {
+              game.ball.speed += BALL_SPEED_INCREMENT;
+            }
+            
             game.lastScorer = game.leftPlayer;
             playPaddleSound();
           }
@@ -1045,6 +1070,12 @@
             const angle = getBallAngle(paddle.y, game.ball.y, paddleHeight);
             game.ball.dx = -Math.abs(Math.cos(angle)) * game.ball.speed;
             game.ball.dy = Math.sin(angle) * game.ball.speed;
+            
+            // Increase ball speed but cap at MAX_BALL_SPEED
+            if (game.ball.speed < MAX_BALL_SPEED) {
+              game.ball.speed += BALL_SPEED_INCREMENT;
+            }
+            
             game.lastScorer = game.rightPlayer;
             playPaddleSound();
           }
@@ -1127,7 +1158,7 @@
     }
 
     function checkForSpecialMove() {
-      const speedThreshold = game.isFourPlayer ? FOUR_PLAYER_BALL_SPEED * 1.8 : INITIAL_BALL_SPEED * 1.8;
+      const speedThreshold = game.isFourPlayer ? FOUR_PLAYER_BALL_SPEED * 1.8 : MAX_BALL_SPEED * 0.9;
       const now = Date.now();
       
       if (game.ball.speed >= speedThreshold && now - game.lastSpecialMoveTime > 5000) {
