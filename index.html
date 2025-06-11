@@ -67,6 +67,7 @@
       z-index: 30;
       font-weight: bold;
       font-family: 'Impact', sans-serif;
+      display: none;
     }
     
     #leftScore { left: 25%; }
@@ -82,6 +83,7 @@
       z-index: 30;
       font-weight: bold;
       text-shadow: 0 0 10px rgba(255,215,0,0.7);
+      display: none;
     }
     
     #bonusPoints {
@@ -94,6 +96,19 @@
       text-shadow: 1px 1px 3px black;
       z-index: 30;
       font-weight: bold;
+      display: none;
+    }
+    
+    #matchInfo {
+      position: absolute;
+      top: 90px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      font-size: 1rem;
+      text-shadow: 1px 1px 2px black;
+      z-index: 30;
+      display: none;
     }
     
     #commentary {
@@ -193,7 +208,7 @@
     #fullscreenButton { top: 20px; left: 140px; }
     #musicMuteButton { top: 20px; right: 20px; }
     
-    #pauseScreen, #countdown {
+    #pauseScreen, #countdown, #halftimeScreen {
       display: none;
     }
     
@@ -321,6 +336,13 @@
       animation: pulse 0.5s infinite alternate;
     }
     
+    #halftimeScreen {
+      font-size: 5rem;
+      font-weight: bold;
+      color: gold;
+      text-shadow: 0 0 30px rgba(255,215,0,0.9);
+    }
+    
     @keyframes pulse {
       from { transform: scale(1); opacity: 1; }
       to { transform: scale(1.3); opacity: 0.8; }
@@ -344,6 +366,114 @@
       to { opacity: 0; }
     }
     
+    /* Leaderboard Styles */
+    .leaderboard {
+      position: absolute;
+      background: rgba(0, 0, 0, 0.7);
+      border: 2px solid gold;
+      border-radius: 10px;
+      padding: 10px;
+      color: white;
+      z-index: 50;
+      max-height: 30vh;
+      overflow-y: auto;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+      font-family: 'Arial', sans-serif;
+      display: none;
+    }
+    
+    #recentPlays {
+      top: 80px;
+      left: 20px;
+      width: 250px;
+    }
+    
+    #bestWins {
+      top: 80px;
+      right: 20px;
+      width: 250px;
+    }
+    
+    #botChampion {
+      bottom: 80px;
+      right: 20px;
+      width: 250px;
+    }
+    
+    .leaderboard h3 {
+      color: gold;
+      margin-top: 0;
+      margin-bottom: 10px;
+      text-align: center;
+      font-size: 1.2rem;
+      border-bottom: 1px solid gold;
+      padding-bottom: 5px;
+    }
+    
+    .leaderboard-item {
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      font-size: 0.9rem;
+    }
+    
+    .leaderboard-item:last-child {
+      border-bottom: none;
+    }
+    
+    .leaderboard-rank {
+      color: gold;
+      font-weight: bold;
+      margin-right: 5px;
+    }
+    
+    /* Scrollbar styling */
+    .leaderboard::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    .leaderboard::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+    }
+    
+    .leaderboard::-webkit-scrollbar-thumb {
+      background: gold;
+      border-radius: 10px;
+    }
+    
+    .leaderboard::-webkit-scrollbar-thumb:hover {
+      background: #ffcc00;
+    }
+    
+    /* Tournament stage selector */
+    .stage-selector {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+    
+    .stage-btn {
+      background: rgba(255, 215, 0, 0.2);
+      border: 1px solid gold;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .stage-btn:hover {
+      background: rgba(255, 215, 0, 0.4);
+    }
+    
+    .stage-btn.active {
+      background: gold;
+      color: black;
+      font-weight: bold;
+    }
+    
     @media (max-width: 768px) {
       .score { 
         font-size: 2.5rem; 
@@ -353,6 +483,7 @@
       #rightScore { right: 20%; }
       #timer { font-size: 1.5rem; top: 15px; }
       #bonusPoints { font-size: 1rem; top: 50px; }
+      #matchInfo { font-size: 0.9rem; top: 80px; }
       #commentary { 
         font-size: 1rem; 
         padding: 10px 20px; 
@@ -392,6 +523,23 @@
       #countdown, #goText {
         font-size: 6rem;
       }
+      #halftimeScreen {
+        font-size: 3rem;
+      }
+      
+      /* Adjust leaderboards for mobile */
+      .leaderboard {
+        width: 150px;
+        font-size: 0.8rem;
+      }
+      
+      #recentPlays, #bestWins {
+        top: 60px;
+      }
+      
+      #botChampion {
+        bottom: 60px;
+      }
     }
     
     @media (max-height: 500px) {
@@ -414,6 +562,14 @@
       #countdown, #goText {
         font-size: 4rem;
       }
+      #halftimeScreen {
+        font-size: 2.5rem;
+      }
+      
+      /* Hide leaderboards on very small screens */
+      .leaderboard {
+        display: none;
+      }
     }
   </style>
 </head>
@@ -421,11 +577,29 @@
   <div id="gameContainer">
     <canvas id="pongCanvas"></canvas>
     
+    <!-- Game elements (hidden during menu) -->
     <div id="leftScore" class="score">0</div>
     <div id="rightScore" class="score">0</div>
     <div id="timer">2:00.000</div>
     <div id="bonusPoints"></div>
+    <div id="matchInfo"></div>
     <div id="commentary">WELCOME TO THE PONG CHAMPIONSHIP!</div>
+    
+    <!-- Leaderboards (hidden during menu) -->
+    <div id="recentPlays" class="leaderboard">
+      <h3>RECENT PLAYS</h3>
+      <div id="recentPlaysList"></div>
+    </div>
+    
+    <div id="bestWins" class="leaderboard">
+      <h3>BEST WINS</h3>
+      <div id="bestWinsList"></div>
+    </div>
+    
+    <div id="botChampion" class="leaderboard">
+      <h3>BOT CHAMPIONS</h3>
+      <div id="botChampionList"></div>
+    </div>
     
     <button id="muteButton" class="control-btn">🔊</button>
     <button id="pauseButton" class="control-btn">⏸️</button>
@@ -445,6 +619,7 @@
 
     <div id="countdown" class="screen"></div>
     <div id="goText" class="screen">GO!</div>
+    <div id="halftimeScreen" class="screen">HALFTIME</div>
 
     <div id="pauseScreen" class="screen">
       <h1>GAME CURRENTLY PAUSED</h1>
@@ -470,6 +645,16 @@
       <div class="modal-title">ENTER PLAYER NAMES</div>
       <input type="text" id="leftPlayerName" class="modal-input" placeholder="Left Player Name" maxlength="20">
       <input type="text" id="rightPlayerName" class="modal-input" placeholder="Right Player Name" maxlength="20">
+      
+      <div class="stage-selector">
+        <div class="stage-btn" data-stage="Round of 16">Round of 16</div>
+        <div class="stage-btn" data-stage="Quarter Finals">Quarter Finals</div>
+        <div class="stage-btn" data-stage="Semi Finals">Semi Finals</div>
+        <div class="stage-btn" data-stage="Finals">Finals</div>
+      </div>
+      
+      <input type="hidden" id="selectedStage" value="Round of 16">
+      
       <button class="modal-btn" onclick="submitTwoPlayerNames()">START GAME</button>
     </div>
   </div>
@@ -495,6 +680,10 @@
   <audio id="paddleSound"></audio>
   <audio id="scoreSound"></audio>
   <audio id="scoreSound1"></audio>
+  <audio id="scoreSound2"></audio>
+  <audio id="hitSound"></audio>
+  <audio id="hitSound1"></audio>
+  <audio id="hitSound2"></audio>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
@@ -507,9 +696,12 @@
     const FOUR_PLAYER_BALL_SPEED = 10;
     const PADDLE_SPEED = 10;
     const WINNING_SCORE = 10;
-    const GAME_TIME = 120;
+    const HALF_TIME = 60; // 1 minute per half
+    const HALF_TIME_BREAK = 10; // 10 second break
     const OVERTIME_TIME = 15;
     const BALL_SPEED_INCREMENT = 0.6;
+    const SMASH_SPEED_MULTIPLIER = 2;
+    const SMASH_DURATION = 1000; // ms
     
     // Music tracks
     const MUSIC_TRACKS = ['music1.mp3', 'music2.mp3'];
@@ -523,10 +715,14 @@
     const paddleSound = document.getElementById('paddleSound');
     const scoreSound = document.getElementById('scoreSound');
     const scoreSound1 = document.getElementById('scoreSound1');
+    const scoreSound2 = document.getElementById('scoreSound2');
+    const hitSound = document.getElementById('hitSound');
+    const hitSound1 = document.getElementById('hitSound1');
+    const hitSound2 = document.getElementById('hitSound2');
     
     // Game State
     const game = {
-      ball: { x: 0, y: 0, dx: 0, dy: 0, speed: INITIAL_BALL_SPEED },
+      ball: { x: 0, y: 0, dx: 0, dy: 0, speed: INITIAL_BALL_SPEED, originalSpeed: INITIAL_BALL_SPEED },
       leftPaddle: { y: 0, score: 0 },
       rightPaddle: { y: 0, score: 0 },
       leftTopPaddle: { y: 0 },
@@ -538,13 +734,18 @@
       isMusicMuted: false,
       isPaused: false,
       gameStarted: false,
-      remainingTime: GAME_TIME,
+      remainingTime: HALF_TIME,
+      currentHalf: 1,
+      extraTime: 0,
+      halftimeActive: false,
       lastScorer: null,
       matchPoint: false,
       leftPlayer: "PLAYER 1",
       rightPlayer: "PLAYER 2",
+      tournamentStage: "Round of 16",
       timerInterval: null,
       countdownInterval: null,
+      halftimeInterval: null,
       keysPressed: {},
       bonusPoints: 0,
       deuceActive: false,
@@ -569,7 +770,14 @@
       paddleHeight: 0,
       fourPlayerPaddleHeight: 0,
       ballRadius: 0,
-      musicStarted: false
+      musicStarted: false,
+      smashCounter: 0,
+      smashTarget: 0,
+      isSmashActive: false,
+      smashEndTime: 0,
+      recentPlays: [],
+      bestWins: [],
+      botChampions: []
     };
 
     // Commentary phrases
@@ -634,12 +842,29 @@
       setupKeyboardControls();
       setupControlButtons();
       loadAudioFiles();
+      loadLeaderboards();
       
       // Set up click event to start music
       document.addEventListener('click', startMusicOnInteraction, { once: true });
       
+      // Set up stage selection
+      setupStageSelection();
+      
       // Start the game loop
       gameLoop();
+    }
+
+    function setupStageSelection() {
+      const stageBtns = document.querySelectorAll('.stage-btn');
+      stageBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          stageBtns.forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          document.getElementById('selectedStage').value = this.dataset.stage;
+        });
+      });
+      // Activate first stage by default
+      stageBtns[0].classList.add('active');
     }
 
     function startMusicOnInteraction() {
@@ -647,6 +872,81 @@
         game.musicStarted = true;
         playRandomMusic();
       }
+    }
+
+    function loadLeaderboards() {
+      // Load from localStorage if available
+      if (localStorage.getItem('pongRecentPlays')) {
+        game.recentPlays = JSON.parse(localStorage.getItem('pongRecentPlays'));
+      }
+      
+      if (localStorage.getItem('pongBestWins')) {
+        game.bestWins = JSON.parse(localStorage.getItem('pongBestWins'));
+      }
+      
+      if (localStorage.getItem('pongBotChampions')) {
+        game.botChampions = JSON.parse(localStorage.getItem('pongBotChampions'));
+      }
+      
+      updateLeaderboards();
+    }
+
+    function updateLeaderboards() {
+      // Recent Plays
+      const recentPlaysList = document.getElementById('recentPlaysList');
+      recentPlaysList.innerHTML = '';
+      
+      game.recentPlays.slice(0, 10).forEach((play, index) => {
+        const item = document.createElement('div');
+        item.className = 'leaderboard-item';
+        item.innerHTML = `<strong>${play.player1}</strong> vs <strong>${play.player2}</strong><br>
+                         ${play.stage} - ${play.score1}-${play.score2}`;
+        recentPlaysList.appendChild(item);
+      });
+      
+      // Best Wins
+      const bestWinsList = document.getElementById('bestWinsList');
+      bestWinsList.innerHTML = '';
+      
+      game.bestWins.sort((a, b) => (b.score1 - b.score2) - (a.score1 - a.score2)).slice(0, 10).forEach((win, index) => {
+        const item = document.createElement('div');
+        item.className = 'leaderboard-item';
+        item.innerHTML = `<span class="leaderboard-rank">${index + 1}.</span> 
+                         <strong>${win.player1}</strong> ${win.score1}-${win.score2} <strong>${win.player2}</strong>`;
+        bestWinsList.appendChild(item);
+      });
+      
+      // Bot Champions
+      const botChampionList = document.getElementById('botChampionList');
+      botChampionList.innerHTML = '';
+      
+      game.botChampions.sort((a, b) => (b.score1 - b.score2) - (a.score1 - a.score2)).slice(0, 20).forEach((champ, index) => {
+        const item = document.createElement('div');
+        item.className = 'leaderboard-item';
+        item.innerHTML = `<span class="leaderboard-rank">${index + 1}.</span> 
+                         <strong>${champ.player1}</strong> ${champ.score1}-${champ.score2} BOT`;
+        botChampionList.appendChild(item);
+      });
+    }
+
+    function saveToLeaderboard(type, data) {
+      if (type === 'recent') {
+        game.recentPlays.unshift(data);
+        if (game.recentPlays.length > 50) game.recentPlays.pop();
+        localStorage.setItem('pongRecentPlays', JSON.stringify(game.recentPlays));
+      } 
+      else if (type === 'best') {
+        game.bestWins.push(data);
+        if (game.bestWins.length > 50) game.bestWins.pop();
+        localStorage.setItem('pongBestWins', JSON.stringify(game.bestWins));
+      }
+      else if (type === 'bot') {
+        game.botChampions.push(data);
+        if (game.botChampions.length > 50) game.botChampions.pop();
+        localStorage.setItem('pongBotChampions', JSON.stringify(game.botChampions));
+      }
+      
+      updateLeaderboards();
     }
 
     // Setup functions
@@ -706,7 +1006,7 @@
       downBtnRight.addEventListener('mouseup', () => game.mobileControls.rightDown = false);
       
       // Show mobile controls on mobile devices
-      if (/Mobi|Android/i.test(navigator.userAgent) && !game.isFourPlayer) {
+      if (/Mobi|Android/i.test(navigator.userAgent)) {
         document.getElementById('mobileControls').style.display = 'flex';
       }
     }
@@ -811,6 +1111,10 @@
       paddleSound.src = 'paddle.wav';
       scoreSound.src = 'score.mp3';
       scoreSound1.src = 'score1.mp3';
+      scoreSound2.src = 'score2.mp3';
+      hitSound.src = 'hit.mp3';
+      hitSound1.src = 'hit1.mp3';
+      hitSound2.src = 'hit2.mp3';
     }
 
     function playRandomMusic() {
@@ -830,8 +1134,18 @@
     function playRandomScoreSound() {
       if (game.isMuted) return;
       
-      const sounds = [scoreSound, scoreSound1];
+      const sounds = [scoreSound, scoreSound1, scoreSound2];
       const randomSound = sounds[Math.floor(Math.random() * sounds.length)];
+      randomSound.currentTime = 0;
+      randomSound.play().catch(e => console.log("Audio play error:", e));
+    }
+
+    function playRandomHitSound() {
+      if (game.isMuted) return;
+      
+      const sounds = [hitSound, hitSound1, hitSound2];
+      const randomSound = sounds[Math.floor(Math.random() * sounds.length)];
+      randomSound.currentTime = 0;
       randomSound.play().catch(e => console.log("Audio play error:", e));
     }
 
@@ -853,12 +1167,18 @@
       game.ball.x = canvas.width / 2;
       game.ball.y = canvas.height / 2;
       game.ball.speed = game.isFourPlayer ? FOUR_PLAYER_BALL_SPEED : INITIAL_BALL_SPEED;
+      game.ball.originalSpeed = game.ball.speed;
       game.ball.dx = Math.random() > 0.5 ? game.ball.speed * 0.6 : -game.ball.speed * 0.6;
       game.ball.dy = (Math.random() * 2 - 1) * game.ball.speed * 0.6;
+      
+      // Reset smash counter
+      game.smashCounter = 0;
+      game.smashTarget = Math.floor(Math.random() * 5) + 3; // 3-7 hits
       
       // Reset speed to normal after first hit
       setTimeout(() => {
         game.ball.speed = game.isFourPlayer ? FOUR_PLAYER_BALL_SPEED : INITIAL_BALL_SPEED;
+        game.ball.originalSpeed = game.ball.speed;
       }, 1000);
     }
 
@@ -910,7 +1230,14 @@
     function drawBall() {
       ctx.beginPath();
       ctx.arc(game.ball.x, game.ball.y, game.ballRadius, 0, Math.PI * 2);
-      ctx.fillStyle = 'white';
+      
+      // Change ball color during smash
+      if (game.isSmashActive) {
+        ctx.fillStyle = 'gold';
+      } else {
+        ctx.fillStyle = 'white';
+      }
+      
       ctx.fill();
     }
 
@@ -927,7 +1254,7 @@
 
     // Game loop functions
     function gameLoop() {
-      if (!game.gameStarted || game.isPaused) {
+      if (!game.gameStarted || game.isPaused || game.halftimeActive) {
         requestAnimationFrame(gameLoop);
         return;
       }
@@ -941,12 +1268,24 @@
       updateBall();
       updatePaddles();
       checkCollisions();
+      checkSmash();
 
       requestAnimationFrame(gameLoop);
     }
 
     function updateBall() {
-      if (game.isPaused) return;
+      if (game.isPaused || game.halftimeActive) return;
+      
+      // Prevent ball from getting stuck at edges
+      if (game.ball.y - game.ballRadius <= 0) {
+        game.ball.y = game.ballRadius + 1;
+        game.ball.dy = Math.abs(game.ball.dy);
+      }
+      
+      if (game.ball.y + game.ballRadius >= canvas.height) {
+        game.ball.y = canvas.height - game.ballRadius - 1;
+        game.ball.dy = -Math.abs(game.ball.dy);
+      }
       
       game.ball.x += game.ball.dx;
       game.ball.y += game.ball.dy;
@@ -958,7 +1297,7 @@
     }
 
     function updatePaddles() {
-      if (game.isPaused) return;
+      if (game.isPaused || game.halftimeActive) return;
 
       // Mobile controls
       if (game.mobileControls.leftUp) game.leftPaddle.y -= PADDLE_SPEED;
@@ -978,12 +1317,17 @@
           if (game.keysPressed['w'] || game.keysPressed['W']) game.leftPaddle.y -= PADDLE_SPEED;
           if (game.keysPressed['s'] || game.keysPressed['S']) game.leftPaddle.y += PADDLE_SPEED;
           
-          // Simple AI for right paddle
+          // Improved AI for right paddle
           const paddleCenter = game.rightPaddle.y + game.paddleHeight / 2;
-          if (paddleCenter < game.ball.y - 10) {
-            game.rightPaddle.y += PADDLE_SPEED * 0.7;
-          } else if (paddleCenter > game.ball.y + 10) {
-            game.rightPaddle.y -= PADDLE_SPEED * 0.7;
+          const predictedBallY = game.ball.y + (game.ball.dy * (canvas.width - game.ball.x) / Math.abs(game.ball.dx));
+          
+          // Add some randomness to make AI less perfect
+          const reactionSpeed = 0.7 * (1 + Math.random() * 0.2 - 0.1);
+          
+          if (paddleCenter < predictedBallY - 15) {
+            game.rightPaddle.y += PADDLE_SPEED * reactionSpeed;
+          } else if (paddleCenter > predictedBallY + 15) {
+            game.rightPaddle.y -= PADDLE_SPEED * reactionSpeed;
           }
         }
       } else {
@@ -1002,7 +1346,7 @@
     }
 
     function checkCollisions() {
-      if (game.isPaused) return;
+      if (game.isPaused || game.halftimeActive) return;
       
       const paddleHeight = game.isFourPlayer ? game.fourPlayerPaddleHeight : game.paddleHeight;
 
@@ -1019,10 +1363,12 @@
           // Increase ball speed but cap at MAX_BALL_SPEED
           if (game.ball.speed < MAX_BALL_SPEED) {
             game.ball.speed += BALL_SPEED_INCREMENT;
+            game.ball.originalSpeed = game.ball.speed;
           }
           
           game.lastScorer = game.leftPlayer;
-          playPaddleSound();
+          playRandomHitSound();
+          incrementSmashCounter();
         }
         
         // Right paddle collision
@@ -1036,10 +1382,12 @@
           // Increase ball speed but cap at MAX_BALL_SPEED
           if (game.ball.speed < MAX_BALL_SPEED) {
             game.ball.speed += BALL_SPEED_INCREMENT;
+            game.ball.originalSpeed = game.ball.speed;
           }
           
           game.lastScorer = game.rightPlayer;
-          playPaddleSound();
+          playRandomHitSound();
+          incrementSmashCounter();
         }
       } else {
         // 4-player paddle collisions
@@ -1055,10 +1403,12 @@
             // Increase ball speed but cap at MAX_BALL_SPEED
             if (game.ball.speed < MAX_BALL_SPEED) {
               game.ball.speed += BALL_SPEED_INCREMENT;
+              game.ball.originalSpeed = game.ball.speed;
             }
             
             game.lastScorer = game.leftPlayer;
-            playPaddleSound();
+            playRandomHitSound();
+            incrementSmashCounter();
           }
         }
         
@@ -1074,10 +1424,12 @@
             // Increase ball speed but cap at MAX_BALL_SPEED
             if (game.ball.speed < MAX_BALL_SPEED) {
               game.ball.speed += BALL_SPEED_INCREMENT;
+              game.ball.originalSpeed = game.ball.speed;
             }
             
             game.lastScorer = game.rightPlayer;
-            playPaddleSound();
+            playRandomHitSound();
+            incrementSmashCounter();
           }
         }
       }
@@ -1106,6 +1458,45 @@
         queueCommentary("WE'RE AT DEUCE! BONUS POINT ACTIVATED! NEXT POINT WINS!", true, true);
       } else if (game.leftPaddle.score !== game.rightPaddle.score) {
         game.deuceActive = false;
+      }
+    }
+
+    function incrementSmashCounter() {
+      game.smashCounter++;
+      if (game.smashCounter >= game.smashTarget && !game.isSmashActive) {
+        activateSmash();
+      }
+    }
+
+    function activateSmash() {
+      game.isSmashActive = true;
+      game.smashEndTime = Date.now() + SMASH_DURATION;
+      
+      // Store original speed and direction
+      const originalSpeed = game.ball.speed;
+      const angle = Math.atan2(game.ball.dy, game.ball.dx);
+      
+      // Double the speed
+      game.ball.speed = originalSpeed * SMASH_SPEED_MULTIPLIER;
+      game.ball.dx = Math.cos(angle) * game.ball.speed;
+      game.ball.dy = Math.sin(angle) * game.ball.speed;
+      
+      queueCommentary("SMASH SHOT! INCREDIBLE POWER!", true);
+    }
+
+    function checkSmash() {
+      if (game.isSmashActive && Date.now() > game.smashEndTime) {
+        game.isSmashActive = false;
+        
+        // Return to original speed but maintain direction
+        const angle = Math.atan2(game.ball.dy, game.ball.dx);
+        game.ball.speed = game.ball.originalSpeed;
+        game.ball.dx = Math.cos(angle) * game.ball.speed;
+        game.ball.dy = Math.sin(angle) * game.ball.speed;
+        
+        // Reset counter and set new target
+        game.smashCounter = 0;
+        game.smashTarget = Math.floor(Math.random() * 5) + 3; // 3-7 hits
       }
     }
 
@@ -1168,12 +1559,6 @@
       return false;
     }
 
-    function playPaddleSound() {
-      if (game.isMuted) return;
-      
-      paddleSound.play().catch(e => console.log("Audio play error:", e));
-    }
-
     // Game management functions
     function startTwoPlayerGame() {
       document.getElementById('twoPlayerPrompt').style.display = 'flex';
@@ -1183,9 +1568,11 @@
     function submitTwoPlayerNames() {
       const leftName = document.getElementById('leftPlayerName').value.trim() || "PLAYER 1";
       const rightName = document.getElementById('rightPlayerName').value.trim() || "PLAYER 2";
+      const stage = document.getElementById('selectedStage').value;
       
       game.leftPlayer = leftName.toUpperCase();
       game.rightPlayer = rightName.toUpperCase();
+      game.tournamentStage = stage;
       game.isLocalMultiplayer = true;
       game.isFourPlayer = false;
       
@@ -1233,7 +1620,9 @@
       game.isPaused = false;
       game.leftPaddle.score = 0;
       game.rightPaddle.score = 0;
-      game.remainingTime = GAME_TIME;
+      game.remainingTime = HALF_TIME;
+      game.currentHalf = 1;
+      game.extraTime = 0;
       game.matchPoint = false;
       game.bonusPoints = 0;
       game.deuceActive = false;
@@ -1241,14 +1630,26 @@
       game.hasAnnounced30 = false;
       game.hasAnnounced10 = false;
       
+      // Show game elements
+      document.getElementById('leftScore').style.display = "block";
+      document.getElementById('rightScore').style.display = "block";
+      document.getElementById('timer').style.display = "block";
+      document.getElementById('bonusPoints').style.display = "block";
+      document.getElementById('matchInfo').style.display = "block";
+      document.getElementById('recentPlays').style.display = "block";
+      document.getElementById('bestWins').style.display = "block";
+      document.getElementById('botChampion').style.display = "block";
+      
+      // Hide menu screens
       document.getElementById('titleScreen').style.display = "none";
       document.getElementById('endScreen').style.display = "none";
       document.getElementById('pauseScreen').style.display = "none";
       
       document.getElementById('leftScore').textContent = "0";
       document.getElementById('rightScore').textContent = "0";
-      document.getElementById('timer').textContent = "2:00.000";
+      document.getElementById('timer').textContent = "1:00.000";
       document.getElementById('bonusPoints').textContent = "";
+      document.getElementById('matchInfo').textContent = "1st Half | Extra Time: +0s";
       
       resetBall();
       resetPaddles();
@@ -1305,10 +1706,10 @@
       game.startTime = Date.now();
       
       game.timerInterval = setInterval(() => {
-        if (game.isPaused) return;
+        if (game.isPaused || game.halftimeActive) return;
         
         const elapsed = Date.now() - game.startTime;
-        const remaining = Math.max(0, game.remainingTime * 1000 - elapsed);
+        const remaining = Math.max(0, game.remainingTime * 1000 - elapsed + (game.extraTime * 1000));
         
         const minutes = Math.floor(remaining / 60000);
         const seconds = Math.floor((remaining % 60000) / 1000);
@@ -1317,33 +1718,72 @@
         document.getElementById('timer').textContent = 
           `${minutes}:${seconds < 10 ? '0' : ''}${seconds}.${milliseconds < 100 ? (milliseconds < 10 ? '00' : '0') : ''}${milliseconds}`;
         
+        // Update match info
+        document.getElementById('matchInfo').innerHTML = `
+          ${game.currentHalf === 1 ? '1st Half' : '2nd Half'} | Extra Time: +${game.extraTime}s
+        `;
+        
         if (remaining <= 30000 && !game.hasAnnounced30) {
           game.hasAnnounced30 = true;
-          queueCommentary("ONLY 30 SECONDS REMAINING IN THE CHAMPIONSHIP MATCH! THE CLOCK IS TICKING!", true, true);
+          queueCommentary(`ONLY 30 SECONDS REMAINING IN THE ${game.currentHalf === 1 ? '1ST' : '2ND'} HALF!`, true, true);
         }
         
         if (remaining <= 10000 && !game.hasAnnounced10) {
           game.hasAnnounced10 = true;
-          queueCommentary("THE FINAL COUNTDOWN! 10 SECONDS TO DECIDE THE CHAMPION!", true, true);
+          queueCommentary(`FINAL COUNTDOWN! 10 SECONDS IN THE ${game.currentHalf === 1 ? '1ST' : '2ND'} HALF!`, true, true);
         }
         
         if (remaining <= 0) {
-          clearInterval(game.timerInterval);
-          handleTimeExpired();
+          if (game.currentHalf === 1) {
+            startHalftime();
+          } else {
+            handleTimeExpired();
+          }
         }
       }, 10);
+    }
+
+    function startHalftime() {
+      clearInterval(game.timerInterval);
+      game.halftimeActive = true;
+      document.getElementById('halftimeScreen').style.display = "flex";
+      document.getElementById('halftimeScreen').textContent = "HALFTIME";
+      
+      // Show halftime stats
+      queueCommentary(`HALFTIME! SCORE IS ${game.leftPaddle.score}-${game.rightPaddle.score}`, true, true);
+      
+      // Start halftime countdown
+      let halftimeCount = HALF_TIME_BREAK;
+      game.halftimeInterval = setInterval(() => {
+        document.getElementById('halftimeScreen').textContent = `HALFTIME\n${halftimeCount}`;
+        halftimeCount--;
+        
+        if (halftimeCount < 0) {
+          clearInterval(game.halftimeInterval);
+          document.getElementById('halftimeScreen').style.display = "none";
+          game.halftimeActive = false;
+          game.currentHalf = 2;
+          game.remainingTime = HALF_TIME;
+          game.hasAnnounced30 = false;
+          game.hasAnnounced10 = false;
+          game.startTime = Date.now();
+          startTimer();
+          queueCommentary("SECOND HALF BEGINS!", true, true);
+        }
+      }, 1000);
     }
 
     function handleTimeExpired() {
       if (game.leftPaddle.score === game.rightPaddle.score) {
         game.remainingTime = OVERTIME_TIME;
+        game.extraTime += OVERTIME_TIME;
         game.hasAnnounced30 = false;
         game.hasAnnounced10 = false;
         if (!game.deuceActive) {
           game.bonusPoints++;
           document.getElementById('bonusPoints').textContent = `⚡ BONUS POINT: +${game.bonusPoints}`;
         }
-        queueCommentary("WE'RE GOING TO OVERTIME IN THE CHAMPIONSHIP! NEXT POINT WINS THE TITLE!", true, true);
+        queueCommentary("WE'RE GOING TO OVERTIME! NEXT POINT WINS!", true, true);
         startTimer();
       } else {
         endGame();
@@ -1446,7 +1886,53 @@
       document.getElementById('endMessage').textContent = `${winner} WINS ${winnerScore}-${loserScore}! 🏆`;
       document.getElementById('endScreen').style.display = "flex";
       
+      // Hide game elements
+      document.getElementById('leftScore').style.display = "none";
+      document.getElementById('rightScore').style.display = "none";
+      document.getElementById('timer').style.display = "none";
+      document.getElementById('bonusPoints').style.display = "none";
+      document.getElementById('matchInfo').style.display = "none";
+      document.getElementById('recentPlays').style.display = "none";
+      document.getElementById('bestWins').style.display = "none";
+      document.getElementById('botChampion').style.display = "none";
+      
       createConfetti();
+      
+      // Stop music at the end of the match
+      backgroundMusic.pause();
+      
+      // Save to leaderboards
+      if (game.isLocalMultiplayer && !game.isFourPlayer) {
+        // Save to Recent Plays
+        saveToLeaderboard('recent', {
+          player1: game.leftPlayer,
+          player2: game.rightPlayer,
+          score1: game.leftPaddle.score,
+          score2: game.rightPaddle.score,
+          stage: game.tournamentStage,
+          timestamp: Date.now()
+        });
+        
+        // Save to Best Wins if score difference is significant
+        if (Math.abs(game.leftPaddle.score - game.rightPaddle.score) >= 3) {
+          saveToLeaderboard('best', {
+            player1: winner,
+            player2: loser,
+            score1: winnerScore,
+            score2: loserScore,
+            stage: game.tournamentStage,
+            timestamp: Date.now()
+          });
+        }
+      } else if (!game.isLocalMultiplayer) {
+        // Save to Bot Champions
+        saveToLeaderboard('bot', {
+          player1: game.leftPlayer,
+          score1: game.leftPaddle.score,
+          score2: game.rightPaddle.score,
+          timestamp: Date.now()
+        });
+      }
       
       queueCommentary(`${winner} defeats ${loser} ${winnerScore}-${loserScore}!`, true, true);
       queueCommentary(`WHAT A PERFORMANCE! ${winner} IS THE PONG CHAMPION!`, true);
@@ -1473,7 +1959,7 @@
         backgroundMusic.pause();
         queueCommentary("Music muted", true, true);
       } else {
-        if (game.musicStarted) {
+        if (game.musicStarted && game.gameStarted) {
           backgroundMusic.play().catch(e => console.log("Audio play error:", e));
         }
         queueCommentary("Music unmuted", true, true);
@@ -1491,7 +1977,7 @@
       } else {
         const pauseDuration = Date.now() - game.pausedTime;
         game.startTime += pauseDuration;
-        if (!game.isMusicMuted && game.musicStarted) {
+        if (!game.isMusicMuted && game.musicStarted && game.gameStarted) {
           backgroundMusic.play().catch(e => console.log("Audio play error:", e));
         }
         queueCommentary("GAME RESUMED", true, true);
@@ -1500,13 +1986,26 @@
 
     function returnToMenu() {
       game.isPaused = false;
+      game.halftimeActive = false;
       document.getElementById('pauseScreen').style.display = "none";
       document.getElementById('endScreen').style.display = "none";
+      document.getElementById('halftimeScreen').style.display = "none";
       document.getElementById('titleScreen').style.display = "flex";
       clearInterval(game.timerInterval);
+      clearInterval(game.halftimeInterval);
       game.gameStarted = false;
       game.isLocalMultiplayer = false;
       game.isFourPlayer = false;
+      
+      // Hide game elements
+      document.getElementById('leftScore').style.display = "none";
+      document.getElementById('rightScore').style.display = "none";
+      document.getElementById('timer').style.display = "none";
+      document.getElementById('bonusPoints').style.display = "none";
+      document.getElementById('matchInfo').style.display = "none";
+      document.getElementById('recentPlays').style.display = "none";
+      document.getElementById('bestWins').style.display = "none";
+      document.getElementById('botChampion').style.display = "none";
       
       // Reset mobile controls
       game.mobileControls = {
@@ -1519,6 +2018,11 @@
       // Show mobile controls if on mobile
       if (/Mobi|Android/i.test(navigator.userAgent)) {
         document.getElementById('mobileControls').style.display = 'flex';
+      }
+      
+      // Start music again if not muted
+      if (!game.isMusicMuted && game.musicStarted) {
+        playRandomMusic();
       }
       
       queueCommentary("RETURNING TO MENU", true, true);
