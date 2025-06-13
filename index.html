@@ -931,9 +931,9 @@
 
     function setupEventListeners() {
       // Menu buttons
-      document.getElementById('twoPlayerButton').addEventListener('click', startTwoPlayerGame);
-      document.getElementById('singlePlayerButton').addEventListener('click', startSinglePlayerGame);
-      document.getElementById('fourPlayerButton').addEventListener('click', startFourPlayerGame);
+      document.getElementById('twoPlayerButton').addEventListener('click', showTwoPlayerPrompt);
+      document.getElementById('singlePlayerButton').addEventListener('click', showSinglePlayerPrompt);
+      document.getElementById('fourPlayerButton').addEventListener('click', showFourPlayerPrompt);
       
       // Modal submit buttons
       document.getElementById('submitTwoPlayerNames').addEventListener('click', submitTwoPlayerNames);
@@ -1258,7 +1258,7 @@
     function playRandomMusic() {
       if (game.isMusicMuted || !game.musicStarted) return;
       
-      const randomTrack = 'music' + (Math.floor(Math.random() * 4) + 1 + '.mp3';
+      const randomTrack = 'music' + (Math.floor(Math.random() * 4) + 1) + '.mp3';
       backgroundMusic.src = randomTrack;
       backgroundMusic.volume = 0.3;
       backgroundMusic.play().catch(e => console.log("Audio play error:", e));
@@ -1817,7 +1817,7 @@
     }
 
     // Game management functions
-    function startTwoPlayerGame() {
+    function showTwoPlayerPrompt() {
       document.getElementById('twoPlayerPrompt').style.display = 'flex';
       document.getElementById('leftPlayerName').focus();
     }
@@ -1837,7 +1837,7 @@
       startGame();
     }
 
-    function startSinglePlayerGame() {
+    function showSinglePlayerPrompt() {
       document.getElementById('singlePlayerPrompt').style.display = 'flex';
       document.getElementById('playerName').focus();
     }
@@ -1854,7 +1854,7 @@
       startGame();
     }
 
-    function startFourPlayerGame() {
+    function showFourPlayerPrompt() {
       document.getElementById('fourPlayerPrompt').style.display = 'flex';
       document.getElementById('leftTeamName').focus();
     }
