@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>🏆 PONG CHAMPIONSHIP 🏆</title>
+  <title>🏆 PONG CHAMPIONSHIP 2.0 🏆</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     :root {
@@ -387,7 +387,6 @@
     
     .paddle-charge {
       position: absolute;
-      bottom: 10px;
       height: 10px;
       background: linear-gradient(to right, #00ff00, #ffff00, #ff0000);
       border-radius: 5px;
@@ -397,11 +396,13 @@
     
     #leftCharge {
       left: 20px;
+      bottom: 20px;
       width: 0;
     }
     
     #rightCharge {
       right: 20px;
+      bottom: 20px;
       width: 0;
     }
     
@@ -513,6 +514,76 @@
       font-weight: bold;
     }
     
+    /* Intro animation */
+    #introAnimation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    
+    #introText {
+      font-size: 5rem;
+      color: gold;
+      text-shadow: 0 0 20px rgba(255,215,0,0.8);
+      font-family: 'Impact', sans-serif;
+      animation: textGlow 2s infinite alternate;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    
+    @keyframes textGlow {
+      from { text-shadow: 0 0 10px gold; }
+      to { text-shadow: 0 0 30px gold, 0 0 40px gold; }
+    }
+    
+    #introButtons {
+      display: flex;
+      gap: 20px;
+    }
+    
+    .intro-btn {
+      padding: 15px 30px;
+      font-size: 1.5rem;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: bold;
+    }
+    
+    #introYes {
+      background: linear-gradient(45deg, #00ff00, #00cc00);
+      color: white;
+    }
+    
+    #introNo {
+      background: linear-gradient(45deg, #ff0000, #cc0000);
+      color: white;
+    }
+    
+    .intro-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px rgba(255,255,255,0.5);
+    }
+    
+    /* Particle effects for intro */
+    .particle {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 10;
+    }
+    
     @media (max-width: 768px) {
       .score { 
         font-size: 2.5rem; 
@@ -565,6 +636,13 @@
       #halftimeScreen, #gameOverScreen {
         font-size: 3rem;
       }
+      #introText {
+        font-size: 3rem;
+      }
+      .intro-btn {
+        font-size: 1.2rem;
+        padding: 12px 25px;
+      }
       
       /* Adjust leaderboards for mobile */
       #menuLeaderboards {
@@ -603,6 +681,9 @@
       #halftimeScreen, #gameOverScreen {
         font-size: 2.5rem;
       }
+      #introText {
+        font-size: 2rem;
+      }
       
       /* Hide leaderboards on very small screens */
       #menuLeaderboards {
@@ -612,6 +693,16 @@
   </style>
 </head>
 <body>
+  <!-- Intro Animation Screen -->
+  <div id="introAnimation">
+    <div id="introText">PONG CHAMPIONSHIP 2.0</div>
+    <div>Would you like sound?</div>
+    <div id="introButtons">
+      <button id="introYes" class="intro-btn">YES</button>
+      <button id="introNo" class="intro-btn">NO</button>
+    </div>
+  </div>
+
   <div id="gameContainer">
     <canvas id="pongCanvas"></canvas>
     
@@ -621,7 +712,7 @@
     <div id="timer">1:30.000</div>
     <div id="bonusPoints"></div>
     <div id="matchInfo"></div>
-    <div id="commentary">WELCOME TO THE PONG CHAMPIONSHIP!</div>
+    <div id="commentary">WELCOME TO THE PONG CHAMPIONSHIP 2.0!</div>
     
     <!-- Power charge bars -->
     <div id="leftCharge" class="paddle-charge"></div>
@@ -655,7 +746,7 @@
     </div>
 
     <div id="titleScreen" class="screen">
-      <h1>🏆 PONG CHAMPIONSHIP 🏆</h1>
+      <h1>🏆 PONG CHAMPIONSHIP 2.0 🏆</h1>
       <button class="btn-championship" id="twoPlayerButton">2 PLAYERS</button>
       <button class="btn-championship" id="singlePlayerButton">1 PLAYER VS BOT</button>
       <button class="btn-championship" id="fourPlayerButton">4 PLAYERS</button>
@@ -740,6 +831,9 @@
   <audio id="startSound1"></audio>
   <audio id="startSound2"></audio>
   <audio id="startSound3"></audio>
+  <audio id="introSound"></audio>
+  <audio id="introSound1"></audio>
+  <audio id="introSound2"></audio>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
@@ -758,8 +852,8 @@
     const BALL_SPEED_INCREMENT = 0.6;
     const SMASH_SPEED_MULTIPLIER = 2;
     const SMASH_DURATION = 1000; // ms
-    const CHARGE_TIME = 4000; // 4 seconds to charge
-    const POWER_SHOT_DURATION = 1000; // 1 second to use power shot
+    const CHARGE_TIME = 6000; // 6 seconds to charge (changed from 4s)
+    const POWER_SHOT_DURATION = 5000; // 5 seconds to use power shot (changed from 1s)
     
     // Game Elements
     const canvas = document.getElementById('pongCanvas');
@@ -784,6 +878,9 @@
     const startSound1 = document.getElementById('startSound1');
     const startSound2 = document.getElementById('startSound2');
     const startSound3 = document.getElementById('startSound3');
+    const introSound = document.getElementById('introSound');
+    const introSound1 = document.getElementById('introSound1');
+    const introSound2 = document.getElementById('introSound2');
     
     // Game State
     const game = {
@@ -854,7 +951,8 @@
       countdownActive: false,
       last10Seconds: false,
       countdownNumbers: [],
-      fireTrails: []
+      fireTrails: [],
+      soundEnabled: false
     };
 
     // Commentary phrases
@@ -922,11 +1020,115 @@
       loadLeaderboards();
       setupEventListeners();
       
-      // Set up click event to start music
-      document.addEventListener('click', startMusicOnInteraction, { once: true });
+      // Set up intro screen
+      setupIntroScreen();
+    }
+
+    function setupIntroScreen() {
+      document.getElementById('introYes').addEventListener('click', () => {
+        game.soundEnabled = true;
+        playIntroAnimation();
+      });
       
-      // Start the game loop
-      gameLoop();
+      document.getElementById('introNo').addEventListener('click', () => {
+        game.soundEnabled = false;
+        game.isMuted = true;
+        game.isMusicMuted = true;
+        document.getElementById('muteButton').textContent = "🔇";
+        document.getElementById('musicMuteButton').textContent = "🔇";
+        document.getElementById('introAnimation').style.display = 'none';
+        document.getElementById('titleScreen').style.display = 'flex';
+      });
+      
+      // Create particles for intro animation
+      createParticles();
+    }
+
+    function playIntroAnimation() {
+      // Play random intro sound
+      const introSounds = [introSound, introSound1, introSound2];
+      const randomIntroSound = introSounds[Math.floor(Math.random() * introSounds.length)];
+      randomIntroSound.volume = 0.7;
+      randomIntroSound.play().catch(e => console.log("Audio play error:", e));
+      
+      // Create explosion effect
+      createExplosion();
+      
+      // Hide intro screen after animation
+      setTimeout(() => {
+        document.getElementById('introAnimation').style.display = 'none';
+        document.getElementById('titleScreen').style.display = 'flex';
+      }, 3000);
+    }
+
+    function createParticles() {
+      const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffffff'];
+      
+      for (let i = 0; i < 50; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + 'vw';
+        particle.style.top = Math.random() * 100 + 'vh';
+        particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        particle.style.width = (Math.random() * 15 + 5) + 'px';
+        particle.style.height = particle.style.width;
+        document.getElementById('introAnimation').appendChild(particle);
+        
+        // Animate particles
+        animateParticle(particle);
+      }
+    }
+
+    function animateParticle(particle) {
+      const duration = Math.random() * 5 + 5;
+      const xEnd = Math.random() * 100;
+      const yEnd = Math.random() * 100;
+      
+      particle.style.transition = `all ${duration}s linear`;
+      particle.style.left = xEnd + 'vw';
+      particle.style.top = yEnd + 'vh';
+      particle.style.opacity = '0';
+      
+      setTimeout(() => {
+        particle.style.left = Math.random() * 100 + 'vw';
+        particle.style.top = Math.random() * 100 + 'vh';
+        particle.style.opacity = '1';
+        animateParticle(particle);
+      }, duration * 1000);
+    }
+
+    function createExplosion() {
+      const colors = ['#ff0000', '#ff9900', '#ffff00', '#00ff00', '#00ffff', '#0000ff', '#ff00ff'];
+      const container = document.getElementById('introAnimation');
+      
+      for (let i = 0; i < 100; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = '50%';
+        particle.style.top = '50%';
+        particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        particle.style.width = (Math.random() * 20 + 5) + 'px';
+        particle.style.height = particle.style.width;
+        particle.style.transform = 'translate(-50%, -50%)';
+        container.appendChild(particle);
+        
+        // Explode animation
+        const angle = Math.random() * Math.PI * 2;
+        const distance = Math.random() * 200 + 100;
+        const duration = Math.random() * 1 + 0.5;
+        
+        setTimeout(() => {
+          particle.style.transition = `all ${duration}s ease-out`;
+          particle.style.left = `calc(50% + ${Math.cos(angle) * distance}px)`;
+          particle.style.top = `calc(50% + ${Math.sin(angle) * distance}px)`;
+          particle.style.opacity = '0';
+          
+          // Remove after animation
+          setTimeout(() => {
+            particle.remove();
+          }, duration * 1000);
+        }, 50);
+      }
     }
 
     function setupEventListeners() {
@@ -952,28 +1154,29 @@
           stageBtns.forEach(b => b.classList.remove('active'));
           this.classList.add('active');
           document.getElementById('selectedStage').value = this.dataset.stage;
+          playSelectSound();
         });
       });
       // Activate first stage by default
       stageBtns[0].classList.add('active');
+      
+      // Setup button sounds
+      setupButtonSounds();
     }
 
     function setupButtonSounds() {
       const buttons = document.querySelectorAll('button');
       buttons.forEach(button => {
         button.addEventListener('click', () => {
-          if (!game.isMuted) {
-            selectSound.currentTime = 0;
-            selectSound.play().catch(e => console.log("Audio play error:", e));
-          }
+          playSelectSound();
         });
       });
     }
 
-    function startMusicOnInteraction() {
-      if (!game.musicStarted) {
-        game.musicStarted = true;
-        playRandomStartMusic();
+    function playSelectSound() {
+      if (game.soundEnabled && !game.isMuted) {
+        selectSound.currentTime = 0;
+        selectSound.play().catch(e => console.log("Audio play error:", e));
       }
     }
 
@@ -1170,8 +1373,7 @@
             activateLeftPowerShot();
           }
           break;
-        case 'm':
-        case 'M':
+        case 'ArrowLeft':
           if (!game.rightCharged && game.rightCharge >= 100) {
             activateRightPowerShot();
           }
@@ -1240,9 +1442,14 @@
       startSound1.src = 'start1.mp3';
       startSound2.src = 'start2.mp3';
       startSound3.src = 'start3.mp3';
+      introSound.src = 'intro.mp3';
+      introSound1.src = 'intro1.mp3';
+      introSound2.src = 'intro2.mp3';
     }
 
     function playRandomStartMusic() {
+      if (!game.soundEnabled || game.isMusicMuted) return;
+      
       const startTracks = [startSound, startSound1, startSound2, startSound3];
       const randomTrack = startTracks[Math.floor(Math.random() * startTracks.length)];
       
@@ -1256,9 +1463,9 @@
     }
 
     function playRandomMusic() {
-      if (game.isMusicMuted || !game.musicStarted) return;
+      if (!game.soundEnabled || game.isMusicMuted || !game.musicStarted) return;
       
-      const randomTrack = 'music' + (Math.floor(Math.random() * 4) + 1) + '.mp3';
+      const randomTrack = 'music' + (Math.floor(Math.random() * 6) + 1) + '.mp3';
       backgroundMusic.src = randomTrack;
       backgroundMusic.volume = 0.3;
       backgroundMusic.play().catch(e => console.log("Audio play error:", e));
@@ -1270,7 +1477,7 @@
     }
 
     function playRandomScoreSound() {
-      if (game.isMuted) return;
+      if (!game.soundEnabled || game.isMuted) return;
       
       const sounds = [scoreSound, scoreSound1, scoreSound2];
       const randomSound = sounds[Math.floor(Math.random() * sounds.length)];
@@ -1279,7 +1486,7 @@
     }
 
     function playRandomHitSound() {
-      if (game.isMuted) return;
+      if (!game.soundEnabled || game.isMuted) return;
       
       const sounds = [hitSound, hitSound1, hitSound2, hitSound3, hitSound4];
       const randomSound = sounds[Math.floor(Math.random() * sounds.length)];
@@ -1288,7 +1495,7 @@
     }
 
     function playGameOverSound() {
-      if (game.isMuted) return;
+      if (!game.soundEnabled || game.isMuted) return;
       
       const sounds = [gameOverSound, gameOverSound1];
       const randomSound = sounds[Math.floor(Math.random() * sounds.length)];
@@ -1298,7 +1505,7 @@
     }
 
     function playETSound() {
-      if (game.isMuted) return;
+      if (!game.soundEnabled || game.isMuted) return;
       
       etSound.currentTime = 0;
       etSound.volume = 0.5;
@@ -1629,7 +1836,7 @@
             game.leftCharged = false;
             document.getElementById('leftCharge').classList.remove('active');
             startLeftCharge();
-            queueCommentary("POWER SHOT FROM " + game.leftPlayer + "!", true);
+            queueCommentary("POWER SHOT FROM " + game.leftPlayer + "!", true, true);
           } else {
             game.ball.dx = Math.abs(Math.cos(angle)) * game.ball.speed;
             game.ball.dy = Math.sin(angle) * game.ball.speed;
@@ -1660,7 +1867,7 @@
             game.rightCharged = false;
             document.getElementById('rightCharge').classList.remove('active');
             startRightCharge();
-            queueCommentary("POWER SHOT FROM " + game.rightPlayer + "!", true);
+            queueCommentary("POWER SHOT FROM " + game.rightPlayer + "!", true, true);
           } else {
             game.ball.dx = -Math.abs(Math.cos(angle)) * game.ball.speed;
             game.ball.dy = Math.sin(angle) * game.ball.speed;
@@ -1936,10 +2143,13 @@
       document.getElementById('goText').style.display = "none";
       game.countdownActive = true;
       
+      // Play start sound
+      playRandomStartMusic();
+      
       function updateCountdown() {
         if (count > 0) {
           document.getElementById('countdown').textContent = count;
-          if (!game.isMuted) {
+          if (game.soundEnabled && !game.isMuted) {
             const utterance = new SpeechSynthesisUtterance(count.toString());
             utterance.rate = 0.8;
             utterance.pitch = 1.3;
@@ -1949,7 +2159,7 @@
         } else if (count === 0) {
           document.getElementById('countdown').style.display = "none";
           document.getElementById('goText').style.display = "flex";
-          if (!game.isMuted) {
+          if (game.soundEnabled && !game.isMuted) {
             const utterance = new SpeechSynthesisUtterance("GO!");
             utterance.rate = 0.7;
             utterance.pitch = 1.5;
@@ -1960,6 +2170,7 @@
           clearInterval(game.countdownInterval);
           document.getElementById('goText').style.display = "none";
           game.gameStarted = true;
+          game.musicStarted = true;
           game.startTime = Date.now();
           game.countdownActive = false;
           
@@ -2126,7 +2337,7 @@
     }
 
     function speakNextCommentary() {
-      if (game.commentaryQueue.length > 0 && !game.isSpeaking && !game.isMuted) {
+      if (game.commentaryQueue.length > 0 && !game.isSpeaking && game.soundEnabled && !game.isMuted) {
         const {text, important} = game.commentaryQueue.shift();
         announceCommentary(text, important);
       }
@@ -2289,6 +2500,8 @@
     }
 
     function toggleMute() {
+      if (!game.soundEnabled) return;
+      
       game.isMuted = !game.isMuted;
       document.getElementById('muteButton').textContent = game.isMuted ? "🔇" : "🔊";
       window.speechSynthesis.cancel();
@@ -2301,6 +2514,8 @@
     }
 
     function toggleMusicMute() {
+      if (!game.soundEnabled) return;
+      
       game.isMusicMuted = !game.isMusicMuted;
       document.getElementById('musicMuteButton').textContent = game.isMusicMuted ? "🔇" : "🎵";
       
@@ -2326,7 +2541,7 @@
       } else {
         const pauseDuration = Date.now() - game.pausedTime;
         game.startTime += pauseDuration;
-        if (!game.isMusicMuted && game.musicStarted && game.gameStarted) {
+        if (game.soundEnabled && !game.isMusicMuted && game.musicStarted && game.gameStarted) {
           backgroundMusic.play().catch(e => console.log("Audio play error:", e));
         }
         queueCommentary("GAME RESUMED", true, true);
@@ -2372,7 +2587,7 @@
       }
       
       // Start music again if not muted
-      if (!game.isMusicMuted && game.musicStarted) {
+      if (game.soundEnabled && !game.isMusicMuted && game.musicStarted) {
         playRandomMusic();
       }
       
