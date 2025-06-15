@@ -143,13 +143,15 @@
       justify-content: center;
       align-items: center;
       z-index: 100;
+      padding: 20px;
+      box-sizing: border-box;
     }
     
     .screen h1 {
       font-size: 3rem;
       color: gold;
       text-shadow: 0 0 15px rgba(255,215,0,0.9);
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
       text-align: center;
       font-family: 'Impact', sans-serif;
       letter-spacing: 2px;
@@ -160,7 +162,7 @@
       border: none;
       font-size: 1.5rem;
       padding: 15px 35px;
-      margin: 15px;
+      margin: 10px;
       border-radius: 50px;
       color: white;
       box-shadow: 0 8px 20px rgba(0,0,0,0.4);
@@ -406,18 +408,6 @@
       width: 0;
     }
     
-    #leftCharge2 {
-      left: 20px;
-      bottom: 35px;
-      width: 0;
-    }
-    
-    #rightCharge2 {
-      right: 20px;
-      bottom: 35px;
-      width: 0;
-    }
-    
     .paddle-charge.active {
       animation: chargePulse 0.5s infinite alternate;
     }
@@ -427,29 +417,28 @@
       to { box-shadow: 0 0 20px gold; }
     }
     
-    /* Leaderboard Styles - Only in menu */
+    /* Leaderboard Styles */
     #menuLeaderboards {
-      position: absolute;
-      bottom: 20px;
-      left: 0;
-      right: 0;
       display: flex;
-      justify-content: space-around;
-      z-index: 50;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 2rem;
+      width: 100%;
+      max-width: 1000px;
     }
     
     .leaderboard {
       background: rgba(0, 0, 0, 0.7);
       border: 2px solid gold;
       border-radius: 10px;
-      padding: 10px;
+      padding: 15px;
       color: white;
       max-height: 30vh;
       overflow-y: auto;
       box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
       font-family: 'Arial', sans-serif;
-      width: 30%;
-      max-width: 300px;
+      width: 300px;
     }
     
     .leaderboard h3 {
@@ -726,11 +715,6 @@
       #introText {
         font-size: 2rem;
       }
-      
-      /* Hide leaderboards on very small screens */
-      #menuLeaderboards {
-        display: none;
-      }
     }
   </style>
 </head>
@@ -756,11 +740,9 @@
     <div id="matchInfo"></div>
     <div id="commentary">WELCOME TO THE PONG CHAMPIONSHIP 2.0!</div>
     
-    <!-- Power charge bars - now split into two bars per player -->
+    <!-- Power charge bars - now properly positioned -->
     <div id="leftCharge" class="paddle-charge"></div>
-    <div id="leftCharge2" class="paddle-charge"></div>
     <div id="rightCharge" class="paddle-charge"></div>
-    <div id="rightCharge2" class="paddle-charge"></div>
     
     <button id="muteButton" class="control-btn">🔊</button>
     <button id="pauseButton" class="control-btn">⏸️</button>
@@ -795,7 +777,7 @@
       <button class="btn-championship" id="singlePlayerButton">1 PLAYER VS BOT</button>
       <button class="btn-championship" id="fourPlayerButton">4 PLAYERS</button>
       
-      <!-- Leaderboards in menu only -->
+      <!-- Leaderboards in menu - now properly positioned -->
       <div id="menuLeaderboards">
         <div id="recentPlays" class="leaderboard">
           <h3>RECENT PLAYS</h3>
@@ -896,8 +878,8 @@
     const BALL_SPEED_INCREMENT = 0.6;
     const SMASH_SPEED_MULTIPLIER = 2;
     const SMASH_DURATION = 1000; // ms
-    const CHARGE_TIME = 6000; // 6 seconds to charge (changed from 4s)
-    const POWER_SHOT_DURATION = 5000; // 5 seconds to use power shot (changed from 1s)
+    const CHARGE_TIME = 6000; // 6 seconds to charge
+    const POWER_SHOT_DURATION = 5000; // 5 seconds to use power shot
     
     // Game Elements
     const canvas = document.getElementById('pongCanvas');
@@ -1273,15 +1255,16 @@
     }
 
     function updateLeaderboards() {
-      // Recent Plays
+      // Recent Plays - now includes bot matches
       const recentPlaysList = document.getElementById('recentPlaysList');
       recentPlaysList.innerHTML = '';
       
       game.recentPlays.slice(0, 10).forEach((play, index) => {
         const item = document.createElement('div');
         item.className = 'leaderboard-item';
-        item.innerHTML = `<strong>${play.player1}</strong> vs <strong>${play.player2}</strong><br>
-                         ${play.stage} - ${play.score1}-${play.score2}`;
+        const opponent = play.player2 === "BOT" ? "BOT" : play.player2;
+        item.innerHTML = `<strong>${play.player1}</strong> vs <strong>${opponent}</strong><br>
+                         ${play.stage || "Match"} - ${play.score1}-${play.score2}`;
         recentPlaysList.appendChild(item);
       });
       
@@ -1337,10 +1320,10 @@
       canvas.height = window.innerHeight;
       
       // Calculate dynamic sizes based on canvas dimensions
-      game.paddleWidth = Math.max(15, canvas.width * 0.015); // Increased minimum paddle width
+      game.paddleWidth = Math.max(15, canvas.width * 0.015);
       game.paddleHeight = canvas.height * PADDLE_HEIGHT_RATIO;
       game.fourPlayerPaddleHeight = canvas.height * FOUR_PLAYER_PADDLE_HEIGHT_RATIO;
-      game.ballRadius = Math.max(8, canvas.width * BALL_RADIUS_RATIO); // Increased minimum ball size
+      game.ballRadius = Math.max(8, canvas.width * BALL_RADIUS_RATIO);
       
       // Reset game elements if game is already started
       if (game.gameStarted) {
@@ -1533,21 +1516,21 @@
       randomTrack.play().catch(e => console.log("Audio play error:", e));
       
       randomTrack.onended = function() {
-        playRandomMusic();
+        playRandomGameMusic();
       };
     }
 
-    function playRandomMusic() {
+    function playRandomGameMusic() {
       if (!game.soundEnabled || game.isMusicMuted || !game.musicStarted) return;
       
-      const randomTrack = 'music' + (Math.floor(Math.random() * 6) + 1) + '.mp3';
+      const musicTracks = ['music1.mp3', 'music2.mp3', 'music3.mp3'];
+      const randomTrack = musicTracks[Math.floor(Math.random() * musicTracks.length)];
       backgroundMusic.src = randomTrack;
       backgroundMusic.volume = 0.3;
       backgroundMusic.play().catch(e => console.log("Audio play error:", e));
       
-      // When music ends, play another random track
       backgroundMusic.onended = function() {
-        playRandomMusic();
+        playRandomGameMusic();
       };
     }
 
@@ -1648,19 +1631,15 @@
       
       game.leftCharge = 0;
       document.getElementById('leftCharge').style.width = '0';
-      document.getElementById('leftCharge2').style.width = '0';
       document.getElementById('leftCharge').classList.remove('active');
-      document.getElementById('leftCharge2').classList.remove('active');
       
       game.leftChargeInterval = setInterval(() => {
         game.leftCharge += 100 / (CHARGE_TIME / 100);
         document.getElementById('leftCharge').style.width = `${game.leftCharge}%`;
-        document.getElementById('leftCharge2').style.width = `${game.leftCharge}%`;
         
         if (game.leftCharge >= 100) {
           clearInterval(game.leftChargeInterval);
           document.getElementById('leftCharge').classList.add('active');
-          document.getElementById('leftCharge2').classList.add('active');
         }
       }, 100);
     }
@@ -1670,19 +1649,15 @@
       
       game.rightCharge = 0;
       document.getElementById('rightCharge').style.width = '0';
-      document.getElementById('rightCharge2').style.width = '0';
       document.getElementById('rightCharge').classList.remove('active');
-      document.getElementById('rightCharge2').classList.remove('active');
       
       game.rightChargeInterval = setInterval(() => {
         game.rightCharge += 100 / (CHARGE_TIME / 100);
         document.getElementById('rightCharge').style.width = `${game.rightCharge}%`;
-        document.getElementById('rightCharge2').style.width = `${game.rightCharge}%`;
         
         if (game.rightCharge >= 100) {
           clearInterval(game.rightChargeInterval);
           document.getElementById('rightCharge').classList.add('active');
-          document.getElementById('rightCharge2').classList.add('active');
         }
       }, 100);
     }
@@ -1691,13 +1666,11 @@
       game.leftCharged = true;
       game.leftChargeEndTime = Date.now() + POWER_SHOT_DURATION;
       document.getElementById('leftCharge').classList.add('active');
-      document.getElementById('leftCharge2').classList.add('active');
       
       setTimeout(() => {
         if (Date.now() > game.leftChargeEndTime) {
           game.leftCharged = false;
           document.getElementById('leftCharge').classList.remove('active');
-          document.getElementById('leftCharge2').classList.remove('active');
           startLeftCharge();
         }
       }, POWER_SHOT_DURATION);
@@ -1707,13 +1680,11 @@
       game.rightCharged = true;
       game.rightChargeEndTime = Date.now() + POWER_SHOT_DURATION;
       document.getElementById('rightCharge').classList.add('active');
-      document.getElementById('rightCharge2').classList.add('active');
       
       setTimeout(() => {
         if (Date.now() > game.rightChargeEndTime) {
           game.rightCharged = false;
           document.getElementById('rightCharge').classList.remove('active');
-          document.getElementById('rightCharge2').classList.remove('active');
           startRightCharge();
         }
       }, POWER_SHOT_DURATION);
@@ -1936,7 +1907,6 @@
             game.smashEndTime = Date.now() + SMASH_DURATION;
             game.leftCharged = false;
             document.getElementById('leftCharge').classList.remove('active');
-            document.getElementById('leftCharge2').classList.remove('active');
             startLeftCharge();
             queueCommentary("POWER SHOT FROM " + game.leftPlayer + "!", true, true);
           } else {
@@ -1968,7 +1938,6 @@
             game.smashEndTime = Date.now() + SMASH_DURATION;
             game.rightCharged = false;
             document.getElementById('rightCharge').classList.remove('active');
-            document.getElementById('rightCharge2').classList.remove('active');
             startRightCharge();
             queueCommentary("POWER SHOT FROM " + game.rightPlayer + "!", true, true);
           } else {
@@ -2205,13 +2174,9 @@
       game.leftCharged = false;
       game.rightCharged = false;
       document.getElementById('leftCharge').style.width = '0';
-      document.getElementById('leftCharge2').style.width = '0';
       document.getElementById('rightCharge').style.width = '0';
-      document.getElementById('rightCharge2').style.width = '0';
       document.getElementById('leftCharge').classList.remove('active');
-      document.getElementById('leftCharge2').classList.remove('active');
       document.getElementById('rightCharge').classList.remove('active');
-      document.getElementById('rightCharge2').classList.remove('active');
       
       // Start charging
       startLeftCharge();
@@ -2353,9 +2318,7 @@
       game.leftCharged = true;
       game.rightCharged = true;
       document.getElementById('leftCharge').classList.add('active');
-      document.getElementById('leftCharge2').classList.add('active');
       document.getElementById('rightCharge').classList.add('active');
-      document.getElementById('rightCharge2').classList.add('active');
       
       // Start announcing numbers
       announceCountdownNumber();
@@ -2698,7 +2661,7 @@
       
       // Start music again if not muted
       if (game.soundEnabled && !game.isMusicMuted && game.musicStarted) {
-        playRandomMusic();
+        playRandomGameMusic();
       }
       
       queueCommentary("RETURNING TO MENU", true, true);
