@@ -1203,6 +1203,18 @@
       }, 50);
     }
 
+    function setupButtonSounds() {
+      const buttons = document.querySelectorAll('button, .btn-championship, .control-btn, .modal-btn, .stage-btn');
+      buttons.forEach(button => {
+        button.addEventListener('click', () => {
+          if (game.soundEnabled && !game.isMuted) {
+            selectSound.currentTime = 0;
+            selectSound.play().catch(e => console.log("Audio play error:", e));
+          }
+        });
+      });
+    }
+
     function setupEventListeners() {
       // Menu buttons
       document.getElementById('twoPlayerButton').addEventListener('click', showTwoPlayerPrompt);
