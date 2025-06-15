@@ -386,27 +386,59 @@
       to { opacity: 0; }
     }
     
-    /* Power shot effects */
+    /* Power shot effects - Updated with separate bars */
+    .paddle-charge-container {
+      position: absolute;
+      bottom: 10px;
+      width: 100px;
+      height: 15px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 8px;
+      overflow: hidden;
+      z-index: 20;
+    }
+    
     .paddle-charge {
       position: absolute;
-      height: 8px;
+      height: 100%;
       background: linear-gradient(to right, #00ff00, #ffff00, #ff0000);
-      border-radius: 4px;
-      z-index: 20;
+      border-radius: 8px;
       transition: width 0.1s;
-      bottom: 10px;
+    }
+    
+    #leftChargeContainer {
+      left: 20px;
+    }
+    
+    #rightChargeContainer {
+      right: 20px;
     }
     
     #leftCharge {
-      left: 20px;
+      left: 0;
       width: 0;
-      right: 50%;
     }
     
     #rightCharge {
-      right: 20px;
+      right: 0;
       width: 0;
-      left: 50%;
+    }
+    
+    .paddle-charge-label {
+      position: absolute;
+      bottom: 30px;
+      font-size: 0.8rem;
+      color: white;
+      text-shadow: 0 0 3px black;
+      z-index: 20;
+    }
+    
+    #leftChargeLabel {
+      left: 20px;
+    }
+    
+    #rightChargeLabel {
+      right: 20px;
     }
     
     .paddle-charge.active {
@@ -472,6 +504,34 @@
       color: #aaa;
       font-size: 0.8rem;
       margin-top: 3px;
+    }
+    
+    /* Difficulty selector */
+    .difficulty-selector {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .difficulty-btn {
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 2px solid gold;
+      background: rgba(255,215,0,0.1);
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .difficulty-btn:hover {
+      background: rgba(255,215,0,0.2);
+    }
+    
+    .difficulty-btn.active {
+      background: gold;
+      color: black;
+      font-weight: bold;
     }
     
     /* Scrollbar styling */
@@ -686,6 +746,17 @@
         max-width: none;
         font-size: 0.8rem;
       }
+      
+      /* Adjust power bars for mobile */
+      .paddle-charge-container {
+        width: 80px;
+        height: 12px;
+      }
+      
+      .paddle-charge-label {
+        font-size: 0.7rem;
+        bottom: 25px;
+      }
     }
     
     @media (max-height: 500px) {
@@ -745,9 +816,16 @@
     <div id="matchInfo"></div>
     <div id="commentary">WELCOME TO THE PONG CHAMPIONSHIP 2.0!</div>
     
-    <!-- Power charge bars - now properly positioned -->
-    <div id="leftCharge" class="paddle-charge"></div>
-    <div id="rightCharge" class="paddle-charge"></div>
+    <!-- Power charge bars - now properly separated -->
+    <div id="leftChargeContainer" class="paddle-charge-container">
+      <div id="leftCharge" class="paddle-charge"></div>
+    </div>
+    <div id="leftChargeLabel" class="paddle-charge-label">P1 POWER</div>
+    
+    <div id="rightChargeContainer" class="paddle-charge-container">
+      <div id="rightCharge" class="paddle-charge"></div>
+    </div>
+    <div id="rightChargeLabel" class="paddle-charge-label">P2 POWER</div>
     
     <button id="muteButton" class="control-btn">🔊</button>
     <button id="pauseButton" class="control-btn">⏸️</button>
@@ -847,6 +925,14 @@
     <div class="modal-content">
       <div class="modal-title">WHAT IS YOUR NAME?</div>
       <input type="text" id="playerName" class="modal-input" placeholder="Your Name" maxlength="20">
+      
+      <div class="difficulty-selector">
+        <div class="difficulty-btn active" data-difficulty="easy">EASY</div>
+        <div class="difficulty-btn" data-difficulty="medium">MEDIUM</div>
+        <div class="difficulty-btn" data-difficulty="hard">HARD</div>
+      </div>
+      <input type="hidden" id="selectedDifficulty" value="easy">
+      
       <div style="display: flex; justify-content: center; gap: 10px; margin-top: 15px;">
         <button class="modal-btn" id="submitSinglePlayerName">START GAME</button>
         <button class="modal-btn" id="cancelSinglePlayer">BACK</button>
@@ -947,6 +1033,7 @@
       leftPlayer: "PLAYER 1",
       rightPlayer: "PLAYER 2",
       tournamentStage: "Round of 16",
+      aiDifficulty: "easy", // Added AI difficulty
       timerInterval: null,
       countdownInterval: null,
       halftimeInterval: null,
@@ -1101,7 +1188,7 @@
     }
 
     function setupButtonSounds() {
-      const buttons = document.querySelectorAll('button, .btn-championship, .control-btn, .modal-btn, .stage-btn');
+      const buttons = document.querySelectorAll('button, .btn-championship, .control-btn, .modal-btn, .stage-btn, .difficulty-btn');
       buttons.forEach(button => {
         button.addEventListener('click', () => {
           if (game.soundEnabled && !game.isMuted) {
@@ -1146,6 +1233,17 @@
       });
       // Activate first stage by default
       stageBtns[0].classList.add('active');
+      
+      // Difficulty selection
+      const difficultyBtns = document.querySelectorAll('.difficulty-btn');
+      difficultyBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          difficultyBtns.forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          document.getElementById('selectedDifficulty').value = this.dataset.difficulty;
+          playSelectSound();
+        });
+      });
       
       // Setup button sounds
       setupButtonSounds();
@@ -1197,7 +1295,8 @@
         item.className = 'leaderboard-item';
         const opponent = play.player2 === "BOT" ? "BOT" : play.player2;
         const timeAgo = getTimeAgo(play.timestamp);
-        item.innerHTML = `<strong>${play.player1}</strong> vs <strong>${opponent}</strong><br>
+        const difficulty = play.difficulty ? ` (${play.difficulty.toUpperCase()})` : '';
+        item.innerHTML = `<strong>${play.player1}</strong> vs <strong>${opponent}${difficulty}</strong><br>
                          ${play.stage || "Match"} - ${play.score1}-${play.score2}
                          <div class="leaderboard-time">${timeAgo}</div>`;
         recentPlaysList.appendChild(item);
@@ -1211,8 +1310,9 @@
         const item = document.createElement('div');
         item.className = 'leaderboard-item';
         const timeAgo = getTimeAgo(win.timestamp);
+        const difficulty = win.difficulty ? ` (${win.difficulty.toUpperCase()})` : '';
         item.innerHTML = `<span class="leaderboard-rank">${index + 1}.</span> 
-                         <strong>${win.player1}</strong> ${win.score1}-${win.score2} <strong>${win.player2}</strong>
+                         <strong>${win.player1}</strong> ${win.score1}-${win.score2} <strong>${win.player2}${difficulty}</strong>
                          <div class="leaderboard-time">${timeAgo}</div>`;
         bestWinsList.appendChild(item);
       });
@@ -1225,8 +1325,9 @@
         const item = document.createElement('div');
         item.className = 'leaderboard-item';
         const timeAgo = getTimeAgo(champ.timestamp);
+        const difficulty = champ.difficulty ? ` (${champ.difficulty.toUpperCase()})` : '';
         item.innerHTML = `<span class="leaderboard-rank">${index + 1}.</span> 
-                         <strong>${champ.player1}</strong> ${champ.score1}-${champ.score2} BOT
+                         <strong>${champ.player1}</strong> ${champ.score1}-${champ.score2} BOT${difficulty}
                          <div class="leaderboard-time">${timeAgo}</div>`;
         botChampionList.appendChild(item);
       });
@@ -1611,6 +1712,7 @@
       game.leftCharge = 0;
       document.getElementById('leftCharge').style.width = '0';
       document.getElementById('leftCharge').classList.remove('active');
+      document.getElementById('leftChargeLabel').textContent = 'P1 POWER';
       
       game.leftChargeInterval = setInterval(() => {
         game.leftCharge += 100 / (CHARGE_TIME / 100);
@@ -1619,6 +1721,7 @@
         if (game.leftCharge >= 100) {
           clearInterval(game.leftChargeInterval);
           document.getElementById('leftCharge').classList.add('active');
+          document.getElementById('leftChargeLabel').textContent = 'P1 READY!';
         }
       }, 100);
     }
@@ -1629,6 +1732,7 @@
       game.rightCharge = 0;
       document.getElementById('rightCharge').style.width = '0';
       document.getElementById('rightCharge').classList.remove('active');
+      document.getElementById('rightChargeLabel').textContent = 'P2 POWER';
       
       game.rightChargeInterval = setInterval(() => {
         game.rightCharge += 100 / (CHARGE_TIME / 100);
@@ -1637,6 +1741,7 @@
         if (game.rightCharge >= 100) {
           clearInterval(game.rightChargeInterval);
           document.getElementById('rightCharge').classList.add('active');
+          document.getElementById('rightChargeLabel').textContent = 'P2 READY!';
         }
       }, 100);
     }
@@ -1645,11 +1750,13 @@
       game.leftCharged = true;
       game.leftChargeEndTime = Date.now() + POWER_SHOT_DURATION;
       document.getElementById('leftCharge').classList.add('active');
+      document.getElementById('leftChargeLabel').textContent = 'P1 FIRING!';
       
       setTimeout(() => {
         if (Date.now() > game.leftChargeEndTime) {
           game.leftCharged = false;
           document.getElementById('leftCharge').classList.remove('active');
+          document.getElementById('leftChargeLabel').textContent = 'P1 POWER';
           startLeftCharge();
         }
       }, POWER_SHOT_DURATION);
@@ -1659,11 +1766,13 @@
       game.rightCharged = true;
       game.rightChargeEndTime = Date.now() + POWER_SHOT_DURATION;
       document.getElementById('rightCharge').classList.add('active');
+      document.getElementById('rightChargeLabel').textContent = 'P2 FIRING!';
       
       setTimeout(() => {
         if (Date.now() > game.rightChargeEndTime) {
           game.rightCharged = false;
           document.getElementById('rightCharge').classList.remove('active');
+          document.getElementById('rightChargeLabel').textContent = 'P2 POWER';
           startRightCharge();
         }
       }, POWER_SHOT_DURATION);
@@ -1673,11 +1782,13 @@
       game.teamLeftCharged = true;
       game.leftChargeEndTime = Date.now() + POWER_SHOT_DURATION;
       document.getElementById('leftCharge').classList.add('active');
+      document.getElementById('leftChargeLabel').textContent = 'TEAM FIRING!';
       
       setTimeout(() => {
         if (Date.now() > game.leftChargeEndTime) {
           game.teamLeftCharged = false;
           document.getElementById('leftCharge').classList.remove('active');
+          document.getElementById('leftChargeLabel').textContent = 'TEAM POWER';
           startLeftCharge();
         }
       }, POWER_SHOT_DURATION);
@@ -1687,11 +1798,13 @@
       game.teamRightCharged = true;
       game.rightChargeEndTime = Date.now() + POWER_SHOT_DURATION;
       document.getElementById('rightCharge').classList.add('active');
+      document.getElementById('rightChargeLabel').textContent = 'TEAM FIRING!';
       
       setTimeout(() => {
         if (Date.now() > game.rightChargeEndTime) {
           game.teamRightCharged = false;
           document.getElementById('rightCharge').classList.remove('active');
+          document.getElementById('rightChargeLabel').textContent = 'TEAM POWER';
           startRightCharge();
         }
       }, POWER_SHOT_DURATION);
@@ -1862,8 +1975,18 @@
           const paddleCenter = game.rightPaddle.y + game.paddleHeight / 2;
           const predictedBallY = game.ball.y + (game.ball.dy * (canvas.width - game.ball.x) / Math.abs(game.ball.dx));
           
-          // Add some randomness to make AI less perfect
-          const reactionSpeed = 0.7 * (1 + Math.random() * 0.2 - 0.1);
+          // Adjust AI difficulty
+          let reactionSpeed;
+          switch(game.aiDifficulty) {
+            case 'easy':
+              reactionSpeed = 0.5 * (1 + Math.random() * 0.3 - 0.15); // Slower and more random
+              break;
+            case 'hard':
+              reactionSpeed = 0.9 * (1 + Math.random() * 0.1 - 0.05); // Faster and more precise
+              break;
+            default: // medium
+              reactionSpeed = 0.7 * (1 + Math.random() * 0.2 - 0.1);
+          }
           
           if (paddleCenter < predictedBallY - 15) {
             game.rightPaddle.y += PADDLE_SPEED * reactionSpeed;
@@ -1907,6 +2030,7 @@
             game.smashEndTime = Date.now() + SMASH_DURATION;
             game.leftCharged = false;
             document.getElementById('leftCharge').classList.remove('active');
+            document.getElementById('leftChargeLabel').textContent = 'P1 POWER';
             startLeftCharge();
             queueCommentary("POWER SHOT FROM " + game.leftPlayer + "!", true, true);
           } else {
@@ -1938,6 +2062,7 @@
             game.smashEndTime = Date.now() + SMASH_DURATION;
             game.rightCharged = false;
             document.getElementById('rightCharge').classList.remove('active');
+            document.getElementById('rightChargeLabel').textContent = 'P2 POWER';
             startRightCharge();
             queueCommentary("POWER SHOT FROM " + game.rightPlayer + "!", true, true);
           } else {
@@ -1971,6 +2096,7 @@
               game.smashEndTime = Date.now() + SMASH_DURATION;
               game.teamLeftCharged = false;
               document.getElementById('leftCharge').classList.remove('active');
+              document.getElementById('leftChargeLabel').textContent = 'TEAM POWER';
               startLeftCharge();
               queueCommentary("TEAM POWER SHOT FROM " + game.leftPlayer + "!", true, true);
             } else {
@@ -2004,6 +2130,7 @@
               game.smashEndTime = Date.now() + SMASH_DURATION;
               game.teamRightCharged = false;
               document.getElementById('rightCharge').classList.remove('active');
+              document.getElementById('rightChargeLabel').textContent = 'TEAM POWER';
               startRightCharge();
               queueCommentary("TEAM POWER SHOT FROM " + game.rightPlayer + "!", true, true);
             } else {
@@ -2162,9 +2289,11 @@
 
     function submitSinglePlayerName() {
       const playerName = document.getElementById('playerName').value.trim() || "PLAYER";
+      const difficulty = document.getElementById('selectedDifficulty').value;
       
       game.leftPlayer = playerName.toUpperCase();
       game.rightPlayer = "BOT";
+      game.aiDifficulty = difficulty;
       game.isLocalMultiplayer = false;
       game.isFourPlayer = false;
       
@@ -2226,6 +2355,8 @@
       document.getElementById('rightCharge').style.width = '0';
       document.getElementById('leftCharge').classList.remove('active');
       document.getElementById('rightCharge').classList.remove('active');
+      document.getElementById('leftChargeLabel').textContent = 'P1 POWER';
+      document.getElementById('rightChargeLabel').textContent = game.isLocalMultiplayer ? 'P2 POWER' : 'BOT POWER';
       
       // Start charging
       startLeftCharge();
@@ -2586,6 +2717,7 @@
           player1: game.leftPlayer,
           score1: game.leftPaddle.score,
           score2: game.rightPaddle.score,
+          difficulty: game.aiDifficulty,
           timestamp: Date.now()
         });
       }
@@ -2615,6 +2747,7 @@
         player1: game.leftPlayer,
         score1: game.leftPaddle.score,
         score2: game.rightPaddle.score,
+        difficulty: game.aiDifficulty,
         timestamp: Date.now()
       });
       
@@ -2712,7 +2845,7 @@
       };
       
       // Show mobile controls if on mobile for 1P and 2P modes
-      if (/Mobi|Android/i.test(navigator.userAgent) && !game.isFourPlayer) {
+      if (/Mobi|Android/i.test(navigator.userAgent) {
         document.getElementById('mobileControls').style.display = 'flex';
       }
       
