@@ -42,9 +42,7 @@
     }
     
     canvas {
-      background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
-      background-size: 400% 400%;
-      animation: gradientBG 15s ease infinite;
+      background: #1a2a6c; /* Simpler background for better performance */
       display: block;
       touch-action: none;
       width: 100%;
@@ -52,18 +50,12 @@
       border-radius: 0;
     }
     
-    @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    
     .score {
       position: absolute;
       top: 20px;
       font-size: 3rem;
       color: white;
-      text-shadow: 0 0 15px rgba(255,255,255,0.9);
+      text-shadow: 0 0 10px rgba(255,255,255,0.7);
       z-index: 30;
       font-weight: bold;
       font-family: 'Impact', sans-serif;
@@ -82,7 +74,7 @@
       color: gold;
       z-index: 30;
       font-weight: bold;
-      text-shadow: 0 0 10px rgba(255,215,0,0.7);
+      text-shadow: 0 0 5px rgba(255,215,0,0.7);
       display: none;
     }
     
@@ -93,7 +85,7 @@
       transform: translateX(-50%);
       color: gold;
       font-size: 1.2rem;
-      text-shadow: 1px 1px 3px black;
+      text-shadow: 1px 1px 2px black;
       z-index: 30;
       font-weight: bold;
       display: none;
@@ -118,15 +110,15 @@
       transform: translateX(-50%);
       background: rgba(0,0,0,0.7);
       color: white;
-      padding: 12px 24px;
-      border-radius: 25px;
+      padding: 10px 20px;
+      border-radius: 20px;
       max-width: 90%;
       text-align: center;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       z-index: 30;
       font-weight: bold;
-      border: 3px solid gold;
-      box-shadow: 0 0 20px rgba(255,215,0,0.7);
+      border: 2px solid gold;
+      box-shadow: 0 0 10px rgba(255,215,0,0.5);
       transition: all 0.3s;
       font-family: 'Arial Black', sans-serif;
     }
@@ -150,7 +142,7 @@
     .screen h1 {
       font-size: 3rem;
       color: gold;
-      text-shadow: 0 0 15px rgba(255,215,0,0.9);
+      text-shadow: 0 0 10px rgba(255,215,0,0.7);
       margin-bottom: 1rem;
       text-align: center;
       font-family: 'Impact', sans-serif;
@@ -161,21 +153,21 @@
       background: linear-gradient(45deg, #ff8a00, #e52e71);
       border: none;
       font-size: 1.5rem;
-      padding: 15px 35px;
+      padding: 12px 30px;
       margin: 10px;
       border-radius: 50px;
       color: white;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-      transition: all 0.3s;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      transition: all 0.2s;
       font-weight: bold;
       text-transform: uppercase;
-      letter-spacing: 2px;
+      letter-spacing: 1px;
       font-family: 'Arial Black', sans-serif;
     }
     
     .btn-championship:hover {
-      transform: scale(1.1);
-      box-shadow: 0 12px 25px rgba(0,0,0,0.5);
+      transform: scale(1.05);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
     }
     
     .control-btn {
@@ -184,31 +176,27 @@
       background: rgba(255,255,255,0.3);
       border: 2px solid white;
       border-radius: 50%;
-      width: 50px;
-      height: 50px;
+      width: 45px;
+      height: 45px;
       color: white;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       cursor: pointer;
       display: flex;
       justify-content: center;
       align-items: center;
       transition: all 0.2s;
-      box-shadow: 0 0 10px rgba(255,255,255,0.5);
+      box-shadow: 0 0 8px rgba(255,255,255,0.4);
     }
     
     .control-btn:hover {
       background: rgba(255,255,255,0.4);
-      transform: scale(1.1);
     }
     
-    .control-btn:active {
-      transform: scale(0.9);
-    }
-    
-    #muteButton { top: 20px; left: 20px; }
-    #pauseButton { top: 20px; left: 80px; }
-    #fullscreenButton { top: 20px; left: 140px; }
-    #musicMuteButton { top: 20px; right: 20px; }
+    #muteButton { top: 15px; left: 15px; }
+    #pauseButton { top: 15px; left: 70px; }
+    #fullscreenButton { top: 15px; left: 125px; }
+    #musicMuteButton { top: 15px; right: 15px; }
+    #backButton { top: 15px; right: 70px; }
     
     #pauseScreen, #countdown, #halftimeScreen, #gameOverScreen {
       display: none;
@@ -216,45 +204,68 @@
     
     #mobileControls {
       position: absolute;
-      bottom: 30px;
+      bottom: 20px;
       width: 100%;
       display: flex;
       justify-content: space-between;
-      padding: 0 30px;
+      padding: 0 20px;
       z-index: 20;
     }
     
     .mobile-paddle-controls {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 15px;
     }
     
     .mobile-btn {
-      width: 80px;
-      height: 80px;
+      width: 70px;
+      height: 70px;
       border-radius: 50%;
       background: rgba(255,255,255,0.3);
       display: flex;
       justify-content: center;
       align-items: center;
       color: white;
-      font-size: 2rem;
+      font-size: 1.8rem;
       user-select: none;
       touch-action: manipulation;
       border: 2px solid white;
-      box-shadow: 0 0 15px rgba(255,255,255,0.5);
+      box-shadow: 0 0 10px rgba(255,255,255,0.4);
     }
     
     .mobile-btn:active {
       background: rgba(255,255,255,0.5);
-      transform: scale(0.95);
+    }
+    
+    .mobile-power-btn {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: rgba(255,215,0,0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: gold;
+      font-size: 1.5rem;
+      user-select: none;
+      touch-action: manipulation;
+      border: 2px solid gold;
+      box-shadow: 0 0 10px rgba(255,215,0,0.5);
+      position: absolute;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    
+    .mobile-power-btn:active {
+      background: rgba(255,215,0,0.5);
     }
     
     .confetti {
       position: absolute;
-      width: 10px;
-      height: 10px;
+      width: 8px;
+      height: 8px;
       background-color: #f00;
       border-radius: 50%;
       pointer-events: none;
@@ -281,30 +292,30 @@
     
     .modal-content {
       background: linear-gradient(135deg, #1a2a6c, #b21f1f);
-      padding: 40px;
-      border-radius: 25px;
+      padding: 30px;
+      border-radius: 20px;
       text-align: center;
       max-width: 90%;
       width: 500px;
-      box-shadow: 0 0 40px rgba(0,0,0,0.7);
-      border: 4px solid gold;
+      box-shadow: 0 0 30px rgba(0,0,0,0.6);
+      border: 3px solid gold;
     }
     
     .modal-title {
       color: gold;
-      font-size: 2.2rem;
-      margin-bottom: 30px;
-      text-shadow: 0 0 15px rgba(255,215,0,0.9);
+      font-size: 2rem;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px rgba(255,215,0,0.7);
       font-family: 'Impact', sans-serif;
     }
     
     .modal-input {
       width: 100%;
-      padding: 15px;
-      margin-bottom: 25px;
+      padding: 12px;
+      margin-bottom: 20px;
       border-radius: 15px;
-      border: 3px solid gold;
-      font-size: 1.5rem;
+      border: 2px solid gold;
+      font-size: 1.3rem;
       text-align: center;
       background: rgba(0,0,0,0.7);
       color: white;
@@ -312,63 +323,63 @@
     }
     
     .modal-btn {
-      padding: 15px 35px;
-      margin: 0 15px;
+      padding: 12px 30px;
+      margin: 0 10px;
       border-radius: 50px;
       border: none;
       background: gold;
       color: #000;
       font-weight: bold;
       cursor: pointer;
-      transition: all 0.3s;
-      font-size: 1.2rem;
+      transition: all 0.2s;
+      font-size: 1.1rem;
       font-family: 'Arial Black', sans-serif;
     }
     
     .modal-btn:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 20px rgba(255,215,0,0.9);
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(255,215,0,0.7);
     }
     
     #countdown {
-      font-size: 10rem;
+      font-size: 8rem;
       font-weight: bold;
       color: gold;
-      text-shadow: 0 0 30px rgba(255,215,0,0.9);
+      text-shadow: 0 0 20px rgba(255,215,0,0.7);
       animation: pulse 0.5s infinite alternate;
     }
     
     #halftimeScreen {
-      font-size: 5rem;
+      font-size: 4rem;
       font-weight: bold;
       color: gold;
-      text-shadow: 0 0 30px rgba(255,215,0,0.9);
+      text-shadow: 0 0 20px rgba(255,215,0,0.7);
     }
     
     #gameOverScreen {
-      font-size: 5rem;
+      font-size: 4rem;
       font-weight: bold;
       color: red;
-      text-shadow: 0 0 30px rgba(255,0,0,0.9);
+      text-shadow: 0 0 20px rgba(255,0,0,0.7);
     }
     
     @keyframes pulse {
       from { transform: scale(1); opacity: 1; }
-      to { transform: scale(1.3); opacity: 0.8; }
+      to { transform: scale(1.2); opacity: 0.8; }
     }
     
     #goText {
-      font-size: 10rem;
+      font-size: 8rem;
       font-weight: bold;
       color: gold;
-      text-shadow: 0 0 30px rgba(255,215,0,0.9);
+      text-shadow: 0 0 20px rgba(255,215,0,0.7);
       animation: goPulse 0.3s infinite alternate, fadeOut 1s 1s forwards;
       display: none;
     }
     
     @keyframes goPulse {
-      from { transform: scale(1); text-shadow: 0 0 30px rgba(255,215,0,0.9); }
-      to { transform: scale(1.5); text-shadow: 0 0 60px rgba(255,215,0,1); }
+      from { transform: scale(1); text-shadow: 0 0 20px rgba(255,215,0,0.7); }
+      to { transform: scale(1.3); text-shadow: 0 0 40px rgba(255,215,0,0.9); }
     }
     
     @keyframes fadeOut {
@@ -376,36 +387,26 @@
     }
     
     /* Power shot effects */
-    .fire-trail {
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      background: radial-gradient(circle, yellow, orange, red);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 10;
-      opacity: 0.7;
-    }
-    
     .paddle-charge {
       position: absolute;
-      height: 10px;
+      height: 8px;
       background: linear-gradient(to right, #00ff00, #ffff00, #ff0000);
-      border-radius: 5px;
+      border-radius: 4px;
       z-index: 20;
       transition: width 0.1s;
+      bottom: 10px;
     }
     
     #leftCharge {
       left: 20px;
-      bottom: 20px;
       width: 0;
+      right: 50%;
     }
     
     #rightCharge {
       right: 20px;
-      bottom: 20px;
       width: 0;
+      left: 50%;
     }
     
     .paddle-charge.active {
@@ -413,8 +414,8 @@
     }
     
     @keyframes chargePulse {
-      from { box-shadow: 0 0 5px gold; }
-      to { box-shadow: 0 0 20px gold; }
+      from { box-shadow: 0 0 3px gold; }
+      to { box-shadow: 0 0 10px gold; }
     }
     
     /* Leaderboard Styles */
@@ -422,8 +423,8 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 20px;
-      margin-top: 2rem;
+      gap: 15px;
+      margin-top: 1.5rem;
       width: 100%;
       max-width: 1000px;
     }
@@ -432,11 +433,11 @@
       background: rgba(0, 0, 0, 0.7);
       border: 2px solid gold;
       border-radius: 10px;
-      padding: 15px;
+      padding: 12px;
       color: white;
       max-height: 30vh;
       overflow-y: auto;
-      box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
       font-family: 'Arial', sans-serif;
       width: 300px;
     }
@@ -444,9 +445,9 @@
     .leaderboard h3 {
       color: gold;
       margin-top: 0;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       text-align: center;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       border-bottom: 1px solid gold;
       padding-bottom: 5px;
     }
@@ -467,19 +468,25 @@
       margin-right: 5px;
     }
     
+    .leaderboard-time {
+      color: #aaa;
+      font-size: 0.8rem;
+      margin-top: 3px;
+    }
+    
     /* Scrollbar styling */
     .leaderboard::-webkit-scrollbar {
-      width: 8px;
+      width: 6px;
     }
     
     .leaderboard::-webkit-scrollbar-track {
       background: rgba(0, 0, 0, 0.3);
-      border-radius: 10px;
+      border-radius: 8px;
     }
     
     .leaderboard::-webkit-scrollbar-thumb {
       background: gold;
-      border-radius: 10px;
+      border-radius: 8px;
     }
     
     .leaderboard::-webkit-scrollbar-thumb:hover {
@@ -491,22 +498,23 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      margin-bottom: 20px;
-      gap: 10px;
+      margin-bottom: 15px;
+      gap: 8px;
     }
     
     .stage-btn {
       background: rgba(255, 215, 0, 0.2);
       border: 1px solid gold;
       color: white;
-      padding: 8px 15px;
+      padding: 6px 12px;
       border-radius: 20px;
       cursor: pointer;
       transition: all 0.2s;
+      font-size: 0.9rem;
     }
     
     .stage-btn:hover {
-      background: rgba(255, 215, 0, 0.4);
+      background: rgba(255, 215, 0, 0.3);
     }
     
     .stage-btn.active {
@@ -531,32 +539,32 @@
     }
     
     #introText {
-      font-size: 5rem;
+      font-size: 4rem;
       color: gold;
-      text-shadow: 0 0 20px rgba(255,215,0,0.8);
+      text-shadow: 0 0 15px rgba(255,215,0,0.7);
       font-family: 'Impact', sans-serif;
       animation: textGlow 2s infinite alternate;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
       text-align: center;
     }
     
     @keyframes textGlow {
-      from { text-shadow: 0 0 10px gold; }
-      to { text-shadow: 0 0 30px gold, 0 0 40px gold; }
+      from { text-shadow: 0 0 8px gold; }
+      to { text-shadow: 0 0 20px gold, 0 0 30px gold; }
     }
     
     #introButtons {
       display: flex;
-      gap: 20px;
+      gap: 15px;
     }
     
     .intro-btn {
-      padding: 15px 30px;
-      font-size: 1.5rem;
+      padding: 12px 25px;
+      font-size: 1.3rem;
       border-radius: 50px;
       border: none;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all 0.2s;
       font-weight: bold;
     }
     
@@ -571,48 +579,32 @@
     }
     
     .intro-btn:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 20px rgba(255,255,255,0.5);
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(255,255,255,0.4);
     }
     
-    /* Particle effects for intro */
-    .particle {
+    /* Back button */
+    .back-btn {
       position: absolute;
-      width: 10px;
-      height: 10px;
+      top: 15px;
+      left: 15px;
+      background: rgba(255,255,255,0.2);
+      border: 2px solid white;
       border-radius: 50%;
-      pointer-events: none;
-      z-index: 10;
+      width: 45px;
+      height: 45px;
+      color: white;
+      font-size: 1.2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      z-index: 110;
+      transition: all 0.2s;
     }
     
-    /* New intro animation */
-    @keyframes titleEntry {
-      0% { transform: scale(0.5) rotate(-10deg); opacity: 0; }
-      50% { transform: scale(1.1) rotate(5deg); }
-      100% { transform: scale(1) rotate(0deg); opacity: 1; }
-    }
-    
-    @keyframes buttonEntry {
-      0% { transform: translateY(50px); opacity: 0; }
-      100% { transform: translateY(0); opacity: 1; }
-    }
-    
-    @keyframes pulseGlow {
-      0% { transform: scale(1); box-shadow: 0 0 10px gold; }
-      50% { transform: scale(1.05); box-shadow: 0 0 30px gold; }
-      100% { transform: scale(1); box-shadow: 0 0 10px gold; }
-    }
-    
-    .intro-animated {
-      animation: titleEntry 1.5s ease-out forwards;
-    }
-    
-    .intro-btn-animated {
-      animation: buttonEntry 1s ease-out 0.5s both;
-    }
-    
-    .pulse-animated {
-      animation: pulseGlow 2s infinite;
+    .back-btn:hover {
+      background: rgba(255,255,255,0.3);
     }
     
     @media (max-width: 768px) {
@@ -627,52 +619,59 @@
       #matchInfo { font-size: 0.9rem; top: 80px; }
       #commentary { 
         font-size: 1rem; 
-        padding: 10px 20px; 
+        padding: 8px 15px; 
         bottom: 15px; 
         max-width: 95%;
       }
       .btn-championship { 
         font-size: 1.2rem; 
-        padding: 12px 25px; 
-        margin: 10px;
+        padding: 10px 20px; 
+        margin: 8px;
       }
       .control-btn {
-        width: 45px;
-        height: 45px;
+        width: 40px;
+        height: 40px;
         font-size: 1rem;
       }
       #muteButton { left: 10px; top: 10px; }
-      #pauseButton { left: 65px; top: 10px; }
-      #fullscreenButton { left: 120px; top: 10px; }
+      #pauseButton { left: 60px; top: 10px; }
+      #fullscreenButton { left: 110px; top: 10px; }
       #musicMuteButton { right: 10px; top: 10px; }
+      #backButton { right: 60px; top: 10px; }
       .mobile-btn {
-        width: 70px;
-        height: 70px;
-        font-size: 1.8rem;
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+      }
+      .mobile-power-btn {
+        width: 60px;
+        height: 60px;
+        font-size: 1.3rem;
+        bottom: 90px;
       }
       .modal-content {
         width: 90%;
-        padding: 30px;
+        padding: 20px;
       }
       .modal-title {
-        font-size: 1.8rem;
+        font-size: 1.6rem;
       }
       .modal-input {
-        font-size: 1.2rem;
-        padding: 12px;
+        font-size: 1.1rem;
+        padding: 10px;
       }
       #countdown, #goText {
-        font-size: 6rem;
+        font-size: 5rem;
       }
       #halftimeScreen, #gameOverScreen {
         font-size: 3rem;
       }
       #introText {
-        font-size: 3rem;
+        font-size: 2.5rem;
       }
       .intro-btn {
-        font-size: 1.2rem;
-        padding: 12px 25px;
+        font-size: 1.1rem;
+        padding: 10px 20px;
       }
       
       /* Adjust leaderboards for mobile */
@@ -693,27 +692,33 @@
       .screen h1 { font-size: 2rem; }
       .btn-championship { 
         font-size: 1rem; 
-        padding: 10px 20px;
-        margin: 8px;
+        padding: 8px 15px;
+        margin: 6px;
       }
-      #mobileControls { bottom: 15px; }
+      #mobileControls { bottom: 10px; }
       .mobile-btn { 
-        width: 60px; 
-        height: 60px; 
-        font-size: 1.5rem;
+        width: 50px; 
+        height: 50px; 
+        font-size: 1.3rem;
+      }
+      .mobile-power-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 1.1rem;
+        bottom: 70px;
       }
       #commentary { 
-        bottom: 10px;
-        font-size: 0.9rem;
+        bottom: 8px;
+        font-size: 0.8rem;
       }
       #countdown, #goText {
-        font-size: 4rem;
+        font-size: 3rem;
       }
       #halftimeScreen, #gameOverScreen {
-        font-size: 2.5rem;
+        font-size: 2rem;
       }
       #introText {
-        font-size: 2rem;
+        font-size: 1.8rem;
       }
     }
   </style>
@@ -722,7 +727,7 @@
   <!-- Intro Animation Screen -->
   <div id="introAnimation">
     <div id="introText" class="intro-animated pulse-animated">PONG CHAMPIONSHIP 2.0</div>
-    <div style="color: white; margin-bottom: 20px; animation: buttonEntry 1s ease-out 0.7s both;">Would you like sound?</div>
+    <div style="color: white; margin-bottom: 15px; animation: buttonEntry 1s ease-out 0.7s both;">Would you like sound?</div>
     <div id="introButtons">
       <button id="introYes" class="intro-btn intro-btn-animated">YES</button>
       <button id="introNo" class="intro-btn intro-btn-animated">NO</button>
@@ -748,12 +753,14 @@
     <button id="pauseButton" class="control-btn">⏸️</button>
     <button id="fullscreenButton" class="control-btn">⛶</button>
     <button id="musicMuteButton" class="control-btn">🎵</button>
+    <button id="backButton" class="control-btn" style="display: none;">↩️</button>
     
     <div id="mobileControls" style="display: none;">
       <div class="mobile-paddle-controls">
         <div class="mobile-btn" id="upBtnLeft">↑</div>
         <div class="mobile-btn" id="downBtnLeft">↓</div>
       </div>
+      <div class="mobile-power-btn" id="powerBtnLeft">💥</div>
       <div class="mobile-paddle-controls">
         <div class="mobile-btn" id="upBtnRight">↑</div>
         <div class="mobile-btn" id="downBtnRight">↓</div>
@@ -777,7 +784,7 @@
       <button class="btn-championship" id="singlePlayerButton">1 PLAYER VS BOT</button>
       <button class="btn-championship" id="fourPlayerButton">4 PLAYERS</button>
       
-      <!-- Leaderboards in menu - now properly positioned -->
+      <!-- Leaderboards in menu -->
       <div id="menuLeaderboards">
         <div id="recentPlays" class="leaderboard">
           <h3>RECENT PLAYS</h3>
@@ -817,7 +824,10 @@
       
       <input type="hidden" id="selectedStage" value="Round of 16">
       
-      <button class="modal-btn" id="submitTwoPlayerNames">START GAME</button>
+      <div style="display: flex; justify-content: center; gap: 10px; margin-top: 15px;">
+        <button class="modal-btn" id="submitTwoPlayerNames">START GAME</button>
+        <button class="modal-btn" id="cancelTwoPlayer">BACK</button>
+      </div>
     </div>
   </div>
 
@@ -826,7 +836,10 @@
       <div class="modal-title">ENTER TEAM NAMES</div>
       <input type="text" id="leftTeamName" class="modal-input" placeholder="Left Team Name" maxlength="20">
       <input type="text" id="rightTeamName" class="modal-input" placeholder="Right Team Name" maxlength="20">
-      <button class="modal-btn" id="submitFourPlayerNames">START GAME</button>
+      <div style="display: flex; justify-content: center; gap: 10px; margin-top: 15px;">
+        <button class="modal-btn" id="submitFourPlayerNames">START GAME</button>
+        <button class="modal-btn" id="cancelFourPlayer">BACK</button>
+      </div>
     </div>
   </div>
 
@@ -834,7 +847,10 @@
     <div class="modal-content">
       <div class="modal-title">WHAT IS YOUR NAME?</div>
       <input type="text" id="playerName" class="modal-input" placeholder="Your Name" maxlength="20">
-      <button class="modal-btn" id="submitSinglePlayerName">START GAME</button>
+      <div style="display: flex; justify-content: center; gap: 10px; margin-top: 15px;">
+        <button class="modal-btn" id="submitSinglePlayerName">START GAME</button>
+        <button class="modal-btn" id="cancelSinglePlayer">BACK</button>
+      </div>
     </div>
   </div>
 
@@ -867,19 +883,19 @@
     const PADDLE_HEIGHT_RATIO = 0.2;
     const FOUR_PLAYER_PADDLE_HEIGHT_RATIO = 0.15;
     const BALL_RADIUS_RATIO = 0.012;
-    const INITIAL_BALL_SPEED = 9;
-    const MAX_BALL_SPEED = 17;
-    const FOUR_PLAYER_BALL_SPEED = 10;
-    const PADDLE_SPEED = 10;
+    const INITIAL_BALL_SPEED = 7; // Reduced for better performance
+    const MAX_BALL_SPEED = 14;
+    const FOUR_PLAYER_BALL_SPEED = 8;
+    const PADDLE_SPEED = 8; // Reduced for better control
     const WINNING_SCORE = 10;
     const HALF_TIME = 90; // 1 minute 30 seconds per half
     const HALF_TIME_BREAK = 10; // 10 second break
     const OVERTIME_TIME = 30; // 30 seconds for overtime
-    const BALL_SPEED_INCREMENT = 0.6;
-    const SMASH_SPEED_MULTIPLIER = 2;
-    const SMASH_DURATION = 1000; // ms
-    const CHARGE_TIME = 6000; // 6 seconds to charge
-    const POWER_SHOT_DURATION = 5000; // 5 seconds to use power shot
+    const BALL_SPEED_INCREMENT = 0.5;
+    const SMASH_SPEED_MULTIPLIER = 1.8; // Reduced for better control
+    const SMASH_DURATION = 800; // ms
+    const CHARGE_TIME = 5000; // 5 seconds to charge
+    const POWER_SHOT_DURATION = 4000; // 4 seconds to use power shot
     
     // Game Elements
     const canvas = document.getElementById('pongCanvas');
@@ -950,7 +966,9 @@
         leftUp: false,
         leftDown: false,
         rightUp: false,
-        rightDown: false
+        rightDown: false,
+        leftPower: false,
+        rightPower: false
       },
       dpadEnabled: false,
       isLocalMultiplayer: false,
@@ -977,8 +995,9 @@
       countdownActive: false,
       last10Seconds: false,
       countdownNumbers: [],
-      fireTrails: [],
-      soundEnabled: false
+      soundEnabled: false,
+      teamLeftCharged: false,
+      teamRightCharged: false
     };
 
     // Commentary phrases
@@ -1046,7 +1065,7 @@
       loadLeaderboards();
       setupEventListeners();
       
-      // Set up intro screen with enhanced animation
+      // Set up intro screen
       setupIntroScreen();
     }
 
@@ -1065,124 +1084,20 @@
         document.getElementById('introAnimation').style.display = 'none';
         document.getElementById('titleScreen').style.display = 'flex';
       });
-      
-      // Create particles for intro animation
-      createParticles();
     }
 
     function playIntroAnimation() {
       // Play random intro sound
       const introSounds = [introSound, introSound1, introSound2];
       const randomIntroSound = introSounds[Math.floor(Math.random() * introSounds.length)];
-      randomIntroSound.volume = 0.7;
+      randomIntroSound.volume = 0.6;
       randomIntroSound.play().catch(e => console.log("Audio play error:", e));
-      
-      // Create enhanced explosion effect
-      createEnhancedExplosion();
       
       // Hide intro screen after animation
       setTimeout(() => {
         document.getElementById('introAnimation').style.display = 'none';
         document.getElementById('titleScreen').style.display = 'flex';
-      }, 3000);
-    }
-
-    function createParticles() {
-      const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffffff'];
-      
-      for (let i = 0; i < 100; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        particle.style.left = Math.random() * 100 + 'vw';
-        particle.style.top = Math.random() * 100 + 'vh';
-        particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        particle.style.width = (Math.random() * 15 + 5) + 'px';
-        particle.style.height = particle.style.width;
-        document.getElementById('introAnimation').appendChild(particle);
-        
-        // Animate particles with more dynamic movement
-        animateParticle(particle);
-      }
-    }
-
-    function animateParticle(particle) {
-      const duration = Math.random() * 5 + 5;
-      const xEnd = Math.random() * 100;
-      const yEnd = Math.random() * 100;
-      
-      particle.style.transition = `all ${duration}s cubic-bezier(0.1, 0.8, 0.2, 1)`;
-      particle.style.left = xEnd + 'vw';
-      particle.style.top = yEnd + 'vh';
-      particle.style.opacity = '0';
-      particle.style.transform = `rotate(${Math.random() * 360}deg) scale(${Math.random() + 0.5})`;
-      
-      setTimeout(() => {
-        particle.style.left = Math.random() * 100 + 'vw';
-        particle.style.top = Math.random() * 100 + 'vh';
-        particle.style.opacity = '1';
-        animateParticle(particle);
-      }, duration * 1000);
-    }
-
-    function createEnhancedExplosion() {
-      const colors = ['#ff0000', '#ff9900', '#ffff00', '#00ff00', '#00ffff', '#0000ff', '#ff00ff'];
-      const container = document.getElementById('introAnimation');
-      
-      for (let i = 0; i < 200; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        particle.style.left = '50%';
-        particle.style.top = '50%';
-        particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        particle.style.width = (Math.random() * 25 + 5) + 'px';
-        particle.style.height = particle.style.width;
-        particle.style.transform = 'translate(-50%, -50%)';
-        container.appendChild(particle);
-        
-        // Enhanced explode animation with more dynamic movement
-        const angle = Math.random() * Math.PI * 2;
-        const distance = Math.random() * 300 + 150;
-        const duration = Math.random() * 2 + 0.5;
-        const rotation = Math.random() * 720 - 360;
-        const scale = Math.random() * 2 + 0.5;
-        
-        setTimeout(() => {
-          particle.style.transition = `all ${duration}s cubic-bezier(0.1, 0.8, 0.2, 1)`;
-          particle.style.left = `calc(50% + ${Math.cos(angle) * distance}px)`;
-          particle.style.top = `calc(50% + ${Math.sin(angle) * distance}px)`;
-          particle.style.opacity = '0';
-          particle.style.transform = `translate(-50%, -50%) rotate(${rotation}deg) scale(${scale})`;
-          
-          // Remove after animation
-          setTimeout(() => {
-            particle.remove();
-          }, duration * 1000);
-        }, 50);
-      }
-      
-      // Add shockwave effect
-      const shockwave = document.createElement('div');
-      shockwave.style.position = 'absolute';
-      shockwave.style.left = '50%';
-      shockwave.style.top = '50%';
-      shockwave.style.width = '10px';
-      shockwave.style.height = '10px';
-      shockwave.style.borderRadius = '50%';
-      shockwave.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
-      shockwave.style.transform = 'translate(-50%, -50%)';
-      shockwave.style.boxShadow = '0 0 20px 10px white';
-      container.appendChild(shockwave);
-      
-      setTimeout(() => {
-        shockwave.style.transition = 'all 0.8s ease-out';
-        shockwave.style.width = '500px';
-        shockwave.style.height = '500px';
-        shockwave.style.opacity = '0';
-        
-        setTimeout(() => {
-          shockwave.remove();
-        }, 1000);
-      }, 50);
+      }, 2000);
     }
 
     function setupButtonSounds() {
@@ -1208,10 +1123,16 @@
       document.getElementById('submitSinglePlayerName').addEventListener('click', submitSinglePlayerName);
       document.getElementById('submitFourPlayerNames').addEventListener('click', submitFourPlayerNames);
       
+      // Modal cancel buttons
+      document.getElementById('cancelTwoPlayer').addEventListener('click', cancelTwoPlayerPrompt);
+      document.getElementById('cancelSinglePlayer').addEventListener('click', cancelSinglePlayerPrompt);
+      document.getElementById('cancelFourPlayer').addEventListener('click', cancelFourPlayerPrompt);
+      
       // Game control buttons
       document.getElementById('resumeButton').addEventListener('click', togglePause);
       document.getElementById('returnToMenuButton').addEventListener('click', returnToMenu);
       document.getElementById('endScreenBtn').addEventListener('click', returnToMenu);
+      document.getElementById('backButton').addEventListener('click', handleBackButton);
       
       // Stage selection
       const stageBtns = document.querySelectorAll('.stage-btn');
@@ -1228,6 +1149,18 @@
       
       // Setup button sounds
       setupButtonSounds();
+    }
+
+    function handleBackButton() {
+      if (document.getElementById('twoPlayerPrompt').style.display === 'flex') {
+        cancelTwoPlayerPrompt();
+      } else if (document.getElementById('singlePlayerPrompt').style.display === 'flex') {
+        cancelSinglePlayerPrompt();
+      } else if (document.getElementById('fourPlayerPrompt').style.display === 'flex') {
+        cancelFourPlayerPrompt();
+      } else {
+        returnToMenu();
+      }
     }
 
     function playSelectSound() {
@@ -1263,8 +1196,10 @@
         const item = document.createElement('div');
         item.className = 'leaderboard-item';
         const opponent = play.player2 === "BOT" ? "BOT" : play.player2;
+        const timeAgo = getTimeAgo(play.timestamp);
         item.innerHTML = `<strong>${play.player1}</strong> vs <strong>${opponent}</strong><br>
-                         ${play.stage || "Match"} - ${play.score1}-${play.score2}`;
+                         ${play.stage || "Match"} - ${play.score1}-${play.score2}
+                         <div class="leaderboard-time">${timeAgo}</div>`;
         recentPlaysList.appendChild(item);
       });
       
@@ -1275,8 +1210,10 @@
       game.bestWins.sort((a, b) => (b.score1 - b.score2) - (a.score1 - a.score2)).slice(0, 10).forEach((win, index) => {
         const item = document.createElement('div');
         item.className = 'leaderboard-item';
+        const timeAgo = getTimeAgo(win.timestamp);
         item.innerHTML = `<span class="leaderboard-rank">${index + 1}.</span> 
-                         <strong>${win.player1}</strong> ${win.score1}-${win.score2} <strong>${win.player2}</strong>`;
+                         <strong>${win.player1}</strong> ${win.score1}-${win.score2} <strong>${win.player2}</strong>
+                         <div class="leaderboard-time">${timeAgo}</div>`;
         bestWinsList.appendChild(item);
       });
       
@@ -1287,10 +1224,24 @@
       game.botChampions.sort((a, b) => (b.score1 - b.score2) - (a.score1 - a.score2)).slice(0, 20).forEach((champ, index) => {
         const item = document.createElement('div');
         item.className = 'leaderboard-item';
+        const timeAgo = getTimeAgo(champ.timestamp);
         item.innerHTML = `<span class="leaderboard-rank">${index + 1}.</span> 
-                         <strong>${champ.player1}</strong> ${champ.score1}-${champ.score2} BOT`;
+                         <strong>${champ.player1}</strong> ${champ.score1}-${champ.score2} BOT
+                         <div class="leaderboard-time">${timeAgo}</div>`;
         botChampionList.appendChild(item);
       });
+    }
+
+    function getTimeAgo(timestamp) {
+      const seconds = Math.floor((Date.now() - timestamp) / 1000);
+      
+      if (seconds < 60) return `${seconds} sec ago`;
+      if (seconds < 3600) return `${Math.floor(seconds / 60)} min ago`;
+      if (seconds < 86400) return `${Math.floor(seconds / 3600)} hr ago`;
+      if (seconds < 604800) return `${Math.floor(seconds / 86400)}D ago`;
+      if (seconds < 2592000) return `${Math.floor(seconds / 604800)}W ago`;
+      if (seconds < 31536000) return `${Math.floor(seconds / 2592000)}M ago`;
+      return `${Math.floor(seconds / 31536000)} yr ago`;
     }
 
     function saveToLeaderboard(type, data) {
@@ -1337,6 +1288,7 @@
       const downBtnLeft = document.getElementById('downBtnLeft');
       const upBtnRight = document.getElementById('upBtnRight');
       const downBtnRight = document.getElementById('downBtnRight');
+      const powerBtnLeft = document.getElementById('powerBtnLeft');
       
       // Touch events
       const handleTouch = (btn, direction, isLeft) => (e) => {
@@ -1359,6 +1311,16 @@
       downBtnRight.addEventListener('touchstart', handleTouch(downBtnRight, 'down', false));
       downBtnRight.addEventListener('touchend', handleTouch(downBtnRight, 'none', false));
       
+      // Power button
+      powerBtnLeft.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        game.mobileControls.leftPower = true;
+      });
+      powerBtnLeft.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        game.mobileControls.leftPower = false;
+      });
+      
       // Mouse events for desktop testing
       upBtnLeft.addEventListener('mousedown', () => game.mobileControls.leftUp = true);
       upBtnLeft.addEventListener('mouseup', () => game.mobileControls.leftUp = false);
@@ -1368,8 +1330,10 @@
       upBtnRight.addEventListener('mouseup', () => game.mobileControls.rightUp = false);
       downBtnRight.addEventListener('mousedown', () => game.mobileControls.rightDown = true);
       downBtnRight.addEventListener('mouseup', () => game.mobileControls.rightDown = false);
+      powerBtnLeft.addEventListener('mousedown', () => game.mobileControls.leftPower = true);
+      powerBtnLeft.addEventListener('mouseup', () => game.mobileControls.leftPower = false);
       
-      // Show mobile controls on mobile devices
+      // Show mobile controls on mobile devices for 1P and 2P modes
       if (/Mobi|Android/i.test(navigator.userAgent)) {
         document.getElementById('mobileControls').style.display = 'flex';
       }
@@ -1394,6 +1358,9 @@
         case 'f':
         case 'F':
           toggleFullscreen();
+          break;
+        case 'Escape':
+          handleBackButton();
           break;
         case 'w':
         case 'W':
@@ -1427,13 +1394,25 @@
           break;
         case 'e':
         case 'E':
-          if (!game.leftCharged && game.leftCharge >= 100) {
+          if (!game.leftCharged && game.leftCharge >= 100 && !game.isFourPlayer) {
             activateLeftPowerShot();
           }
           break;
         case 'ArrowLeft':
-          if (!game.rightCharged && game.rightCharge >= 100) {
+          if (!game.rightCharged && game.rightCharge >= 100 && !game.isFourPlayer) {
             activateRightPowerShot();
+          }
+          break;
+        case 'z':
+        case 'Z':
+          if (game.isFourPlayer && !game.teamLeftCharged && game.leftCharge >= 100) {
+            activateTeamLeftPowerShot();
+          }
+          break;
+        case 'k':
+        case 'K':
+          if (game.isFourPlayer && !game.teamRightCharged && game.rightCharge >= 100) {
+            activateTeamRightPowerShot();
           }
           break;
       }
@@ -1523,7 +1502,7 @@
     function playRandomGameMusic() {
       if (!game.soundEnabled || game.isMusicMuted || !game.musicStarted) return;
       
-      const musicTracks = ['music1.mp3', 'music2.mp3', 'music3.mp3'];
+      const musicTracks = ['music1.mp3', 'music2.mp3', 'music3.mp3', 'music4.mp3', 'music5.mp3', 'music6.mp3'];
       const randomTrack = musicTracks[Math.floor(Math.random() * musicTracks.length)];
       backgroundMusic.src = randomTrack;
       backgroundMusic.volume = 0.3;
@@ -1690,29 +1669,32 @@
       }, POWER_SHOT_DURATION);
     }
 
-    function createFireTrail(x, y) {
-      const fire = document.createElement('div');
-      fire.className = 'fire-trail';
-      fire.style.left = (x - 10) + 'px';
-      fire.style.top = (y - 10) + 'px';
-      document.getElementById('gameContainer').appendChild(fire);
+    function activateTeamLeftPowerShot() {
+      game.teamLeftCharged = true;
+      game.leftChargeEndTime = Date.now() + POWER_SHOT_DURATION;
+      document.getElementById('leftCharge').classList.add('active');
       
-      // Random size and animation
-      const size = Math.random() * 15 + 10;
-      fire.style.width = size + 'px';
-      fire.style.height = size + 'px';
-      fire.style.animation = `fadeOut ${Math.random() * 0.5 + 0.3}s forwards`;
-      
-      // Remove after animation
       setTimeout(() => {
-        fire.remove();
-      }, 1000);
+        if (Date.now() > game.leftChargeEndTime) {
+          game.teamLeftCharged = false;
+          document.getElementById('leftCharge').classList.remove('active');
+          startLeftCharge();
+        }
+      }, POWER_SHOT_DURATION);
+    }
+
+    function activateTeamRightPowerShot() {
+      game.teamRightCharged = true;
+      game.rightChargeEndTime = Date.now() + POWER_SHOT_DURATION;
+      document.getElementById('rightCharge').classList.add('active');
       
-      // Add to game state for tracking
-      game.fireTrails.push({
-        element: fire,
-        createdAt: Date.now()
-      });
+      setTimeout(() => {
+        if (Date.now() > game.rightChargeEndTime) {
+          game.teamRightCharged = false;
+          document.getElementById('rightCharge').classList.remove('active');
+          startRightCharge();
+        }
+      }, POWER_SHOT_DURATION);
     }
 
     // Drawing functions
@@ -1721,9 +1703,9 @@
       
       if (!game.isFourPlayer) {
         // Left paddle
-        if (game.leftCharged) {
+        if (game.leftCharged || (game.last10Seconds && game.lastScorer === game.leftPlayer)) {
           ctx.fillStyle = 'gold';
-          ctx.shadowBlur = 15;
+          ctx.shadowBlur = 10;
           ctx.shadowColor = 'gold';
         } else {
           ctx.fillStyle = 'white';
@@ -1732,9 +1714,9 @@
         ctx.fillRect(20, game.leftPaddle.y, game.paddleWidth, paddleHeight);
         
         // Right paddle
-        if (game.rightCharged) {
+        if (game.rightCharged || (game.last10Seconds && game.lastScorer === game.rightPlayer)) {
           ctx.fillStyle = 'gold';
-          ctx.shadowBlur = 15;
+          ctx.shadowBlur = 10;
           ctx.shadowColor = 'gold';
         } else {
           ctx.fillStyle = 'white';
@@ -1742,10 +1724,28 @@
         }
         ctx.fillRect(canvas.width - 20 - game.paddleWidth, game.rightPaddle.y, game.paddleWidth, paddleHeight);
       } else {
+        // 4-player paddles
         ctx.fillStyle = 'white';
         ctx.shadowBlur = 0;
+        
+        // Left team (top and bottom)
+        if (game.teamLeftCharged || (game.last10Seconds && game.lastScorer === game.leftPlayer)) {
+          ctx.fillStyle = 'gold';
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = 'gold';
+        }
         ctx.fillRect(20, game.leftTopPaddle.y, game.paddleWidth, paddleHeight);
         ctx.fillRect(20, game.leftBottomPaddle.y, game.paddleWidth, paddleHeight);
+        
+        // Right team (top and bottom)
+        if (game.teamRightCharged || (game.last10Seconds && game.lastScorer === game.rightPlayer)) {
+          ctx.fillStyle = 'gold';
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = 'gold';
+        } else {
+          ctx.fillStyle = 'white';
+          ctx.shadowBlur = 0;
+        }
         ctx.fillRect(canvas.width - 20 - game.paddleWidth, game.rightTopPaddle.y, game.paddleWidth, paddleHeight);
         ctx.fillRect(canvas.width - 20 - game.paddleWidth, game.rightBottomPaddle.y, game.paddleWidth, paddleHeight);
       }
@@ -1753,11 +1753,6 @@
     }
 
     function drawBall() {
-      // Draw fire trails for smash shots
-      if (game.isSmashActive || game.last10Seconds) {
-        createFireTrail(game.ball.x, game.ball.y);
-      }
-      
       ctx.beginPath();
       ctx.arc(game.ball.x, game.ball.y, game.ballRadius, 0, Math.PI * 2);
       
@@ -1771,7 +1766,7 @@
         gradient.addColorStop(0.5, 'orange');
         gradient.addColorStop(1, 'red');
         ctx.fillStyle = gradient;
-        ctx.shadowBlur = 15;
+        ctx.shadowBlur = 10;
         ctx.shadowColor = 'orange';
       } else {
         ctx.fillStyle = 'white';
@@ -1783,7 +1778,7 @@
     }
 
     function drawNet() {
-      ctx.setLineDash([10, 15]);
+      ctx.setLineDash([8, 12]);
       ctx.beginPath();
       ctx.moveTo(canvas.width / 2, 0);
       ctx.lineTo(canvas.width / 2, canvas.height);
@@ -1845,6 +1840,11 @@
       if (game.mobileControls.leftDown) game.leftPaddle.y += PADDLE_SPEED;
       if (game.mobileControls.rightUp) game.rightPaddle.y -= PADDLE_SPEED;
       if (game.mobileControls.rightDown) game.rightPaddle.y += PADDLE_SPEED;
+      
+      // Mobile power button
+      if (game.mobileControls.leftPower && !game.leftCharged && game.leftCharge >= 100) {
+        activateLeftPowerShot();
+      }
 
       // Keyboard controls
       if (!game.isFourPlayer) {
@@ -1854,11 +1854,11 @@
           if (game.keysPressed['ArrowUp']) game.rightPaddle.y -= PADDLE_SPEED;
           if (game.keysPressed['ArrowDown']) game.rightPaddle.y += PADDLE_SPEED;
         } else {
-          // AI for right paddle in single player
+          // Player controls
           if (game.keysPressed['w'] || game.keysPressed['W']) game.leftPaddle.y -= PADDLE_SPEED;
           if (game.keysPressed['s'] || game.keysPressed['S']) game.leftPaddle.y += PADDLE_SPEED;
           
-          // Improved AI for right paddle
+          // AI for right paddle in single player
           const paddleCenter = game.rightPaddle.y + game.paddleHeight / 2;
           const predictedBallY = game.ball.y + (game.ball.dy * (canvas.width - game.ball.x) / Math.abs(game.ball.dx));
           
@@ -1962,8 +1962,21 @@
               (game.ball.y > game.leftBottomPaddle.y && game.ball.y < game.leftBottomPaddle.y + paddleHeight)) {
             const paddle = game.ball.y < canvas.height/2 ? game.leftTopPaddle : game.leftBottomPaddle;
             const angle = getBallAngle(paddle.y, game.ball.y, paddleHeight);
-            game.ball.dx = Math.abs(Math.cos(angle)) * game.ball.speed;
-            game.ball.dy = Math.sin(angle) * game.ball.speed;
+            
+            // Check for team power shot
+            if (game.teamLeftCharged || game.last10Seconds) {
+              game.ball.dx = Math.abs(Math.cos(angle)) * game.ball.speed * SMASH_SPEED_MULTIPLIER;
+              game.ball.dy = Math.sin(angle) * game.ball.speed * SMASH_SPEED_MULTIPLIER;
+              game.isSmashActive = true;
+              game.smashEndTime = Date.now() + SMASH_DURATION;
+              game.teamLeftCharged = false;
+              document.getElementById('leftCharge').classList.remove('active');
+              startLeftCharge();
+              queueCommentary("TEAM POWER SHOT FROM " + game.leftPlayer + "!", true, true);
+            } else {
+              game.ball.dx = Math.abs(Math.cos(angle)) * game.ball.speed;
+              game.ball.dy = Math.sin(angle) * game.ball.speed;
+            }
             
             // Increase ball speed but cap at MAX_BALL_SPEED
             if (game.ball.speed < MAX_BALL_SPEED) {
@@ -1982,8 +1995,21 @@
               (game.ball.y > game.rightBottomPaddle.y && game.ball.y < game.rightBottomPaddle.y + paddleHeight)) {
             const paddle = game.ball.y < canvas.height/2 ? game.rightTopPaddle : game.rightBottomPaddle;
             const angle = getBallAngle(paddle.y, game.ball.y, paddleHeight);
-            game.ball.dx = -Math.abs(Math.cos(angle)) * game.ball.speed;
-            game.ball.dy = Math.sin(angle) * game.ball.speed;
+            
+            // Check for team power shot
+            if (game.teamRightCharged || game.last10Seconds) {
+              game.ball.dx = -Math.abs(Math.cos(angle)) * game.ball.speed * SMASH_SPEED_MULTIPLIER;
+              game.ball.dy = Math.sin(angle) * game.ball.speed * SMASH_SPEED_MULTIPLIER;
+              game.isSmashActive = true;
+              game.smashEndTime = Date.now() + SMASH_DURATION;
+              game.teamRightCharged = false;
+              document.getElementById('rightCharge').classList.remove('active');
+              startRightCharge();
+              queueCommentary("TEAM POWER SHOT FROM " + game.rightPlayer + "!", true, true);
+            } else {
+              game.ball.dx = -Math.abs(Math.cos(angle)) * game.ball.speed;
+              game.ball.dy = Math.sin(angle) * game.ball.speed;
+            }
             
             // Increase ball speed but cap at MAX_BALL_SPEED
             if (game.ball.speed < MAX_BALL_SPEED) {
@@ -2085,7 +2111,7 @@
     }
 
     function checkForSpecialMove() {
-      const speedThreshold = game.isFourPlayer ? FOUR_PLAYER_BALL_SPEED * 1.8 : MAX_BALL_SPEED * 0.9;
+      const speedThreshold = game.isFourPlayer ? FOUR_PLAYER_BALL_SPEED * 1.5 : MAX_BALL_SPEED * 0.8;
       const now = Date.now();
       
       if (game.ball.speed >= speedThreshold && now - game.lastSpecialMoveTime > 5000) {
@@ -2098,7 +2124,13 @@
     // Game management functions
     function showTwoPlayerPrompt() {
       document.getElementById('twoPlayerPrompt').style.display = 'flex';
+      document.getElementById('backButton').style.display = 'flex';
       document.getElementById('leftPlayerName').focus();
+    }
+
+    function cancelTwoPlayerPrompt() {
+      document.getElementById('twoPlayerPrompt').style.display = 'none';
+      document.getElementById('backButton').style.display = 'none';
     }
 
     function submitTwoPlayerNames() {
@@ -2113,12 +2145,19 @@
       game.isFourPlayer = false;
       
       document.getElementById('twoPlayerPrompt').style.display = 'none';
+      document.getElementById('backButton').style.display = 'none';
       startGame();
     }
 
     function showSinglePlayerPrompt() {
       document.getElementById('singlePlayerPrompt').style.display = 'flex';
+      document.getElementById('backButton').style.display = 'flex';
       document.getElementById('playerName').focus();
+    }
+
+    function cancelSinglePlayerPrompt() {
+      document.getElementById('singlePlayerPrompt').style.display = 'none';
+      document.getElementById('backButton').style.display = 'none';
     }
 
     function submitSinglePlayerName() {
@@ -2130,12 +2169,19 @@
       game.isFourPlayer = false;
       
       document.getElementById('singlePlayerPrompt').style.display = 'none';
+      document.getElementById('backButton').style.display = 'none';
       startGame();
     }
 
     function showFourPlayerPrompt() {
       document.getElementById('fourPlayerPrompt').style.display = 'flex';
+      document.getElementById('backButton').style.display = 'flex';
       document.getElementById('leftTeamName').focus();
+    }
+
+    function cancelFourPlayerPrompt() {
+      document.getElementById('fourPlayerPrompt').style.display = 'none';
+      document.getElementById('backButton').style.display = 'none';
     }
 
     function submitFourPlayerNames() {
@@ -2148,6 +2194,7 @@
       game.isFourPlayer = true;
       
       document.getElementById('fourPlayerPrompt').style.display = 'none';
+      document.getElementById('backButton').style.display = 'none';
       document.getElementById('mobileControls').style.display = 'none';
       startGame();
     }
@@ -2167,6 +2214,8 @@
       game.hasAnnounced10 = false;
       game.last10Seconds = false;
       game.countdownNumbers = [];
+      game.teamLeftCharged = false;
+      game.teamRightCharged = false;
       
       // Reset charge bars
       game.leftCharge = 0;
@@ -2315,8 +2364,13 @@
       game.countdownNumbers = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, "FINISH!"];
       
       // Make all shots power shots in last 10 seconds
-      game.leftCharged = true;
-      game.rightCharged = true;
+      if (!game.isFourPlayer) {
+        game.leftCharged = true;
+        game.rightCharged = true;
+      } else {
+        game.teamLeftCharged = true;
+        game.teamRightCharged = true;
+      }
       document.getElementById('leftCharge').classList.add('active');
       document.getElementById('rightCharge').classList.add('active');
       
@@ -2439,15 +2493,15 @@
     function createConfetti() {
       const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffffff'];
       
-      for (let i = 0; i < 100; i++) {
+      for (let i = 0; i < 50; i++) { // Reduced number of particles for performance
         const confetti = document.createElement('div');
         confetti.className = 'confetti';
         confetti.style.left = Math.random() * 100 + 'vw';
         confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        confetti.style.animation = `confetti-fall ${Math.random() * 3 + 2}s linear forwards`;
+        confetti.style.animation = `confetti-fall ${Math.random() * 2 + 1}s linear forwards`;
         confetti.style.animationDelay = Math.random() * 0.5 + 's';
         
-        const size = Math.random() * 10 + 5;
+        const size = Math.random() * 8 + 4;
         confetti.style.width = size + 'px';
         confetti.style.height = size + 'px';
         
@@ -2461,7 +2515,7 @@
         
         setTimeout(() => {
           confetti.remove();
-        }, 5000);
+        }, 3000);
       }
     }
 
@@ -2629,6 +2683,7 @@
       document.getElementById('halftimeScreen').style.display = "none";
       document.getElementById('gameOverScreen').style.display = "none";
       document.getElementById('titleScreen').style.display = "flex";
+      document.getElementById('backButton').style.display = "none";
       clearInterval(game.timerInterval);
       clearInterval(game.halftimeInterval);
       clearInterval(game.leftChargeInterval);
@@ -2651,11 +2706,13 @@
         leftUp: false,
         leftDown: false,
         rightUp: false,
-        rightDown: false
+        rightDown: false,
+        leftPower: false,
+        rightPower: false
       };
       
-      // Show mobile controls if on mobile
-      if (/Mobi|Android/i.test(navigator.userAgent)) {
+      // Show mobile controls if on mobile for 1P and 2P modes
+      if (/Mobi|Android/i.test(navigator.userAgent) && !game.isFourPlayer) {
         document.getElementById('mobileControls').style.display = 'flex';
       }
       
