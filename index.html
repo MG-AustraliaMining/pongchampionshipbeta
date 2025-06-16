@@ -1238,11 +1238,7 @@
       const introText = document.getElementById('introText');
       const startButton = document.getElementById('startButton');
       
-      // Play intro sound
-      const introSounds = [introSound, introSound1, introSound2];
-      const randomIntroSound = introSounds[Math.floor(Math.random() * introSounds.length)];
-      randomIntroSound.volume = 0.6;
-      randomIntroSound.play().catch(e => console.log("Audio play error:", e));
+      // Don't play any sounds yet - wait for start button click
       
       // Animate text entry
       setTimeout(() => {
@@ -1258,7 +1254,7 @@
         document.getElementById('introAnimation').style.display = 'none';
         document.getElementById('titleScreen').style.display = 'flex';
         
-        // Play start sound
+        // Play start sound only when button is clicked
         const startSounds = [startSound, startSound1, startSound2, startSound3];
         const randomStartSound = startSounds[Math.floor(Math.random() * startSounds.length)];
         randomStartSound.volume = 0.5;
@@ -1322,7 +1318,8 @@
             lb.classList.remove('active');
           });
           
-          document.getElementById(this.dataset.tab + 'Plays').classList.add('active');
+          const targetId = this.dataset.tab + (this.dataset.tab === 'best' ? 'Wins' : this.dataset.tab === 'bot' ? 'Champion' : 'Plays');
+          document.getElementById(targetId).classList.add('active');
           playSelectSound();
         });
       });
@@ -1338,7 +1335,7 @@
         });
       });
       // Activate first stage by default
-      stageBtns[0].classList.add('active');
+      if (stageBtns[0]) stageBtns[0].classList.add('active');
       
       // Difficulty selection
       const difficultyBtns = document.querySelectorAll('.difficulty-btn');
@@ -1346,7 +1343,10 @@
         btn.addEventListener('click', function() {
           difficultyBtns.forEach(b => b.classList.remove('active'));
           this.classList.add('active');
-          document.getElementById('selectedDifficulty').value = this.dataset.difficulty;
+          const difficultyInput = document.getElementById(this.parentElement.nextElementSibling.id);
+          if (difficultyInput) {
+            difficultyInput.value = this.dataset.difficulty;
+          }
           playSelectSound();
         });
       });
@@ -1398,49 +1398,55 @@
     function updateLeaderboards() {
       // Recent Plays - now includes bot matches
       const recentPlaysList = document.getElementById('recentPlaysList');
-      recentPlaysList.innerHTML = '';
-      
-      game.recentPlays.slice(0, 10).forEach((play, index) => {
-        const item = document.createElement('div');
-        item.className = 'leaderboard-item';
-        const opponent = play.player2 === "BOT" ? "BOT" : play.player2;
-        const timeAgo = getTimeAgo(play.timestamp);
-        const difficulty = play.difficulty ? ` (${play.difficulty.toUpperCase()})` : '';
-        item.innerHTML = `<strong>${play.player1}</strong> vs <strong>${opponent}${difficulty}</strong><br>
-                         ${play.stage || "Match"} - ${play.score1}-${play.score2}
-                         <div class="leaderboard-time">${timeAgo}</div>`;
-        recentPlaysList.appendChild(item);
-      });
+      if (recentPlaysList) {
+        recentPlaysList.innerHTML = '';
+        
+        game.recentPlays.slice(0, 10).forEach((play, index) => {
+          const item = document.createElement('div');
+          item.className = 'leaderboard-item';
+          const opponent = play.player2 === "BOT" ? "BOT" : play.player2;
+          const timeAgo = getTimeAgo(play.timestamp);
+          const difficulty = play.difficulty ? ` (${play.difficulty.toUpperCase()})` : '';
+          item.innerHTML = `<strong>${play.player1}</strong> vs <strong>${opponent}${difficulty}</strong><br>
+                           ${play.stage || "Match"} - ${play.score1}-${play.score2}
+                           <div class="leaderboard-time">${timeAgo}</div>`;
+          recentPlaysList.appendChild(item);
+        });
+      }
       
       // Best Wins
       const bestWinsList = document.getElementById('bestWinsList');
-      bestWinsList.innerHTML = '';
-      
-      game.bestWins.sort((a, b) => (b.score1 - b.score2) - (a.score1 - a.score2)).slice(0, 10).forEach((win, index) => {
-        const item = document.createElement('div');
-        item.className = 'leaderboard-item';
-        const timeAgo = getTimeAgo(win.timestamp);
-        const difficulty = win.difficulty ? ` (${win.difficulty.toUpperCase()})` : '';
-        item.innerHTML = `<span class="leaderboard-rank">${index + 1}.</span> 
-                         <strong>${win.player1}</strong> ${win.score1}-${win.score2} <strong>${win.player2}${difficulty}</strong>
-                         <div class="leaderboard-time">${timeAgo}</div>`;
-        bestWinsList.appendChild(item);
-      });
+      if (bestWinsList) {
+        bestWinsList.innerHTML = '';
+        
+        game.bestWins.sort((a, b) => (b.score1 - b.score2) - (a.score1 - a.score2)).slice(0, 10).forEach((win, index) => {
+          const item = document.createElement('div');
+          item.className = 'leaderboard-item';
+          const timeAgo = getTimeAgo(win.timestamp);
+          const difficulty = win.difficulty ? ` (${win.difficulty.toUpperCase()})` : '';
+          item.innerHTML = `<span class="leaderboard-rank">${index + 1}.</span> 
+                           <strong>${win.player1}</strong> ${win.score1}-${win.score2} <strong>${win.player2}${difficulty}</strong>
+                           <div class="leaderboard-time">${timeAgo}</div>`;
+          bestWinsList.appendChild(item);
+        });
+      }
       
       // Bot Champions
       const botChampionList = document.getElementById('botChampionList');
-      botChampionList.innerHTML = '';
-      
-      game.botChampions.sort((a, b) => (b.score1 - b.score2) - (a.score1 - a.score2)).slice(0, 20).forEach((champ, index) => {
-        const item = document.createElement('div');
-        item.className = 'leaderboard-item';
-        const timeAgo = getTimeAgo(champ.timestamp);
-        const difficulty = champ.difficulty ? ` (${champ.difficulty.toUpperCase()})` : '';
-        item.innerHTML = `<span class="leaderboard-rank">${index + 1}.</span> 
-                         <strong>${champ.player1}</strong> ${champ.score1}-${champ.score2} BOT${difficulty}
-                         <div class="leaderboard-time">${timeAgo}</div>`;
-        botChampionList.appendChild(item);
-      });
+      if (botChampionList) {
+        botChampionList.innerHTML = '';
+        
+        game.botChampions.sort((a, b) => (b.score1 - b.score2) - (a.score1 - a.score2)).slice(0, 20).forEach((champ, index) => {
+          const item = document.createElement('div');
+          item.className = 'leaderboard-item';
+          const timeAgo = getTimeAgo(champ.timestamp);
+          const difficulty = champ.difficulty ? ` (${champ.difficulty.toUpperCase()})` : '';
+          item.innerHTML = `<span class="leaderboard-rank">${index + 1}.</span> 
+                           <strong>${champ.player1}</strong> ${champ.score1}-${champ.score2} BOT${difficulty}
+                           <div class="leaderboard-time">${timeAgo}</div>`;
+          botChampionList.appendChild(item);
+        });
+      }
     }
 
     function getTimeAgo(timestamp) {
@@ -1515,40 +1521,41 @@
         }
       };
       
-      upBtnLeft.addEventListener('touchstart', handleTouch(upBtnLeft, 'up', true));
-      upBtnLeft.addEventListener('touchend', handleTouch(upBtnLeft, 'none', true));
-      downBtnLeft.addEventListener('touchstart', handleTouch(downBtnLeft, 'down', true));
-      downBtnLeft.addEventListener('touchend', handleTouch(downBtnLeft, 'none', true));
-      upBtnRight.addEventListener('touchstart', handleTouch(upBtnRight, 'up', false));
-      upBtnRight.addEventListener('touchend', handleTouch(upBtnRight, 'none', false));
-      downBtnRight.addEventListener('touchstart', handleTouch(downBtnRight, 'down', false));
-      downBtnRight.addEventListener('touchend', handleTouch(downBtnRight, 'none', false));
+      if (upBtnLeft) upBtnLeft.addEventListener('touchstart', handleTouch(upBtnLeft, 'up', true));
+      if (upBtnLeft) upBtnLeft.addEventListener('touchend', handleTouch(upBtnLeft, 'none', true));
+      if (downBtnLeft) downBtnLeft.addEventListener('touchstart', handleTouch(downBtnLeft, 'down', true));
+      if (downBtnLeft) downBtnLeft.addEventListener('touchend', handleTouch(downBtnLeft, 'none', true));
+      if (upBtnRight) upBtnRight.addEventListener('touchstart', handleTouch(upBtnRight, 'up', false));
+      if (upBtnRight) upBtnRight.addEventListener('touchend', handleTouch(upBtnRight, 'none', false));
+      if (downBtnRight) downBtnRight.addEventListener('touchstart', handleTouch(downBtnRight, 'down', false));
+      if (downBtnRight) downBtnRight.addEventListener('touchend', handleTouch(downBtnRight, 'none', false));
       
       // Power button
-      powerBtnLeft.addEventListener('touchstart', (e) => {
+      if (powerBtnLeft) powerBtnLeft.addEventListener('touchstart', (e) => {
         e.preventDefault();
         game.mobileControls.leftPower = true;
       });
-      powerBtnLeft.addEventListener('touchend', (e) => {
+      if (powerBtnLeft) powerBtnLeft.addEventListener('touchend', (e) => {
         e.preventDefault();
         game.mobileControls.leftPower = false;
       });
       
       // Mouse events for desktop testing
-      upBtnLeft.addEventListener('mousedown', () => game.mobileControls.leftUp = true);
-      upBtnLeft.addEventListener('mouseup', () => game.mobileControls.leftUp = false);
-      downBtnLeft.addEventListener('mousedown', () => game.mobileControls.leftDown = true);
-      downBtnLeft.addEventListener('mouseup', () => game.mobileControls.leftDown = false);
-      upBtnRight.addEventListener('mousedown', () => game.mobileControls.rightUp = true);
-      upBtnRight.addEventListener('mouseup', () => game.mobileControls.rightUp = false);
-      downBtnRight.addEventListener('mousedown', () => game.mobileControls.rightDown = true);
-      downBtnRight.addEventListener('mouseup', () => game.mobileControls.rightDown = false);
-      powerBtnLeft.addEventListener('mousedown', () => game.mobileControls.leftPower = true);
-      powerBtnLeft.addEventListener('mouseup', () => game.mobileControls.leftPower = false);
+      if (upBtnLeft) upBtnLeft.addEventListener('mousedown', () => game.mobileControls.leftUp = true);
+      if (upBtnLeft) upBtnLeft.addEventListener('mouseup', () => game.mobileControls.leftUp = false);
+      if (downBtnLeft) downBtnLeft.addEventListener('mousedown', () => game.mobileControls.leftDown = true);
+      if (downBtnLeft) downBtnLeft.addEventListener('mouseup', () => game.mobileControls.leftDown = false);
+      if (upBtnRight) upBtnRight.addEventListener('mousedown', () => game.mobileControls.rightUp = true);
+      if (upBtnRight) upBtnRight.addEventListener('mouseup', () => game.mobileControls.rightUp = false);
+      if (downBtnRight) downBtnRight.addEventListener('mousedown', () => game.mobileControls.rightDown = true);
+      if (downBtnRight) downBtnRight.addEventListener('mouseup', () => game.mobileControls.rightDown = false);
+      if (powerBtnLeft) powerBtnLeft.addEventListener('mousedown', () => game.mobileControls.leftPower = true);
+      if (powerBtnLeft) powerBtnLeft.addEventListener('mouseup', () => game.mobileControls.leftPower = false);
       
       // Show mobile controls on mobile devices for 1P and 2P modes
       if (/Mobi|Android/i.test(navigator.userAgent)) {
-        document.getElementById('mobileControls').style.display = 'flex';
+        const mobileControls = document.getElementById('mobileControls');
+        if (mobileControls) mobileControls.style.display = 'flex';
       }
     }
 
@@ -1667,10 +1674,15 @@
     });
 
     function setupControlButtons() {
-      document.getElementById('muteButton').addEventListener('click', toggleMute);
-      document.getElementById('pauseButton').addEventListener('click', togglePause);
-      document.getElementById('fullscreenButton').addEventListener('click', toggleFullscreen);
-      document.getElementById('musicMuteButton').addEventListener('click', toggleMusicMute);
+      const muteButton = document.getElementById('muteButton');
+      const pauseButton = document.getElementById('pauseButton');
+      const fullscreenButton = document.getElementById('fullscreenButton');
+      const musicMuteButton = document.getElementById('musicMuteButton');
+      
+      if (muteButton) muteButton.addEventListener('click', toggleMute);
+      if (pauseButton) pauseButton.addEventListener('click', togglePause);
+      if (fullscreenButton) fullscreenButton.addEventListener('click', toggleFullscreen);
+      if (musicMuteButton) musicMuteButton.addEventListener('click', toggleMusicMute);
     }
 
     function loadAudioFiles() {
@@ -1822,18 +1834,21 @@
       if (game.leftChargeInterval) clearInterval(game.leftChargeInterval);
       
       game.leftCharge = 0;
-      document.getElementById('leftCharge').style.width = '0';
-      document.getElementById('leftCharge').classList.remove('active');
-      document.getElementById('leftChargeLabel').textContent = 'P1 POWER';
+      const leftChargeElement = document.getElementById('leftCharge');
+      const leftChargeLabel = document.getElementById('leftChargeLabel');
+      
+      if (leftChargeElement) leftChargeElement.style.width = '0';
+      if (leftChargeElement) leftChargeElement.classList.remove('active');
+      if (leftChargeLabel) leftChargeLabel.textContent = 'P1 POWER';
       
       game.leftChargeInterval = setInterval(() => {
         game.leftCharge += 100 / (CHARGE_TIME / 100);
-        document.getElementById('leftCharge').style.width = `${game.leftCharge}%`;
+        if (leftChargeElement) leftChargeElement.style.width = `${game.leftCharge}%`;
         
         if (game.leftCharge >= 100) {
           clearInterval(game.leftChargeInterval);
-          document.getElementById('leftCharge').classList.add('active');
-          document.getElementById('leftChargeLabel').textContent = 'P1 READY!';
+          if (leftChargeElement) leftChargeElement.classList.add('active');
+          if (leftChargeLabel) leftChargeLabel.textContent = 'P1 READY!';
         }
       }, 100);
     }
@@ -1842,18 +1857,21 @@
       if (game.rightChargeInterval) clearInterval(game.rightChargeInterval);
       
       game.rightCharge = 0;
-      document.getElementById('rightCharge').style.width = '0';
-      document.getElementById('rightCharge').classList.remove('active');
-      document.getElementById('rightChargeLabel').textContent = 'P2 POWER';
+      const rightChargeElement = document.getElementById('rightCharge');
+      const rightChargeLabel = document.getElementById('rightChargeLabel');
+      
+      if (rightChargeElement) rightChargeElement.style.width = '0';
+      if (rightChargeElement) rightChargeElement.classList.remove('active');
+      if (rightChargeLabel) rightChargeLabel.textContent = game.isLocalMultiplayer ? 'P2 POWER' : 'BOT POWER';
       
       game.rightChargeInterval = setInterval(() => {
         game.rightCharge += 100 / (CHARGE_TIME / 100);
-        document.getElementById('rightCharge').style.width = `${game.rightCharge}%`;
+        if (rightChargeElement) rightChargeElement.style.width = `${game.rightCharge}%`;
         
         if (game.rightCharge >= 100) {
           clearInterval(game.rightChargeInterval);
-          document.getElementById('rightCharge').classList.add('active');
-          document.getElementById('rightChargeLabel').textContent = 'P2 READY!';
+          if (rightChargeElement) rightChargeElement.classList.add('active');
+          if (rightChargeLabel) rightChargeLabel.textContent = game.isLocalMultiplayer ? 'P2 READY!' : 'BOT READY!';
         }
       }, 100);
     }
@@ -1861,14 +1879,17 @@
     function activateLeftPowerShot() {
       game.leftCharged = true;
       game.leftChargeEndTime = Date.now() + POWER_SHOT_DURATION;
-      document.getElementById('leftCharge').classList.add('active');
-      document.getElementById('leftChargeLabel').textContent = 'P1 FIRING!';
+      const leftChargeElement = document.getElementById('leftCharge');
+      const leftChargeLabel = document.getElementById('leftChargeLabel');
+      
+      if (leftChargeElement) leftChargeElement.classList.add('active');
+      if (leftChargeLabel) leftChargeLabel.textContent = 'P1 FIRING!';
       
       setTimeout(() => {
         if (Date.now() > game.leftChargeEndTime) {
           game.leftCharged = false;
-          document.getElementById('leftCharge').classList.remove('active');
-          document.getElementById('leftChargeLabel').textContent = 'P1 POWER';
+          if (leftChargeElement) leftChargeElement.classList.remove('active');
+          if (leftChargeLabel) leftChargeLabel.textContent = 'P1 POWER';
           startLeftCharge();
         }
       }, POWER_SHOT_DURATION);
@@ -1877,14 +1898,17 @@
     function activateRightPowerShot() {
       game.rightCharged = true;
       game.rightChargeEndTime = Date.now() + POWER_SHOT_DURATION;
-      document.getElementById('rightCharge').classList.add('active');
-      document.getElementById('rightChargeLabel').textContent = 'P2 FIRING!';
+      const rightChargeElement = document.getElementById('rightCharge');
+      const rightChargeLabel = document.getElementById('rightChargeLabel');
+      
+      if (rightChargeElement) rightChargeElement.classList.add('active');
+      if (rightChargeLabel) rightChargeLabel.textContent = game.isLocalMultiplayer ? 'P2 FIRING!' : 'BOT FIRING!';
       
       setTimeout(() => {
         if (Date.now() > game.rightChargeEndTime) {
           game.rightCharged = false;
-          document.getElementById('rightCharge').classList.remove('active');
-          document.getElementById('rightChargeLabel').textContent = 'P2 POWER';
+          if (rightChargeElement) rightChargeElement.classList.remove('active');
+          if (rightChargeLabel) rightChargeLabel.textContent = game.isLocalMultiplayer ? 'P2 POWER' : 'BOT POWER';
           startRightCharge();
         }
       }, POWER_SHOT_DURATION);
@@ -1893,14 +1917,17 @@
     function activateTeamLeftPowerShot() {
       game.teamLeftCharged = true;
       game.leftChargeEndTime = Date.now() + POWER_SHOT_DURATION;
-      document.getElementById('leftCharge').classList.add('active');
-      document.getElementById('leftChargeLabel').textContent = 'TEAM FIRING!';
+      const leftChargeElement = document.getElementById('leftCharge');
+      const leftChargeLabel = document.getElementById('leftChargeLabel');
+      
+      if (leftChargeElement) leftChargeElement.classList.add('active');
+      if (leftChargeLabel) leftChargeLabel.textContent = 'TEAM FIRING!';
       
       setTimeout(() => {
         if (Date.now() > game.leftChargeEndTime) {
           game.teamLeftCharged = false;
-          document.getElementById('leftCharge').classList.remove('active');
-          document.getElementById('leftChargeLabel').textContent = 'TEAM POWER';
+          if (leftChargeElement) leftChargeElement.classList.remove('active');
+          if (leftChargeLabel) leftChargeLabel.textContent = 'TEAM POWER';
           startLeftCharge();
         }
       }, POWER_SHOT_DURATION);
@@ -1909,14 +1936,17 @@
     function activateTeamRightPowerShot() {
       game.teamRightCharged = true;
       game.rightChargeEndTime = Date.now() + POWER_SHOT_DURATION;
-      document.getElementById('rightCharge').classList.add('active');
-      document.getElementById('rightChargeLabel').textContent = 'TEAM FIRING!';
+      const rightChargeElement = document.getElementById('rightCharge');
+      const rightChargeLabel = document.getElementById('rightChargeLabel');
+      
+      if (rightChargeElement) rightChargeElement.classList.add('active');
+      if (rightChargeLabel) rightChargeLabel.textContent = 'TEAM FIRING!';
       
       setTimeout(() => {
         if (Date.now() > game.rightChargeEndTime) {
           game.teamRightCharged = false;
-          document.getElementById('rightCharge').classList.remove('active');
-          document.getElementById('rightChargeLabel').textContent = 'TEAM POWER';
+          if (rightChargeElement) rightChargeElement.classList.remove('active');
+          if (rightChargeLabel) rightChargeLabel.textContent = 'TEAM POWER';
           startRightCharge();
         }
       }, POWER_SHOT_DURATION);
@@ -2265,8 +2295,10 @@
             game.isSmashActive = true;
             game.smashEndTime = Date.now() + SMASH_DURATION;
             game.leftCharged = false;
-            document.getElementById('leftCharge').classList.remove('active');
-            document.getElementById('leftChargeLabel').textContent = 'P1 POWER';
+            const leftChargeElement = document.getElementById('leftCharge');
+            const leftChargeLabel = document.getElementById('leftChargeLabel');
+            if (leftChargeElement) leftChargeElement.classList.remove('active');
+            if (leftChargeLabel) leftChargeLabel.textContent = 'P1 POWER';
             startLeftCharge();
             if (!game.isPracticeMode && !game.isEndlessMode) {
               queueCommentary("POWER SHOT FROM " + game.leftPlayer + "!", true, true);
@@ -2299,8 +2331,10 @@
             game.isSmashActive = true;
             game.smashEndTime = Date.now() + SMASH_DURATION;
             game.rightCharged = false;
-            document.getElementById('rightCharge').classList.remove('active');
-            document.getElementById('rightChargeLabel').textContent = 'P2 POWER';
+            const rightChargeElement = document.getElementById('rightCharge');
+            const rightChargeLabel = document.getElementById('rightChargeLabel');
+            if (rightChargeElement) rightChargeElement.classList.remove('active');
+            if (rightChargeLabel) rightChargeLabel.textContent = game.isLocalMultiplayer ? 'P2 POWER' : 'BOT POWER';
             startRightCharge();
             if (!game.isPracticeMode && !game.isEndlessMode) {
               queueCommentary("POWER SHOT FROM " + game.rightPlayer + "!", true, true);
@@ -2335,8 +2369,10 @@
               game.isSmashActive = true;
               game.smashEndTime = Date.now() + SMASH_DURATION;
               game.teamLeftCharged = false;
-              document.getElementById('leftCharge').classList.remove('active');
-              document.getElementById('leftChargeLabel').textContent = 'TEAM POWER';
+              const leftChargeElement = document.getElementById('leftCharge');
+              const leftChargeLabel = document.getElementById('leftChargeLabel');
+              if (leftChargeElement) leftChargeElement.classList.remove('active');
+              if (leftChargeLabel) leftChargeLabel.textContent = 'TEAM POWER';
               startLeftCharge();
               queueCommentary("TEAM POWER SHOT FROM " + game.leftPlayer + "!", true, true);
             } else {
@@ -2369,8 +2405,10 @@
               game.isSmashActive = true;
               game.smashEndTime = Date.now() + SMASH_DURATION;
               game.teamRightCharged = false;
-              document.getElementById('rightCharge').classList.remove('active');
-              document.getElementById('rightChargeLabel').textContent = 'TEAM POWER';
+              const rightChargeElement = document.getElementById('rightCharge');
+              const rightChargeLabel = document.getElementById('rightChargeLabel');
+              if (rightChargeElement) rightChargeElement.classList.remove('active');
+              if (rightChargeLabel) rightChargeLabel.textContent = 'TEAM POWER';
               startRightCharge();
               queueCommentary("TEAM POWER SHOT FROM " + game.rightPlayer + "!", true, true);
             } else {
@@ -2430,7 +2468,8 @@
             game.leftPaddle.score === game.rightPaddle.score && !game.deuceActive) {
           game.deuceActive = true;
           game.bonusPoints++;
-          document.getElementById('bonusPoints').textContent = `⚡ BONUS POINT: +${game.bonusPoints}`;
+          const bonusPointsElement = document.getElementById('bonusPoints');
+          if (bonusPointsElement) bonusPointsElement.textContent = `⚡ BONUS POINT: +${game.bonusPoints}`;
           queueCommentary("WE'RE AT DEUCE! BONUS POINT ACTIVATED! NEXT POINT WINS!", true, true);
         } else if (game.leftPaddle.score !== game.rightPaddle.score) {
           game.deuceActive = false;
@@ -2591,7 +2630,8 @@
       
       document.getElementById('fourPlayerPrompt').style.display = 'none';
       document.getElementById('backButton').style.display = 'none';
-      document.getElementById('mobileControls').style.display = 'none';
+      const mobileControls = document.getElementById('mobileControls');
+      if (mobileControls) mobileControls.style.display = 'none';
       startGame();
     }
 
@@ -2672,8 +2712,10 @@
     }
 
     function showPracticeInstructions(title, text) {
-      document.getElementById('practiceTitle').textContent = title;
-      document.getElementById('practiceText').textContent = text;
+      const practiceTitle = document.getElementById('practiceTitle');
+      const practiceText = document.getElementById('practiceText');
+      if (practiceTitle) practiceTitle.textContent = title;
+      if (practiceText) practiceText.textContent = text;
       document.getElementById('practiceInstructions').style.display = 'block';
     }
 
@@ -2707,12 +2749,17 @@
       game.rightCharge = 0;
       game.leftCharged = false;
       game.rightCharged = false;
-      document.getElementById('leftCharge').style.width = '0';
-      document.getElementById('rightCharge').style.width = '0';
-      document.getElementById('leftCharge').classList.remove('active');
-      document.getElementById('rightCharge').classList.remove('active');
-      document.getElementById('leftChargeLabel').textContent = 'P1 POWER';
-      document.getElementById('rightChargeLabel').textContent = game.isLocalMultiplayer ? 'P2 POWER' : 'BOT POWER';
+      const leftChargeElement = document.getElementById('leftCharge');
+      const rightChargeElement = document.getElementById('rightCharge');
+      const leftChargeLabel = document.getElementById('leftChargeLabel');
+      const rightChargeLabel = document.getElementById('rightChargeLabel');
+      
+      if (leftChargeElement) leftChargeElement.style.width = '0';
+      if (rightChargeElement) rightChargeElement.style.width = '0';
+      if (leftChargeElement) leftChargeElement.classList.remove('active');
+      if (rightChargeElement) rightChargeElement.classList.remove('active');
+      if (leftChargeLabel) leftChargeLabel.textContent = 'P1 POWER';
+      if (rightChargeLabel) rightChargeLabel.textContent = game.isLocalMultiplayer ? 'P2 POWER' : 'BOT POWER';
       
       // Start charging
       startLeftCharge();
@@ -2826,14 +2873,20 @@
         const seconds = Math.floor((remaining % 60000) / 1000);
         const milliseconds = remaining % 1000;
         
-        document.getElementById('timer').textContent = 
-          `${minutes}:${seconds < 10 ? '0' : ''}${seconds}.${milliseconds < 100 ? (milliseconds < 10 ? '00' : '0') : ''}${milliseconds}`;
+        const timerElement = document.getElementById('timer');
+        if (timerElement) {
+          timerElement.textContent = 
+            `${minutes}:${seconds < 10 ? '0' : ''}${seconds}.${milliseconds < 100 ? (milliseconds < 10 ? '00' : '0') : ''}${milliseconds}`;
+        }
         
         // Update match info
         const halfText = game.currentHalf === 1 ? '1st Half' : (game.extraTime > 0 ? 'ET' : '2nd Half');
-        document.getElementById('matchInfo').innerHTML = `
-          ${halfText} | Extra Time: +${game.extraTime}s
-        `;
+        const matchInfoElement = document.getElementById('matchInfo');
+        if (matchInfoElement) {
+          matchInfoElement.innerHTML = `
+            ${halfText} | Extra Time: +${game.extraTime}s
+          `;
+        }
         
         if (remaining <= 30000 && !game.hasAnnounced30) {
           game.hasAnnounced30 = true;
@@ -2875,8 +2928,10 @@
         game.teamLeftCharged = true;
         game.teamRightCharged = true;
       }
-      document.getElementById('leftCharge').classList.add('active');
-      document.getElementById('rightCharge').classList.add('active');
+      const leftChargeElement = document.getElementById('leftCharge');
+      const rightChargeElement = document.getElementById('rightCharge');
+      if (leftChargeElement) leftChargeElement.classList.add('active');
+      if (rightChargeElement) rightChargeElement.classList.add('active');
       
       // Start announcing numbers
       announceCountdownNumber();
@@ -2909,12 +2964,13 @@
       // Start halftime countdown
       let halftimeCount = HALF_TIME_BREAK;
       game.halftimeInterval = setInterval(() => {
-        document.getElementById('halftimeScreen').textContent = `HALFTIME\n${halftimeCount}`;
+        const halftimeScreen = document.getElementById('halftimeScreen');
+        if (halftimeScreen) halftimeScreen.textContent = `HALFTIME\n${halftimeCount}`;
         halftimeCount--;
         
         if (halftimeCount < 0) {
           clearInterval(game.halftimeInterval);
-          document.getElementById('halftimeScreen').style.display = "none";
+          if (halftimeScreen) halftimeScreen.style.display = "none";
           game.halftimeActive = false;
           game.currentHalf = 2;
           game.remainingTime = HALF_TIME;
@@ -2937,7 +2993,8 @@
         game.countdownNumbers = [];
         if (!game.deuceActive) {
           game.bonusPoints++;
-          document.getElementById('bonusPoints').textContent = `⚡ BONUS POINT: +${game.bonusPoints}`;
+          const bonusPointsElement = document.getElementById('bonusPoints');
+          if (bonusPointsElement) bonusPointsElement.textContent = `⚡ BONUS POINT: +${game.bonusPoints}`;
         }
         playETSound();
         queueCommentary("WE'RE GOING TO OVERTIME! NEXT POINT WINS!", true, true);
@@ -2964,7 +3021,8 @@
       }
       
       // Update commentary display
-      document.getElementById('commentary').textContent = text;
+      const commentaryElement = document.getElementById('commentary');
+      if (commentaryElement) commentaryElement.textContent = text;
     }
 
     function speakNextCommentary() {
@@ -3034,7 +3092,8 @@
         return;
       }
       
-      document.getElementById('endMessage').textContent = `${winner} WINS ${winnerScore}-${loserScore}! 🏆`;
+      const endMessageElement = document.getElementById('endMessage');
+      if (endMessageElement) endMessageElement.textContent = `${winner} WINS ${winnerScore}-${loserScore}! 🏆`;
       document.getElementById('endScreen').style.display = "flex";
       
       // Hide game elements
@@ -3124,7 +3183,8 @@
       if (!game.soundEnabled) return;
       
       game.isMuted = !game.isMuted;
-      document.getElementById('muteButton').textContent = game.isMuted ? "🔇" : "🔊";
+      const muteButton = document.getElementById('muteButton');
+      if (muteButton) muteButton.textContent = game.isMuted ? "🔇" : "🔊";
       window.speechSynthesis.cancel();
       
       if (game.isMuted) {
@@ -3138,7 +3198,8 @@
       if (!game.soundEnabled) return;
       
       game.isMusicMuted = !game.isMusicMuted;
-      document.getElementById('musicMuteButton').textContent = game.isMusicMuted ? "🔇" : "🎵";
+      const musicMuteButton = document.getElementById('musicMuteButton');
+      if (musicMuteButton) musicMuteButton.textContent = game.isMusicMuted ? "🔇" : "🎵";
       
       if (game.isMusicMuted) {
         backgroundMusic.pause();
@@ -3209,8 +3270,10 @@
       };
       
       // Show mobile controls if on mobile for 1P and 2P modes
-      if (/Mobi|Android/i.test(navigator.userAgent))
-        document.getElementById('mobileControls').style.display = 'flex';
+      if (/Mobi|Android/i.test(navigator.userAgent)) {
+        const mobileControls = document.getElementById('mobileControls');
+        if (mobileControls) mobileControls.style.display = 'flex';
+      }
       
       // Start music again if not muted
       if (game.soundEnabled && !game.isMusicMuted && game.musicStarted) {
