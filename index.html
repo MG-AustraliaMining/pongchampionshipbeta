@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>🏆 PONG CHAMPIONSHIP 2.0 🏆</title>
+  <title>🏆 PONG CHAMPIONSHIP 2.1 🏆</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     :root {
@@ -19,7 +19,7 @@
       margin: 0;
       padding: 0;
       overflow: hidden;
-      background: #000;
+      background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
       font-family: 'Arial', sans-serif;
       touch-action: manipulation;
       -webkit-touch-callout: none;
@@ -42,7 +42,7 @@
     }
     
     canvas {
-      background: #1a2a6c; /* Simpler background for better performance */
+      background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
       display: block;
       touch-action: none;
       width: 100%;
@@ -262,21 +262,6 @@
       background: rgba(255,215,0,0.5);
     }
     
-    .confetti {
-      position: absolute;
-      width: 8px;
-      height: 8px;
-      background-color: #f00;
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 100;
-    }
-    
-    @keyframes confetti-fall {
-      0% { transform: translateY(-100px) rotate(0deg); }
-      100% { transform: translateY(100vh) rotate(360deg); }
-    }
-    
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -453,12 +438,44 @@
     /* Leaderboard Styles */
     #menuLeaderboards {
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 15px;
-      margin-top: 1.5rem;
+      flex-direction: column;
+      align-items: center;
       width: 100%;
-      max-width: 1000px;
+      max-width: 800px;
+      margin-top: 20px;
+      max-height: 40vh;
+      overflow: hidden;
+    }
+    
+    .leaderboard-tabs {
+      display: flex;
+      margin-bottom: 10px;
+      width: 100%;
+      justify-content: center;
+    }
+    
+    .leaderboard-tab {
+      padding: 8px 16px;
+      background: rgba(255,215,0,0.2);
+      border: 1px solid gold;
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.9rem;
+    }
+    
+    .leaderboard-tab:first-child {
+      border-radius: 20px 0 0 20px;
+    }
+    
+    .leaderboard-tab:last-child {
+      border-radius: 0 20px 20px 0;
+    }
+    
+    .leaderboard-tab.active {
+      background: gold;
+      color: black;
+      font-weight: bold;
     }
     
     .leaderboard {
@@ -467,11 +484,16 @@
       border-radius: 10px;
       padding: 12px;
       color: white;
-      max-height: 30vh;
+      width: 100%;
+      height: 30vh;
       overflow-y: auto;
       box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
       font-family: 'Arial', sans-serif;
-      width: 300px;
+      display: none;
+    }
+    
+    .leaderboard.active {
+      display: block;
     }
     
     .leaderboard h3 {
@@ -534,25 +556,6 @@
       font-weight: bold;
     }
     
-    /* Scrollbar styling */
-    .leaderboard::-webkit-scrollbar {
-      width: 6px;
-    }
-    
-    .leaderboard::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: 8px;
-    }
-    
-    .leaderboard::-webkit-scrollbar-thumb {
-      background: gold;
-      border-radius: 8px;
-    }
-    
-    .leaderboard::-webkit-scrollbar-thumb:hover {
-      background: #ffcc00;
-    }
-    
     /* Tournament stage selector */
     .stage-selector {
       display: flex;
@@ -606,6 +609,8 @@
       animation: textGlow 2s infinite alternate;
       margin-bottom: 1.5rem;
       text-align: center;
+      transform: scale(0);
+      opacity: 0;
     }
     
     @keyframes textGlow {
@@ -613,32 +618,27 @@
       to { text-shadow: 0 0 20px gold, 0 0 30px gold; }
     }
     
-    #introButtons {
-      display: flex;
-      gap: 15px;
+    @keyframes textEntry {
+      0% { transform: scale(0); opacity: 0; }
+      50% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
     }
     
-    .intro-btn {
+    #startButton {
       padding: 12px 25px;
       font-size: 1.3rem;
       border-radius: 50px;
       border: none;
+      background: linear-gradient(45deg, #ff8a00, #e52e71);
+      color: white;
       cursor: pointer;
       transition: all 0.2s;
       font-weight: bold;
+      transform: scale(0);
+      opacity: 0;
     }
     
-    #introYes {
-      background: linear-gradient(45deg, #00ff00, #00cc00);
-      color: white;
-    }
-    
-    #introNo {
-      background: linear-gradient(45deg, #ff0000, #cc0000);
-      color: white;
-    }
-    
-    .intro-btn:hover {
+    #startButton:hover {
       transform: scale(1.05);
       box-shadow: 0 0 15px rgba(255,255,255,0.4);
     }
@@ -665,6 +665,33 @@
     
     .back-btn:hover {
       background: rgba(255,255,255,0.3);
+    }
+    
+    /* Fire trail effect */
+    .particle {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 10;
+    }
+    
+    /* Practice mode instructions */
+    #practiceInstructions {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.8);
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      z-index: 50;
+      max-width: 80%;
+      border: 2px solid gold;
+      display: none;
     }
     
     @media (max-width: 768px) {
@@ -728,10 +755,6 @@
       }
       #introText {
         font-size: 2.5rem;
-      }
-      .intro-btn {
-        font-size: 1.1rem;
-        padding: 10px 20px;
       }
       
       /* Adjust leaderboards for mobile */
@@ -797,16 +820,13 @@
 <body>
   <!-- Intro Animation Screen -->
   <div id="introAnimation">
-    <div id="introText" class="intro-animated pulse-animated">PONG CHAMPIONSHIP 2.0</div>
-    <div style="color: white; margin-bottom: 15px; animation: buttonEntry 1s ease-out 0.7s both;">Would you like sound?</div>
-    <div id="introButtons">
-      <button id="introYes" class="intro-btn intro-btn-animated">YES</button>
-      <button id="introNo" class="intro-btn intro-btn-animated">NO</button>
-    </div>
+    <div id="introText">PONG CHAMPIONSHIP 2.1</div>
+    <button id="startButton">START</button>
   </div>
 
   <div id="gameContainer">
     <canvas id="pongCanvas"></canvas>
+    <canvas id="particleCanvas" style="position: absolute; top: 0; left: 0; z-index: 5;"></canvas>
     
     <!-- Game elements (hidden during menu) -->
     <div id="leftScore" class="score">0</div>
@@ -814,7 +834,7 @@
     <div id="timer">1:30.000</div>
     <div id="bonusPoints"></div>
     <div id="matchInfo"></div>
-    <div id="commentary">WELCOME TO THE PONG CHAMPIONSHIP 2.0!</div>
+    <div id="commentary">WELCOME TO THE PONG CHAMPIONSHIP 2.1!</div>
     
     <!-- Power charge bars - now properly separated -->
     <div id="leftChargeContainer" class="paddle-charge-container">
@@ -857,14 +877,20 @@
     </div>
 
     <div id="titleScreen" class="screen">
-      <h1>🏆 PONG CHAMPIONSHIP 2.0 🏆</h1>
+      <h1>🏆 PONG CHAMPIONSHIP 2.1 🏆</h1>
       <button class="btn-championship" id="twoPlayerButton">2 PLAYERS</button>
       <button class="btn-championship" id="singlePlayerButton">1 PLAYER VS BOT</button>
       <button class="btn-championship" id="fourPlayerButton">4 PLAYERS</button>
       
       <!-- Leaderboards in menu -->
       <div id="menuLeaderboards">
-        <div id="recentPlays" class="leaderboard">
+        <div class="leaderboard-tabs">
+          <div class="leaderboard-tab active" data-tab="recent">RECENT PLAYS</div>
+          <div class="leaderboard-tab" data-tab="best">BEST WINS</div>
+          <div class="leaderboard-tab" data-tab="bot">BOT CHAMPIONS</div>
+        </div>
+        
+        <div id="recentPlays" class="leaderboard active">
           <h3>RECENT PLAYS</h3>
           <div id="recentPlaysList"></div>
         </div>
@@ -879,12 +905,23 @@
           <div id="botChampionList"></div>
         </div>
       </div>
+      
+      <button class="btn-championship" id="practiceButton" style="margin-top: 20px;">PRACTICE</button>
+      <button class="btn-championship" id="endlessButton">ENDLESS MODE</button>
+      <button class="btn-championship" id="learnPongButton">LEARN ABOUT PONG</button>
     </div>
 
     <div id="endScreen" class="screen" style="display: none;">
       <h1 id="endMessage" style="color: gold; font-size: 2rem;"></h1>
       <button class="btn-championship" id="endScreenBtn">RETURN TO MENU</button>
     </div>
+  </div>
+
+  <!-- Practice mode instructions -->
+  <div id="practiceInstructions">
+    <h3 id="practiceTitle"></h3>
+    <p id="practiceText"></p>
+    <button class="modal-btn" id="practiceContinue">CONTINUE</button>
   </div>
 
   <div id="twoPlayerPrompt" class="modal-overlay" style="display: none;">
@@ -940,6 +977,38 @@
     </div>
   </div>
 
+  <div id="endlessPrompt" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-title">ENDLESS MODE</div>
+      <input type="text" id="endlessPlayerName" class="modal-input" placeholder="Your Name" maxlength="20">
+      
+      <div class="difficulty-selector">
+        <div class="difficulty-btn active" data-difficulty="easy">EASY</div>
+        <div class="difficulty-btn" data-difficulty="medium">MEDIUM</div>
+        <div class="difficulty-btn" data-difficulty="hard">HARD</div>
+      </div>
+      <input type="hidden" id="endlessDifficulty" value="easy">
+      
+      <div style="display: flex; justify-content: center; gap: 10px; margin-top: 15px;">
+        <button class="modal-btn" id="submitEndlessName">START</button>
+        <button class="modal-btn" id="cancelEndless">BACK</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="practiceModePrompt" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-title">PRACTICE MODE</div>
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+        <button class="modal-btn" id="learnPowerShotBtn">LEARN POWER SHOT</button>
+        <button class="modal-btn" id="learnRespondingBtn">LEARN RESPONDING</button>
+      </div>
+      <div style="display: flex; justify-content: center; gap: 10px; margin-top: 15px;">
+        <button class="modal-btn" id="cancelPractice">BACK</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Audio elements -->
   <audio id="backgroundMusic" loop></audio>
   <audio id="paddleSound"></audio>
@@ -986,6 +1055,8 @@
     // Game Elements
     const canvas = document.getElementById('pongCanvas');
     const ctx = canvas.getContext('2d');
+    const particleCanvas = document.getElementById('particleCanvas');
+    const particleCtx = particleCanvas.getContext('2d');
     
     // Audio Elements
     const backgroundMusic = document.getElementById('backgroundMusic');
@@ -1033,7 +1104,7 @@
       leftPlayer: "PLAYER 1",
       rightPlayer: "PLAYER 2",
       tournamentStage: "Round of 16",
-      aiDifficulty: "easy", // Added AI difficulty
+      aiDifficulty: "easy",
       timerInterval: null,
       countdownInterval: null,
       halftimeInterval: null,
@@ -1084,7 +1155,13 @@
       countdownNumbers: [],
       soundEnabled: false,
       teamLeftCharged: false,
-      teamRightCharged: false
+      teamRightCharged: false,
+      particles: [],
+      lastFrameTime: 0,
+      isPracticeMode: false,
+      practiceType: null,
+      isEndlessMode: false,
+      ballResetTimeout: null
     };
 
     // Commentary phrases
@@ -1157,34 +1234,36 @@
     }
 
     function setupIntroScreen() {
-      document.getElementById('introYes').addEventListener('click', () => {
-        game.soundEnabled = true;
-        playIntroAnimation();
-      });
+      // Animate the intro text
+      const introText = document.getElementById('introText');
+      const startButton = document.getElementById('startButton');
       
-      document.getElementById('introNo').addEventListener('click', () => {
-        game.soundEnabled = false;
-        game.isMuted = true;
-        game.isMusicMuted = true;
-        document.getElementById('muteButton').textContent = "🔇";
-        document.getElementById('musicMuteButton').textContent = "🔇";
-        document.getElementById('introAnimation').style.display = 'none';
-        document.getElementById('titleScreen').style.display = 'flex';
-      });
-    }
-
-    function playIntroAnimation() {
-      // Play random intro sound
+      // Play intro sound
       const introSounds = [introSound, introSound1, introSound2];
       const randomIntroSound = introSounds[Math.floor(Math.random() * introSounds.length)];
       randomIntroSound.volume = 0.6;
       randomIntroSound.play().catch(e => console.log("Audio play error:", e));
       
-      // Hide intro screen after animation
+      // Animate text entry
       setTimeout(() => {
+        introText.style.animation = 'textEntry 1s forwards';
+        setTimeout(() => {
+          startButton.style.animation = 'textEntry 0.5s forwards';
+          startButton.style.animationDelay = '0.3s';
+        }, 500);
+      }, 300);
+      
+      startButton.addEventListener('click', () => {
+        game.soundEnabled = true;
         document.getElementById('introAnimation').style.display = 'none';
         document.getElementById('titleScreen').style.display = 'flex';
-      }, 2000);
+        
+        // Play start sound
+        const startSounds = [startSound, startSound1, startSound2, startSound3];
+        const randomStartSound = startSounds[Math.floor(Math.random() * startSounds.length)];
+        randomStartSound.volume = 0.5;
+        randomStartSound.play().catch(e => console.log("Audio play error:", e));
+      });
     }
 
     function setupButtonSounds() {
@@ -1204,22 +1283,49 @@
       document.getElementById('twoPlayerButton').addEventListener('click', showTwoPlayerPrompt);
       document.getElementById('singlePlayerButton').addEventListener('click', showSinglePlayerPrompt);
       document.getElementById('fourPlayerButton').addEventListener('click', showFourPlayerPrompt);
+      document.getElementById('practiceButton').addEventListener('click', showPracticePrompt);
+      document.getElementById('endlessButton').addEventListener('click', showEndlessPrompt);
+      document.getElementById('learnPongButton').addEventListener('click', () => {
+        window.open('https://en.wikipedia.org/wiki/Pong', '_blank');
+      });
       
       // Modal submit buttons
       document.getElementById('submitTwoPlayerNames').addEventListener('click', submitTwoPlayerNames);
       document.getElementById('submitSinglePlayerName').addEventListener('click', submitSinglePlayerName);
       document.getElementById('submitFourPlayerNames').addEventListener('click', submitFourPlayerNames);
+      document.getElementById('submitEndlessName').addEventListener('click', submitEndlessName);
+      document.getElementById('learnPowerShotBtn').addEventListener('click', startPowerShotPractice);
+      document.getElementById('learnRespondingBtn').addEventListener('click', startRespondingPractice);
+      document.getElementById('practiceContinue').addEventListener('click', hidePracticeInstructions);
       
       // Modal cancel buttons
       document.getElementById('cancelTwoPlayer').addEventListener('click', cancelTwoPlayerPrompt);
       document.getElementById('cancelSinglePlayer').addEventListener('click', cancelSinglePlayerPrompt);
       document.getElementById('cancelFourPlayer').addEventListener('click', cancelFourPlayerPrompt);
+      document.getElementById('cancelEndless').addEventListener('click', cancelEndlessPrompt);
+      document.getElementById('cancelPractice').addEventListener('click', cancelPracticePrompt);
       
       // Game control buttons
       document.getElementById('resumeButton').addEventListener('click', togglePause);
       document.getElementById('returnToMenuButton').addEventListener('click', returnToMenu);
       document.getElementById('endScreenBtn').addEventListener('click', returnToMenu);
       document.getElementById('backButton').addEventListener('click', handleBackButton);
+      
+      // Leaderboard tabs
+      const leaderboardTabs = document.querySelectorAll('.leaderboard-tab');
+      leaderboardTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          leaderboardTabs.forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          
+          document.querySelectorAll('.leaderboard').forEach(lb => {
+            lb.classList.remove('active');
+          });
+          
+          document.getElementById(this.dataset.tab + 'Plays').classList.add('active');
+          playSelectSound();
+        });
+      });
       
       // Stage selection
       const stageBtns = document.querySelectorAll('.stage-btn');
@@ -1256,6 +1362,10 @@
         cancelSinglePlayerPrompt();
       } else if (document.getElementById('fourPlayerPrompt').style.display === 'flex') {
         cancelFourPlayerPrompt();
+      } else if (document.getElementById('endlessPrompt').style.display === 'flex') {
+        cancelEndlessPrompt();
+      } else if (document.getElementById('practiceModePrompt').style.display === 'flex') {
+        cancelPracticePrompt();
       } else {
         returnToMenu();
       }
@@ -1370,6 +1480,8 @@
       // Set canvas to full window size
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      particleCanvas.width = window.innerWidth;
+      particleCanvas.height = window.innerHeight;
       
       // Calculate dynamic sizes based on canvas dimensions
       game.paddleWidth = Math.max(15, canvas.width * 0.015);
@@ -1817,9 +1929,26 @@
       if (!game.isFourPlayer) {
         // Left paddle
         if (game.leftCharged || (game.last10Seconds && game.lastScorer === game.leftPlayer)) {
+          // Draw fire effect for powered paddle
           ctx.fillStyle = 'gold';
-          ctx.shadowBlur = 10;
-          ctx.shadowColor = 'gold';
+          ctx.shadowBlur = 15;
+          ctx.shadowColor = 'orange';
+          
+          // Draw fire particles
+          if (game.leftCharged) {
+            for (let i = 0; i < 3; i++) {
+              const particle = {
+                x: 20 + game.paddleWidth,
+                y: game.leftPaddle.y + Math.random() * paddleHeight,
+                size: Math.random() * 5 + 3,
+                color: `hsl(${20 + Math.random() * 20}, 100%, 50%)`,
+                life: 30 + Math.random() * 20,
+                vx: -1 - Math.random() * 2,
+                vy: -1 + Math.random() * 2
+              };
+              game.particles.push(particle);
+            }
+          }
         } else {
           ctx.fillStyle = 'white';
           ctx.shadowBlur = 0;
@@ -1828,9 +1957,26 @@
         
         // Right paddle
         if (game.rightCharged || (game.last10Seconds && game.lastScorer === game.rightPlayer)) {
+          // Draw fire effect for powered paddle
           ctx.fillStyle = 'gold';
-          ctx.shadowBlur = 10;
-          ctx.shadowColor = 'gold';
+          ctx.shadowBlur = 15;
+          ctx.shadowColor = 'orange';
+          
+          // Draw fire particles
+          if (game.rightCharged) {
+            for (let i = 0; i < 3; i++) {
+              const particle = {
+                x: canvas.width - 20,
+                y: game.rightPaddle.y + Math.random() * paddleHeight,
+                size: Math.random() * 5 + 3,
+                color: `hsl(${20 + Math.random() * 20}, 100%, 50%)`,
+                life: 30 + Math.random() * 20,
+                vx: 1 + Math.random() * 2,
+                vy: -1 + Math.random() * 2
+              };
+              game.particles.push(particle);
+            }
+          }
         } else {
           ctx.fillStyle = 'white';
           ctx.shadowBlur = 0;
@@ -1844,8 +1990,24 @@
         // Left team (top and bottom)
         if (game.teamLeftCharged || (game.last10Seconds && game.lastScorer === game.leftPlayer)) {
           ctx.fillStyle = 'gold';
-          ctx.shadowBlur = 10;
-          ctx.shadowColor = 'gold';
+          ctx.shadowBlur = 15;
+          ctx.shadowColor = 'orange';
+          
+          // Draw fire particles
+          if (game.teamLeftCharged) {
+            for (let i = 0; i < 3; i++) {
+              const particle = {
+                x: 20 + game.paddleWidth,
+                y: (Math.random() > 0.5 ? game.leftTopPaddle.y : game.leftBottomPaddle.y) + Math.random() * paddleHeight,
+                size: Math.random() * 5 + 3,
+                color: `hsl(${20 + Math.random() * 20}, 100%, 50%)`,
+                life: 30 + Math.random() * 20,
+                vx: -1 - Math.random() * 2,
+                vy: -1 + Math.random() * 2
+              };
+              game.particles.push(particle);
+            }
+          }
         }
         ctx.fillRect(20, game.leftTopPaddle.y, game.paddleWidth, paddleHeight);
         ctx.fillRect(20, game.leftBottomPaddle.y, game.paddleWidth, paddleHeight);
@@ -1853,8 +2015,24 @@
         // Right team (top and bottom)
         if (game.teamRightCharged || (game.last10Seconds && game.lastScorer === game.rightPlayer)) {
           ctx.fillStyle = 'gold';
-          ctx.shadowBlur = 10;
-          ctx.shadowColor = 'gold';
+          ctx.shadowBlur = 15;
+          ctx.shadowColor = 'orange';
+          
+          // Draw fire particles
+          if (game.teamRightCharged) {
+            for (let i = 0; i < 3; i++) {
+              const particle = {
+                x: canvas.width - 20,
+                y: (Math.random() > 0.5 ? game.rightTopPaddle.y : game.rightBottomPaddle.y) + Math.random() * paddleHeight,
+                size: Math.random() * 5 + 3,
+                color: `hsl(${20 + Math.random() * 20}, 100%, 50%)`,
+                life: 30 + Math.random() * 20,
+                vx: 1 + Math.random() * 2,
+                vy: -1 + Math.random() * 2
+              };
+              game.particles.push(particle);
+            }
+          }
         } else {
           ctx.fillStyle = 'white';
           ctx.shadowBlur = 0;
@@ -1881,6 +2059,22 @@
         ctx.fillStyle = gradient;
         ctx.shadowBlur = 10;
         ctx.shadowColor = 'orange';
+        
+        // Add fire trail particles
+        if (game.isSmashActive) {
+          for (let i = 0; i < 3; i++) {
+            const particle = {
+              x: game.ball.x,
+              y: game.ball.y,
+              size: Math.random() * 4 + 2,
+              color: `hsl(${20 + Math.random() * 20}, 100%, 50%)`,
+              life: 20 + Math.random() * 10,
+              vx: -game.ball.dx * 0.1 * Math.random(),
+              vy: -game.ball.dy * 0.1 * Math.random()
+            };
+            game.particles.push(particle);
+          }
+        }
       } else {
         ctx.fillStyle = 'white';
         ctx.shadowBlur = 0;
@@ -1901,29 +2095,62 @@
       ctx.setLineDash([]);
     }
 
+    function updateParticles() {
+      particleCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+      
+      for (let i = game.particles.length - 1; i >= 0; i--) {
+        const p = game.particles[i];
+        
+        // Update particle
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life--;
+        
+        // Draw particle
+        if (p.life > 0) {
+          particleCtx.globalAlpha = p.life / 50;
+          particleCtx.fillStyle = p.color;
+          particleCtx.beginPath();
+          particleCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          particleCtx.fill();
+        } else {
+          game.particles.splice(i, 1);
+        }
+      }
+    }
+
     // Game loop functions
-    function gameLoop() {
+    function gameLoop(timestamp) {
       if (!game.gameStarted || game.isPaused || game.halftimeActive) {
         requestAnimationFrame(gameLoop);
         return;
       }
 
+      // Clear canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Calculate delta time for smooth animation
+      const deltaTime = timestamp - game.lastFrameTime;
+      game.lastFrameTime = timestamp;
       
       drawPaddles();
       drawBall();
       drawNet();
+      updateParticles();
 
-      updateBall();
-      updatePaddles();
+      updateBall(deltaTime);
+      updatePaddles(deltaTime);
       checkCollisions();
       checkSmash();
 
       requestAnimationFrame(gameLoop);
     }
 
-    function updateBall() {
+    function updateBall(deltaTime) {
       if (game.isPaused || game.halftimeActive) return;
+      
+      // Normalize speed based on frame rate
+      const speedFactor = deltaTime / 16; // 16ms is ~60fps
       
       // Prevent ball from getting stuck at edges
       if (game.ball.y - game.ballRadius <= 0) {
@@ -1936,8 +2163,8 @@
         game.ball.dy = -Math.abs(game.ball.dy);
       }
       
-      game.ball.x += game.ball.dx;
-      game.ball.y += game.ball.dy;
+      game.ball.x += game.ball.dx * speedFactor;
+      game.ball.y += game.ball.dy * speedFactor;
 
       // Ball collision with top and bottom
       if (game.ball.y - game.ballRadius < 0 || game.ball.y + game.ballRadius > canvas.height) {
@@ -1945,14 +2172,18 @@
       }
     }
 
-    function updatePaddles() {
+    function updatePaddles(deltaTime) {
       if (game.isPaused || game.halftimeActive) return;
 
+      // Normalize speed based on frame rate
+      const speedFactor = deltaTime / 16; // 16ms is ~60fps
+      const paddleSpeed = PADDLE_SPEED * speedFactor;
+
       // Mobile controls
-      if (game.mobileControls.leftUp) game.leftPaddle.y -= PADDLE_SPEED;
-      if (game.mobileControls.leftDown) game.leftPaddle.y += PADDLE_SPEED;
-      if (game.mobileControls.rightUp) game.rightPaddle.y -= PADDLE_SPEED;
-      if (game.mobileControls.rightDown) game.rightPaddle.y += PADDLE_SPEED;
+      if (game.mobileControls.leftUp) game.leftPaddle.y -= paddleSpeed;
+      if (game.mobileControls.leftDown) game.leftPaddle.y += paddleSpeed;
+      if (game.mobileControls.rightUp) game.rightPaddle.y -= paddleSpeed;
+      if (game.mobileControls.rightDown) game.rightPaddle.y += paddleSpeed;
       
       // Mobile power button
       if (game.mobileControls.leftPower && !game.leftCharged && game.leftCharge >= 100) {
@@ -1961,15 +2192,15 @@
 
       // Keyboard controls
       if (!game.isFourPlayer) {
-        if (game.isLocalMultiplayer) {
-          if (game.keysPressed['w'] || game.keysPressed['W']) game.leftPaddle.y -= PADDLE_SPEED;
-          if (game.keysPressed['s'] || game.keysPressed['S']) game.leftPaddle.y += PADDLE_SPEED;
-          if (game.keysPressed['ArrowUp']) game.rightPaddle.y -= PADDLE_SPEED;
-          if (game.keysPressed['ArrowDown']) game.rightPaddle.y += PADDLE_SPEED;
+        if (game.isLocalMultiplayer || game.isPracticeMode || game.isEndlessMode) {
+          if (game.keysPressed['w'] || game.keysPressed['W']) game.leftPaddle.y -= paddleSpeed;
+          if (game.keysPressed['s'] || game.keysPressed['S']) game.leftPaddle.y += paddleSpeed;
+          if (game.keysPressed['ArrowUp']) game.rightPaddle.y -= paddleSpeed;
+          if (game.keysPressed['ArrowDown']) game.rightPaddle.y += paddleSpeed;
         } else {
           // Player controls
-          if (game.keysPressed['w'] || game.keysPressed['W']) game.leftPaddle.y -= PADDLE_SPEED;
-          if (game.keysPressed['s'] || game.keysPressed['S']) game.leftPaddle.y += PADDLE_SPEED;
+          if (game.keysPressed['w'] || game.keysPressed['W']) game.leftPaddle.y -= paddleSpeed;
+          if (game.keysPressed['s'] || game.keysPressed['S']) game.leftPaddle.y += paddleSpeed;
           
           // AI for right paddle in single player
           const paddleCenter = game.rightPaddle.y + game.paddleHeight / 2;
@@ -1989,21 +2220,26 @@
           }
           
           if (paddleCenter < predictedBallY - 15) {
-            game.rightPaddle.y += PADDLE_SPEED * reactionSpeed;
+            game.rightPaddle.y += paddleSpeed * reactionSpeed;
           } else if (paddleCenter > predictedBallY + 15) {
-            game.rightPaddle.y -= PADDLE_SPEED * reactionSpeed;
+            game.rightPaddle.y -= paddleSpeed * reactionSpeed;
+          }
+          
+          // AI power shot
+          if (!game.rightCharged && game.rightCharge >= 100 && Math.random() < 0.01) {
+            activateRightPowerShot();
           }
         }
       } else {
         // 4-player controls
-        if (game.keysPressed['w'] || game.keysPressed['W']) game.leftTopPaddle.y -= PADDLE_SPEED;
-        if (game.keysPressed['s'] || game.keysPressed['S']) game.leftTopPaddle.y += PADDLE_SPEED;
-        if (game.keysPressed['q'] || game.keysPressed['Q']) game.leftBottomPaddle.y -= PADDLE_SPEED;
-        if (game.keysPressed['a'] || game.keysPressed['A']) game.leftBottomPaddle.y += PADDLE_SPEED;
-        if (game.keysPressed['o'] || game.keysPressed['O']) game.rightTopPaddle.y -= PADDLE_SPEED;
-        if (game.keysPressed['l'] || game.keysPressed['L']) game.rightTopPaddle.y += PADDLE_SPEED;
-        if (game.keysPressed['ArrowUp']) game.rightBottomPaddle.y -= PADDLE_SPEED;
-        if (game.keysPressed['ArrowDown']) game.rightBottomPaddle.y += PADDLE_SPEED;
+        if (game.keysPressed['w'] || game.keysPressed['W']) game.leftTopPaddle.y -= paddleSpeed;
+        if (game.keysPressed['s'] || game.keysPressed['S']) game.leftTopPaddle.y += paddleSpeed;
+        if (game.keysPressed['q'] || game.keysPressed['Q']) game.leftBottomPaddle.y -= paddleSpeed;
+        if (game.keysPressed['a'] || game.keysPressed['A']) game.leftBottomPaddle.y += paddleSpeed;
+        if (game.keysPressed['o'] || game.keysPressed['O']) game.rightTopPaddle.y -= paddleSpeed;
+        if (game.keysPressed['l'] || game.keysPressed['L']) game.rightTopPaddle.y += paddleSpeed;
+        if (game.keysPressed['ArrowUp']) game.rightBottomPaddle.y -= paddleSpeed;
+        if (game.keysPressed['ArrowDown']) game.rightBottomPaddle.y += paddleSpeed;
       }
       
       constrainPaddles();
@@ -2032,7 +2268,9 @@
             document.getElementById('leftCharge').classList.remove('active');
             document.getElementById('leftChargeLabel').textContent = 'P1 POWER';
             startLeftCharge();
-            queueCommentary("POWER SHOT FROM " + game.leftPlayer + "!", true, true);
+            if (!game.isPracticeMode && !game.isEndlessMode) {
+              queueCommentary("POWER SHOT FROM " + game.leftPlayer + "!", true, true);
+            }
           } else {
             game.ball.dx = Math.abs(Math.cos(angle)) * game.ball.speed;
             game.ball.dy = Math.sin(angle) * game.ball.speed;
@@ -2064,7 +2302,9 @@
             document.getElementById('rightCharge').classList.remove('active');
             document.getElementById('rightChargeLabel').textContent = 'P2 POWER';
             startRightCharge();
-            queueCommentary("POWER SHOT FROM " + game.rightPlayer + "!", true, true);
+            if (!game.isPracticeMode && !game.isEndlessMode) {
+              queueCommentary("POWER SHOT FROM " + game.rightPlayer + "!", true, true);
+            }
           } else {
             game.ball.dx = -Math.abs(Math.cos(angle)) * game.ball.speed;
             game.ball.dy = Math.sin(angle) * game.ball.speed;
@@ -2152,28 +2392,49 @@
       
       // Ball out of bounds - scoring
       if (game.ball.x - game.ballRadius < 0) {
-        game.rightPaddle.score++;
-        document.getElementById('rightScore').textContent = game.rightPaddle.score;
-        game.lastScorer = game.rightPlayer;
-        handleScore();
+        if (!game.isPracticeMode && !game.isEndlessMode) {
+          game.rightPaddle.score++;
+          document.getElementById('rightScore').textContent = game.rightPaddle.score;
+          game.lastScorer = game.rightPlayer;
+          handleScore();
+        } else if (game.isPracticeMode && game.practiceType === 'responding') {
+          // In practice mode, just reset the ball
+          resetBall();
+          game.ball.dx = -Math.abs(game.ball.dx);
+          queueCommentary("Try again! Press E for a power shot!", true);
+        } else if (game.isEndlessMode) {
+          resetBall();
+          game.ball.dx = -Math.abs(game.ball.dx);
+        }
       }
 
       if (game.ball.x + game.ballRadius > canvas.width) {
-        game.leftPaddle.score++;
-        document.getElementById('leftScore').textContent = game.leftPaddle.score;
-        game.lastScorer = game.leftPlayer;
-        handleScore();
+        if (!game.isPracticeMode && !game.isEndlessMode) {
+          game.leftPaddle.score++;
+          document.getElementById('leftScore').textContent = game.leftPaddle.score;
+          game.lastScorer = game.leftPlayer;
+          handleScore();
+        } else if (game.isPracticeMode || game.isEndlessMode) {
+          // In practice/endless mode, just reset the ball
+          resetBall();
+          game.ball.dx = Math.abs(game.ball.dx);
+          if (game.isPracticeMode && game.practiceType === 'powershot') {
+            queueCommentary("Great! Now try again!", true);
+          }
+        }
       }
 
       // Deuce (tie) situation
-      if (game.leftPaddle.score >= 5 && game.rightPaddle.score >= 5 && 
-          game.leftPaddle.score === game.rightPaddle.score && !game.deuceActive) {
-        game.deuceActive = true;
-        game.bonusPoints++;
-        document.getElementById('bonusPoints').textContent = `⚡ BONUS POINT: +${game.bonusPoints}`;
-        queueCommentary("WE'RE AT DEUCE! BONUS POINT ACTIVATED! NEXT POINT WINS!", true, true);
-      } else if (game.leftPaddle.score !== game.rightPaddle.score) {
-        game.deuceActive = false;
+      if (!game.isPracticeMode && !game.isEndlessMode) {
+        if (game.leftPaddle.score >= 5 && game.rightPaddle.score >= 5 && 
+            game.leftPaddle.score === game.rightPaddle.score && !game.deuceActive) {
+          game.deuceActive = true;
+          game.bonusPoints++;
+          document.getElementById('bonusPoints').textContent = `⚡ BONUS POINT: +${game.bonusPoints}`;
+          queueCommentary("WE'RE AT DEUCE! BONUS POINT ACTIVATED! NEXT POINT WINS!", true, true);
+        } else if (game.leftPaddle.score !== game.rightPaddle.score) {
+          game.deuceActive = false;
+        }
       }
     }
 
@@ -2270,6 +2531,8 @@
       game.tournamentStage = stage;
       game.isLocalMultiplayer = true;
       game.isFourPlayer = false;
+      game.isPracticeMode = false;
+      game.isEndlessMode = false;
       
       document.getElementById('twoPlayerPrompt').style.display = 'none';
       document.getElementById('backButton').style.display = 'none';
@@ -2296,6 +2559,8 @@
       game.aiDifficulty = difficulty;
       game.isLocalMultiplayer = false;
       game.isFourPlayer = false;
+      game.isPracticeMode = false;
+      game.isEndlessMode = false;
       
       document.getElementById('singlePlayerPrompt').style.display = 'none';
       document.getElementById('backButton').style.display = 'none';
@@ -2321,10 +2586,99 @@
       game.rightPlayer = rightName.toUpperCase();
       game.isLocalMultiplayer = true;
       game.isFourPlayer = true;
+      game.isPracticeMode = false;
+      game.isEndlessMode = false;
       
       document.getElementById('fourPlayerPrompt').style.display = 'none';
       document.getElementById('backButton').style.display = 'none';
       document.getElementById('mobileControls').style.display = 'none';
+      startGame();
+    }
+
+    function showEndlessPrompt() {
+      document.getElementById('endlessPrompt').style.display = 'flex';
+      document.getElementById('backButton').style.display = 'flex';
+      document.getElementById('endlessPlayerName').focus();
+    }
+
+    function cancelEndlessPrompt() {
+      document.getElementById('endlessPrompt').style.display = 'none';
+      document.getElementById('backButton').style.display = 'none';
+    }
+
+    function submitEndlessName() {
+      const playerName = document.getElementById('endlessPlayerName').value.trim() || "PLAYER";
+      const difficulty = document.getElementById('endlessDifficulty').value;
+      
+      game.leftPlayer = playerName.toUpperCase();
+      game.rightPlayer = "BOT";
+      game.aiDifficulty = difficulty;
+      game.isLocalMultiplayer = false;
+      game.isFourPlayer = false;
+      game.isPracticeMode = false;
+      game.isEndlessMode = true;
+      
+      document.getElementById('endlessPrompt').style.display = 'none';
+      document.getElementById('backButton').style.display = 'none';
+      startGame();
+    }
+
+    function showPracticePrompt() {
+      document.getElementById('practiceModePrompt').style.display = 'flex';
+      document.getElementById('backButton').style.display = 'flex';
+    }
+
+    function cancelPracticePrompt() {
+      document.getElementById('practiceModePrompt').style.display = 'none';
+      document.getElementById('backButton').style.display = 'none';
+    }
+
+    function startPowerShotPractice() {
+      game.leftPlayer = "PLAYER";
+      game.rightPlayer = "BOT";
+      game.aiDifficulty = "easy";
+      game.isLocalMultiplayer = false;
+      game.isFourPlayer = false;
+      game.isPracticeMode = true;
+      game.practiceType = "powershot";
+      game.isEndlessMode = false;
+      
+      document.getElementById('practiceModePrompt').style.display = 'none';
+      document.getElementById('backButton').style.display = 'none';
+      
+      showPracticeInstructions(
+        "LEARN POWER SHOT",
+        "Press E when your power bar is full to unleash a powerful shot! The power bar fills automatically over time. Try hitting the ball with a power shot!"
+      );
+    }
+
+    function startRespondingPractice() {
+      game.leftPlayer = "PLAYER";
+      game.rightPlayer = "BOT";
+      game.aiDifficulty = "medium";
+      game.isLocalMultiplayer = false;
+      game.isFourPlayer = false;
+      game.isPracticeMode = true;
+      game.practiceType = "responding";
+      game.isEndlessMode = false;
+      
+      document.getElementById('practiceModePrompt').style.display = 'none';
+      document.getElementById('backButton').style.display = 'none';
+      
+      showPracticeInstructions(
+        "LEARN RESPONDING",
+        "The bot will hit shots at you. Try to return them! The bot will occasionally use power shots. Watch the ball carefully and position your paddle to hit it back."
+      );
+    }
+
+    function showPracticeInstructions(title, text) {
+      document.getElementById('practiceTitle').textContent = title;
+      document.getElementById('practiceText').textContent = text;
+      document.getElementById('practiceInstructions').style.display = 'block';
+    }
+
+    function hidePracticeInstructions() {
+      document.getElementById('practiceInstructions').style.display = 'none';
       startGame();
     }
 
@@ -2345,6 +2699,8 @@
       game.countdownNumbers = [];
       game.teamLeftCharged = false;
       game.teamRightCharged = false;
+      game.particles = [];
+      game.lastFrameTime = 0;
       
       // Reset charge bars
       game.leftCharge = 0;
@@ -2377,14 +2733,29 @@
       
       document.getElementById('leftScore').textContent = "0";
       document.getElementById('rightScore').textContent = "0";
-      document.getElementById('timer').textContent = "1:30.000";
-      document.getElementById('bonusPoints').textContent = "";
-      document.getElementById('matchInfo').textContent = "1st Half | Extra Time: +0s";
+      
+      if (!game.isPracticeMode && !game.isEndlessMode) {
+        document.getElementById('timer').textContent = "1:30.000";
+        document.getElementById('bonusPoints').textContent = "";
+        document.getElementById('matchInfo').textContent = "1st Half | Extra Time: +0s";
+      } else {
+        document.getElementById('timer').style.display = "none";
+        document.getElementById('bonusPoints').style.display = "none";
+        document.getElementById('matchInfo').style.display = "none";
+      }
       
       resetBall();
       resetPaddles();
       
-      queueCommentary(`THE CHAMPIONSHIP MATCH BEGINS! ${game.leftPlayer} VS ${game.rightPlayer}!`, true, true);
+      if (!game.isPracticeMode && !game.isEndlessMode) {
+        queueCommentary(`THE CHAMPIONSHIP MATCH BEGINS! ${game.leftPlayer} VS ${game.rightPlayer}!`, true, true);
+      } else if (game.practiceType === 'powershot') {
+        queueCommentary("Practice mode: Power shots. Press E when your power bar is full!", true, true);
+      } else if (game.practiceType === 'responding') {
+        queueCommentary("Practice mode: Responding. Return the bot's shots!", true, true);
+      } else if (game.isEndlessMode) {
+        queueCommentary("Endless mode! Play as long as you want!", true, true);
+      }
       
       startCountdown();
     }
@@ -2426,7 +2797,9 @@
           game.startTime = Date.now();
           game.countdownActive = false;
           
-          startTimer();
+          if (!game.isPracticeMode && !game.isEndlessMode) {
+            startTimer();
+          }
           gameLoop(); // Start the game loop
         }
       }
@@ -2624,29 +2997,17 @@
     function createConfetti() {
       const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffffff'];
       
-      for (let i = 0; i < 50; i++) { // Reduced number of particles for performance
-        const confetti = document.createElement('div');
-        confetti.className = 'confetti';
-        confetti.style.left = Math.random() * 100 + 'vw';
-        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        confetti.style.animation = `confetti-fall ${Math.random() * 2 + 1}s linear forwards`;
-        confetti.style.animationDelay = Math.random() * 0.5 + 's';
-        
-        const size = Math.random() * 8 + 4;
-        confetti.style.width = size + 'px';
-        confetti.style.height = size + 'px';
-        
-        if (Math.random() > 0.5) {
-          confetti.style.borderRadius = '50%';
-        } else {
-          confetti.style.borderRadius = '0';
-        }
-        
-        document.body.appendChild(confetti);
-        
-        setTimeout(() => {
-          confetti.remove();
-        }, 3000);
+      for (let i = 0; i < 50; i++) {
+        const particle = {
+          x: Math.random() * canvas.width,
+          y: -10,
+          size: Math.random() * 8 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          life: 100 + Math.random() * 50,
+          vx: -5 + Math.random() * 10,
+          vy: 2 + Math.random() * 5
+        };
+        game.particles.push(particle);
       }
     }
 
@@ -2824,8 +3185,11 @@
       game.gameStarted = false;
       game.isLocalMultiplayer = false;
       game.isFourPlayer = false;
+      game.isPracticeMode = false;
+      game.isEndlessMode = false;
       game.last10Seconds = false;
       game.countdownNumbers = [];
+      game.particles = [];
       
       // Hide game elements
       document.getElementById('leftScore').style.display = "none";
@@ -2847,7 +3211,6 @@
       // Show mobile controls if on mobile for 1P and 2P modes
       if (/Mobi|Android/i.test(navigator.userAgent))
         document.getElementById('mobileControls').style.display = 'flex';
-      }
       
       // Start music again if not muted
       if (game.soundEnabled && !game.isMusicMuted && game.musicStarted) {
@@ -2855,6 +3218,7 @@
       }
       
       queueCommentary("RETURNING TO MENU", true, true);
+    }
 
     // Initialize the game when the DOM is loaded
     document.addEventListener('DOMContentLoaded', initGame);
