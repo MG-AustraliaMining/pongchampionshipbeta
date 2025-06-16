@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>🏆 PONG CHAMPIONSHIP 2.1.0 🏆</title>
+  <title>🏆 PONG CHAMPIONSHIP 2.2 🏆</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     :root {
@@ -436,15 +436,8 @@
     }
     
     /* Leaderboard Styles */
-    #menuLeaderboards {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-      max-width: 800px;
-      margin-top: 20px;
-      max-height: 40vh;
-      overflow: hidden;
+    #leaderboardScreen {
+      display: none;
     }
     
     .leaderboard-tabs {
@@ -485,7 +478,7 @@
       padding: 12px;
       color: white;
       width: 100%;
-      height: 30vh;
+      height: 60vh;
       overflow-y: auto;
       box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
       font-family: 'Arial', sans-serif;
@@ -694,6 +687,21 @@
       display: none;
     }
     
+    /* Glow effect for UI elements */
+    .glow {
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+    
+    @keyframes glow {
+      from {
+        box-shadow: 0 0 5px rgba(255,215,0,0.5);
+      }
+      to {
+        box-shadow: 0 0 20px rgba(255,215,0,0.8);
+      }
+    }
+    
+    /* Responsive adjustments */
     @media (max-width: 768px) {
       .score { 
         font-size: 2.5rem; 
@@ -758,12 +766,6 @@
       }
       
       /* Adjust leaderboards for mobile */
-      #menuLeaderboards {
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-      }
-      
       .leaderboard {
         width: 90%;
         max-width: none;
@@ -820,7 +822,7 @@
 <body>
   <!-- Intro Animation Screen -->
   <div id="introAnimation">
-    <div id="introText">PONG CHAMPIONSHIP 2.1</div>
+    <div id="introText">PONG CHAMPIONSHIP 2.2</div>
     <button id="startButton">START</button>
   </div>
 
@@ -834,7 +836,7 @@
     <div id="timer">1:30.000</div>
     <div id="bonusPoints"></div>
     <div id="matchInfo"></div>
-    <div id="commentary">WELCOME TO THE PONG CHAMPIONSHIP 2.1!</div>
+    <div id="commentary">WELCOME TO THE PONG CHAMPIONSHIP 2.2!</div>
     
     <!-- Power charge bars - now properly separated -->
     <div id="leftChargeContainer" class="paddle-charge-container">
@@ -877,38 +879,40 @@
     </div>
 
     <div id="titleScreen" class="screen">
-      <h1>🏆 PONG CHAMPIONSHIP 2.1.0 🏆</h1>
+      <h1>🏆 PONG CHAMPIONSHIP 2.2 🏆</h1>
       <button class="btn-championship" id="twoPlayerButton">2 PLAYERS</button>
       <button class="btn-championship" id="singlePlayerButton">1 PLAYER VS BOT</button>
       <button class="btn-championship" id="fourPlayerButton">4 PLAYERS</button>
-      
-      <!-- Leaderboards in menu -->
-      <div id="menuLeaderboards">
-        <div class="leaderboard-tabs">
-          <div class="leaderboard-tab active" data-tab="recent">RECENT PLAYS</div>
-          <div class="leaderboard-tab" data-tab="best">BEST WINS</div>
-          <div class="leaderboard-tab" data-tab="bot">BOT CHAMPIONS</div>
-        </div>
-        
-        <div id="recentPlays" class="leaderboard active">
-          <h3>RECENT PLAYS</h3>
-          <div id="recentPlaysList"></div>
-        </div>
-        
-        <div id="bestWins" class="leaderboard">
-          <h3>BEST WINS</h3>
-          <div id="bestWinsList"></div>
-        </div>
-        
-        <div id="botChampion" class="leaderboard">
-          <h3>BOT CHAMPIONS</h3>
-          <div id="botChampionList"></div>
-        </div>
-      </div>
-      
-      <button class="btn-championship" id="practiceButton" style="margin-top: 20px;">PRACTICE</button>
+      <button class="btn-championship" id="leaderboardButton" style="margin-top: 20px;">LEADERBOARDS</button>
+      <button class="btn-championship" id="practiceButton">PRACTICE</button>
       <button class="btn-championship" id="endlessButton">ENDLESS MODE</button>
       <button class="btn-championship" id="learnPongButton">LEARN ABOUT PONG</button>
+    </div>
+
+    <div id="leaderboardScreen" class="screen">
+      <h1>🏆 LEADERBOARDS 🏆</h1>
+      <div class="leaderboard-tabs">
+        <div class="leaderboard-tab active" data-tab="recent">RECENT PLAYS</div>
+        <div class="leaderboard-tab" data-tab="best">BEST WINS</div>
+        <div class="leaderboard-tab" data-tab="bot">BOT CHAMPIONS</div>
+      </div>
+      
+      <div id="recentPlays" class="leaderboard active">
+        <h3>RECENT PLAYS</h3>
+        <div id="recentPlaysList"></div>
+      </div>
+      
+      <div id="bestWins" class="leaderboard">
+        <h3>BEST WINS</h3>
+        <div id="bestWinsList"></div>
+      </div>
+      
+      <div id="botChampion" class="leaderboard">
+        <h3>BOT CHAMPIONS</h3>
+        <div id="botChampionList"></div>
+      </div>
+      
+      <button class="btn-championship" id="backToMenuButton" style="margin-top: 20px;">BACK TO MENU</button>
     </div>
 
     <div id="endScreen" class="screen" style="display: none;">
@@ -1238,7 +1242,7 @@
       const introText = document.getElementById('introText');
       const startButton = document.getElementById('startButton');
       
-      // Don't play any sounds yet - wait for start button click
+      // No sounds play at the beginning now
       
       // Animate text entry
       setTimeout(() => {
@@ -1250,7 +1254,6 @@
       }, 300);
       
       startButton.addEventListener('click', () => {
-        game.soundEnabled = true;
         document.getElementById('introAnimation').style.display = 'none';
         document.getElementById('titleScreen').style.display = 'flex';
         
@@ -1281,6 +1284,8 @@
       document.getElementById('fourPlayerButton').addEventListener('click', showFourPlayerPrompt);
       document.getElementById('practiceButton').addEventListener('click', showPracticePrompt);
       document.getElementById('endlessButton').addEventListener('click', showEndlessPrompt);
+      document.getElementById('leaderboardButton').addEventListener('click', showLeaderboards);
+      document.getElementById('backToMenuButton').addEventListener('click', hideLeaderboards);
       document.getElementById('learnPongButton').addEventListener('click', () => {
         window.open('https://en.wikipedia.org/wiki/Pong', '_blank');
       });
@@ -1355,6 +1360,20 @@
       setupButtonSounds();
     }
 
+    function showLeaderboards() {
+      document.getElementById('titleScreen').style.display = 'none';
+      document.getElementById('leaderboardScreen').style.display = 'flex';
+      document.getElementById('backButton').style.display = 'flex';
+      playSelectSound();
+    }
+
+    function hideLeaderboards() {
+      document.getElementById('leaderboardScreen').style.display = 'none';
+      document.getElementById('titleScreen').style.display = 'flex';
+      document.getElementById('backButton').style.display = 'none';
+      playSelectSound();
+    }
+
     function handleBackButton() {
       if (document.getElementById('twoPlayerPrompt').style.display === 'flex') {
         cancelTwoPlayerPrompt();
@@ -1366,6 +1385,8 @@
         cancelEndlessPrompt();
       } else if (document.getElementById('practiceModePrompt').style.display === 'flex') {
         cancelPracticePrompt();
+      } else if (document.getElementById('leaderboardScreen').style.display === 'flex') {
+        hideLeaderboards();
       } else {
         returnToMenu();
       }
@@ -1958,6 +1979,9 @@
       
       if (!game.isFourPlayer) {
         // Left paddle
+        ctx.fillStyle = 'white';
+        ctx.shadowBlur = 0;
+        
         if (game.leftCharged || (game.last10Seconds && game.lastScorer === game.leftPlayer)) {
           // Draw fire effect for powered paddle
           ctx.fillStyle = 'gold';
@@ -1979,13 +2003,13 @@
               game.particles.push(particle);
             }
           }
-        } else {
-          ctx.fillStyle = 'white';
-          ctx.shadowBlur = 0;
         }
         ctx.fillRect(20, game.leftPaddle.y, game.paddleWidth, paddleHeight);
         
         // Right paddle
+        ctx.fillStyle = 'white';
+        ctx.shadowBlur = 0;
+        
         if (game.rightCharged || (game.last10Seconds && game.lastScorer === game.rightPlayer)) {
           // Draw fire effect for powered paddle
           ctx.fillStyle = 'gold';
@@ -2007,9 +2031,6 @@
               game.particles.push(particle);
             }
           }
-        } else {
-          ctx.fillStyle = 'white';
-          ctx.shadowBlur = 0;
         }
         ctx.fillRect(canvas.width - 20 - game.paddleWidth, game.rightPaddle.y, game.paddleWidth, paddleHeight);
       } else {
@@ -2043,7 +2064,11 @@
         ctx.fillRect(20, game.leftBottomPaddle.y, game.paddleWidth, paddleHeight);
         
         // Right team (top and bottom)
+        ctx.fillStyle = 'white';
+        ctx.shadowBlur = 0;
+        
         if (game.teamRightCharged || (game.last10Seconds && game.lastScorer === game.rightPlayer)) {
+          // Draw fire effect for powered paddle
           ctx.fillStyle = 'gold';
           ctx.shadowBlur = 15;
           ctx.shadowColor = 'orange';
@@ -2063,9 +2088,6 @@
               game.particles.push(particle);
             }
           }
-        } else {
-          ctx.fillStyle = 'white';
-          ctx.shadowBlur = 0;
         }
         ctx.fillRect(canvas.width - 20 - game.paddleWidth, game.rightTopPaddle.y, game.paddleWidth, paddleHeight);
         ctx.fillRect(canvas.width - 20 - game.paddleWidth, game.rightBottomPaddle.y, game.paddleWidth, paddleHeight);
@@ -2553,11 +2575,13 @@
       document.getElementById('twoPlayerPrompt').style.display = 'flex';
       document.getElementById('backButton').style.display = 'flex';
       document.getElementById('leftPlayerName').focus();
+      playSelectSound();
     }
 
     function cancelTwoPlayerPrompt() {
       document.getElementById('twoPlayerPrompt').style.display = 'none';
       document.getElementById('backButton').style.display = 'none';
+      playSelectSound();
     }
 
     function submitTwoPlayerNames() {
@@ -2576,17 +2600,20 @@
       document.getElementById('twoPlayerPrompt').style.display = 'none';
       document.getElementById('backButton').style.display = 'none';
       startGame();
+      playSelectSound();
     }
 
     function showSinglePlayerPrompt() {
       document.getElementById('singlePlayerPrompt').style.display = 'flex';
       document.getElementById('backButton').style.display = 'flex';
       document.getElementById('playerName').focus();
+      playSelectSound();
     }
 
     function cancelSinglePlayerPrompt() {
       document.getElementById('singlePlayerPrompt').style.display = 'none';
       document.getElementById('backButton').style.display = 'none';
+      playSelectSound();
     }
 
     function submitSinglePlayerName() {
@@ -2604,17 +2631,20 @@
       document.getElementById('singlePlayerPrompt').style.display = 'none';
       document.getElementById('backButton').style.display = 'none';
       startGame();
+      playSelectSound();
     }
 
     function showFourPlayerPrompt() {
       document.getElementById('fourPlayerPrompt').style.display = 'flex';
       document.getElementById('backButton').style.display = 'flex';
       document.getElementById('leftTeamName').focus();
+      playSelectSound();
     }
 
     function cancelFourPlayerPrompt() {
       document.getElementById('fourPlayerPrompt').style.display = 'none';
       document.getElementById('backButton').style.display = 'none';
+      playSelectSound();
     }
 
     function submitFourPlayerNames() {
@@ -2633,17 +2663,20 @@
       const mobileControls = document.getElementById('mobileControls');
       if (mobileControls) mobileControls.style.display = 'none';
       startGame();
+      playSelectSound();
     }
 
     function showEndlessPrompt() {
       document.getElementById('endlessPrompt').style.display = 'flex';
       document.getElementById('backButton').style.display = 'flex';
       document.getElementById('endlessPlayerName').focus();
+      playSelectSound();
     }
 
     function cancelEndlessPrompt() {
       document.getElementById('endlessPrompt').style.display = 'none';
       document.getElementById('backButton').style.display = 'none';
+      playSelectSound();
     }
 
     function submitEndlessName() {
@@ -2661,16 +2694,19 @@
       document.getElementById('endlessPrompt').style.display = 'none';
       document.getElementById('backButton').style.display = 'none';
       startGame();
+      playSelectSound();
     }
 
     function showPracticePrompt() {
       document.getElementById('practiceModePrompt').style.display = 'flex';
       document.getElementById('backButton').style.display = 'flex';
+      playSelectSound();
     }
 
     function cancelPracticePrompt() {
       document.getElementById('practiceModePrompt').style.display = 'none';
       document.getElementById('backButton').style.display = 'none';
+      playSelectSound();
     }
 
     function startPowerShotPractice() {
@@ -2690,6 +2726,7 @@
         "LEARN POWER SHOT",
         "Press E when your power bar is full to unleash a powerful shot! The power bar fills automatically over time. Try hitting the ball with a power shot!"
       );
+      playSelectSound();
     }
 
     function startRespondingPractice() {
@@ -2709,6 +2746,7 @@
         "LEARN RESPONDING",
         "The bot will hit shots at you. Try to return them! The bot will occasionally use power shots. Watch the ball carefully and position your paddle to hit it back."
       );
+      playSelectSound();
     }
 
     function showPracticeInstructions(title, text) {
@@ -2722,6 +2760,7 @@
     function hidePracticeInstructions() {
       document.getElementById('practiceInstructions').style.display = 'none';
       startGame();
+      playSelectSound();
     }
 
     function startGame() {
@@ -2777,6 +2816,7 @@
       document.getElementById('endScreen').style.display = "none";
       document.getElementById('pauseScreen').style.display = "none";
       document.getElementById('gameOverScreen').style.display = "none";
+      document.getElementById('leaderboardScreen').style.display = "none";
       
       document.getElementById('leftScore').textContent = "0";
       document.getElementById('rightScore').textContent = "0";
@@ -3239,6 +3279,7 @@
       document.getElementById('gameOverScreen').style.display = "none";
       document.getElementById('titleScreen').style.display = "flex";
       document.getElementById('backButton').style.display = "none";
+      document.getElementById('leaderboardScreen').style.display = "none";
       clearInterval(game.timerInterval);
       clearInterval(game.halftimeInterval);
       clearInterval(game.leftChargeInterval);
