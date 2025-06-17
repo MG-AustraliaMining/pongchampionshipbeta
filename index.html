@@ -237,10 +237,6 @@
     .mobile-btn:active {
       background: rgba(255,255,255,0.5);
     }
-
-    #leftPaddle, #rightPaddle {
-      color: white;
-    }
     
     .mobile-power-btn {
       width: 70px;
@@ -1039,6 +1035,7 @@
   <audio id="introSound"></audio>
   <audio id="introSound1"></audio>
   <audio id="introSound2"></audio>
+  <audio id="introSound3"></audio>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
@@ -1088,6 +1085,7 @@
     const introSound = document.getElementById('introSound');
     const introSound1 = document.getElementById('introSound1');
     const introSound2 = document.getElementById('introSound2');
+    const introSound3 = document.getElementById('introSound3');
     
     // Game State
     const game = {
@@ -1169,7 +1167,10 @@
       isPracticeMode: false,
       practiceType: null,
       isEndlessMode: false,
-      ballResetTimeout: null
+      ballResetTimeout: null,
+      leftPaddleColor: 'white',
+      rightPaddleColor: 'white',
+      ballColor: 'white'
     };
 
     // Commentary phrases
@@ -1249,12 +1250,6 @@
       const introText = document.getElementById('introText');
       const startButton = document.getElementById('startButton');
       
-      // Play random intro sound
-      const introSounds = [introSound, introSound1, introSound2];
-      const randomIntroSound = introSounds[Math.floor(Math.random() * introSounds.length)];
-      randomIntroSound.volume = 0.5;
-      randomIntroSound.play().catch(e => console.log("Audio play error:", e));
-      
       // Animate text entry
       setTimeout(() => {
         introText.style.animation = 'textEntry 1s forwards';
@@ -1268,11 +1263,11 @@
         document.getElementById('introAnimation').style.display = 'none';
         document.getElementById('titleScreen').style.display = 'flex';
         
-        // Play start sound only when button is clicked
-        const startSounds = [startSound, startSound1, startSound2, startSound3];
-        const randomStartSound = startSounds[Math.floor(Math.random() * startSounds.length)];
-        randomStartSound.volume = 0.5;
-        randomStartSound.play().catch(e => console.log("Audio play error:", e));
+        // Play random intro sound only when button is clicked
+        const introSounds = [introSound, introSound1, introSound2, introSound3];
+        const randomIntroSound = introSounds[Math.floor(Math.random() * introSounds.length)];
+        randomIntroSound.volume = 0.5;
+        randomIntroSound.play().catch(e => console.log("Audio play error:", e));
       });
     }
 
@@ -1739,6 +1734,7 @@
       introSound.src = 'intro.mp3';
       introSound1.src = 'intro1.mp3';
       introSound2.src = 'intro2.mp3';
+      introSound3.src = 'intro3.mp3';
     }
 
     function playRandomStartMusic() {
@@ -1831,6 +1827,9 @@
       // Reset smash counter
       game.smashCounter = 0;
       game.smashTarget = Math.floor(Math.random() * 5) + 3; // 3-7 hits
+      
+      // Randomly select ball color (white or black)
+      game.ballColor = Math.random() > 0.5 ? 'white' : 'black';
     }
 
     function resetPaddles() {
@@ -1839,6 +1838,10 @@
       
       game.leftPaddle.y = centerY;
       game.rightPaddle.y = centerY;
+      
+      // Randomly select paddle colors (white or black)
+      game.leftPaddleColor = Math.random() > 0.5 ? 'white' : 'black';
+      game.rightPaddleColor = Math.random() > 0.5 ? 'white' : 'black';
       
       if (game.isFourPlayer) {
         game.leftTopPaddle.y = canvas.height * 0.25 - paddleHeight/2;
@@ -1990,7 +1993,7 @@
       
       if (!game.isFourPlayer) {
         // Left paddle
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = game.leftPaddleColor;
         ctx.shadowBlur = 0;
         
         if (game.leftCharged || (game.last10Seconds && game.lastScorer === game.leftPlayer)) {
@@ -2018,7 +2021,7 @@
         ctx.fillRect(20, game.leftPaddle.y, game.paddleWidth, paddleHeight);
         
         // Right paddle
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = game.rightPaddleColor;
         ctx.shadowBlur = 0;
         
         if (game.rightCharged || (game.last10Seconds && game.lastScorer === game.rightPlayer)) {
@@ -2046,7 +2049,7 @@
         ctx.fillRect(canvas.width - 20 - game.paddleWidth, game.rightPaddle.y, game.paddleWidth, paddleHeight);
       } else {
         // 4-player paddles
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = game.leftPaddleColor;
         ctx.shadowBlur = 0;
         
         // Left team (top and bottom)
@@ -2075,7 +2078,7 @@
         ctx.fillRect(20, game.leftBottomPaddle.y, game.paddleWidth, paddleHeight);
         
         // Right team (top and bottom)
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = game.rightPaddleColor;
         ctx.shadowBlur = 0;
         
         if (game.teamRightCharged || (game.last10Seconds && game.lastScorer === game.rightPlayer)) {
@@ -2139,7 +2142,7 @@
           }
         }
       } else {
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = game.ballColor;
         ctx.shadowBlur = 0;
       }
       
