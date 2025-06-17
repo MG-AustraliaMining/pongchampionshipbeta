@@ -1235,6 +1235,9 @@
       
       // Set up intro screen
       setupIntroScreen();
+      
+      // Enable sound by default
+      game.soundEnabled = true;
     }
 
     function setupIntroScreen() {
@@ -1242,7 +1245,11 @@
       const introText = document.getElementById('introText');
       const startButton = document.getElementById('startButton');
       
-      // No sounds play at the beginning now
+      // Play random intro sound
+      const introSounds = [introSound, introSound1, introSound2];
+      const randomIntroSound = introSounds[Math.floor(Math.random() * introSounds.length)];
+      randomIntroSound.volume = 0.5;
+      randomIntroSound.play().catch(e => console.log("Audio play error:", e));
       
       // Animate text entry
       setTimeout(() => {
@@ -2133,6 +2140,7 @@
       }
       
       ctx.fill();
+      ctx.closePath();
       ctx.shadowBlur = 0; // Reset shadow
     }
 
