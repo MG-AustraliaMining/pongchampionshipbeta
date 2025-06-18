@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>🏆 PONG CHAMPIONSHIP 2.2 🏆</title>
+  <title>🏆 PONG CHAMPIONSHIP 2.3 🏆</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     :root {
@@ -254,12 +254,18 @@
       box-shadow: 0 0 10px rgba(255,215,0,0.5);
       position: absolute;
       bottom: 100px;
-      left: 50%;
-      transform: translateX(-50%);
     }
     
     .mobile-power-btn:active {
       background: rgba(255,215,0,0.5);
+    }
+    
+    #leftPowerBtn {
+      left: 20%;
+    }
+    
+    #rightPowerBtn {
+      right: 20%;
     }
     
     .modal-overlay {
@@ -668,6 +674,8 @@
       border-radius: 50%;
       pointer-events: none;
       z-index: 10;
+      background: radial-gradient(circle, yellow, orange, red);
+      box-shadow: 0 0 5px yellow;
     }
     
     /* Practice mode instructions */
@@ -699,6 +707,53 @@
       to {
         box-shadow: 0 0 20px rgba(255,215,0,0.8);
       }
+    }
+    
+    /* Toggle switch */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+      margin: 0 10px;
+    }
+    
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 34px;
+    }
+    
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    
+    input:checked + .slider {
+      background-color: gold;
+    }
+    
+    input:checked + .slider:before {
+      transform: translateX(26px);
     }
     
     /* Responsive adjustments */
@@ -822,13 +877,12 @@
 <body>
   <!-- Intro Animation Screen -->
   <div id="introAnimation">
-    <div id="introText">PONG CHAMPIONSHIP 2.2</div>
+    <div id="introText">PONG CHAMPIONSHIP 2.3</div>
     <button id="startButton">START</button>
   </div>
 
   <div id="gameContainer">
     <canvas id="pongCanvas"></canvas>
-    <canvas id="particleCanvas" style="position: absolute; top: 0; left: 0; z-index: 5;"></canvas>
     
     <!-- Game elements (hidden during menu) -->
     <div id="leftScore" class="score">0</div>
@@ -836,7 +890,7 @@
     <div id="timer">1:30.000</div>
     <div id="bonusPoints"></div>
     <div id="matchInfo"></div>
-    <div id="commentary">WELCOME TO THE PONG CHAMPIONSHIP 2.2!</div>
+    <div id="commentary">WELCOME TO THE PONG CHAMPIONSHIP 2.3!</div>
     
     <!-- Power charge bars - now properly separated -->
     <div id="leftChargeContainer" class="paddle-charge-container">
@@ -860,11 +914,12 @@
         <div class="mobile-btn" id="upBtnLeft">↑</div>
         <div class="mobile-btn" id="downBtnLeft">↓</div>
       </div>
-      <div class="mobile-power-btn" id="powerBtnLeft">💥</div>
+      <div class="mobile-power-btn" id="leftPowerBtn">💥</div>
       <div class="mobile-paddle-controls">
         <div class="mobile-btn" id="upBtnRight">↑</div>
         <div class="mobile-btn" id="downBtnRight">↓</div>
       </div>
+      <div class="mobile-power-btn" id="rightPowerBtn">💥</div>
     </div>
 
     <div id="countdown" class="screen"></div>
@@ -879,7 +934,7 @@
     </div>
 
     <div id="titleScreen" class="screen">
-      <h1>🏆 PONG CHAMPIONSHIP 2.2 🏆</h1>
+      <h1>🏆 PONG CHAMPIONSHIP 2.3 🏆</h1>
       <button class="btn-championship" id="twoPlayerButton">2 PLAYERS</button>
       <button class="btn-championship" id="singlePlayerButton">1 PLAYER VS BOT</button>
       <button class="btn-championship" id="fourPlayerButton">4 PLAYERS</button>
@@ -993,6 +1048,22 @@
       </div>
       <input type="hidden" id="endlessDifficulty" value="easy">
       
+      <div style="margin: 15px 0;">
+        <label style="color: white; margin-right: 10px;">Show Score:</label>
+        <label class="switch">
+          <input type="checkbox" id="showScoreToggle" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+      
+      <div style="margin: 15px 0;">
+        <label style="color: white; margin-right: 10px;">Commentary:</label>
+        <label class="switch">
+          <input type="checkbox" id="commentaryToggle" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+      
       <div style="display: flex; justify-content: center; gap: 10px; margin-top: 15px;">
         <button class="modal-btn" id="submitEndlessName">START</button>
         <button class="modal-btn" id="cancelEndless">BACK</button>
@@ -1043,25 +1114,23 @@
     const PADDLE_HEIGHT_RATIO = 0.2;
     const FOUR_PLAYER_PADDLE_HEIGHT_RATIO = 0.15;
     const BALL_RADIUS_RATIO = 0.012;
-    const INITIAL_BALL_SPEED = 7; // Reduced for better performance
-    const MAX_BALL_SPEED = 14;
-    const FOUR_PLAYER_BALL_SPEED = 8;
-    const PADDLE_SPEED = 8; // Reduced for better control
+    const INITIAL_BALL_SPEED = 9; // Increased speed
+    const MAX_BALL_SPEED = 16; // Increased max speed
+    const FOUR_PLAYER_BALL_SPEED = 10; // Increased speed
+    const PADDLE_SPEED = 10; // Increased paddle speed
     const WINNING_SCORE = 10;
     const HALF_TIME = 90; // 1 minute 30 seconds per half
     const HALF_TIME_BREAK = 10; // 10 second break
     const OVERTIME_TIME = 30; // 30 seconds for overtime
-    const BALL_SPEED_INCREMENT = 0.5;
-    const SMASH_SPEED_MULTIPLIER = 1.8; // Reduced for better control
+    const BALL_SPEED_INCREMENT = 0.7; // Increased speed increment
+    const SMASH_SPEED_MULTIPLIER = 2.0; // Increased smash multiplier
     const SMASH_DURATION = 800; // ms
-    const CHARGE_TIME = 5000; // 5 seconds to charge
-    const POWER_SHOT_DURATION = 4000; // 4 seconds to use power shot
+    const CHARGE_TIME = 4000; // Reduced charge time to 4 seconds
+    const POWER_SHOT_DURATION = 3000; // 3 seconds to use power shot
     
     // Game Elements
     const canvas = document.getElementById('pongCanvas');
     const ctx = canvas.getContext('2d');
-    const particleCanvas = document.getElementById('particleCanvas');
-    const particleCtx = particleCanvas.getContext('2d');
     
     // Audio Elements
     const backgroundMusic = document.getElementById('backgroundMusic');
@@ -1170,7 +1239,10 @@
       ballResetTimeout: null,
       leftPaddleColor: 'white',
       rightPaddleColor: 'white',
-      ballColor: 'white'
+      ballColor: 'white',
+      practiceWins: 0,
+      showScore: true,
+      enableCommentary: true
     };
 
     // Commentary phrases
@@ -1250,9 +1322,27 @@
       const introText = document.getElementById('introText');
       const startButton = document.getElementById('startButton');
       
-      // Animate text entry
+      // Enhanced intro animation
       setTimeout(() => {
         introText.style.animation = 'textEntry 1s forwards';
+        
+        // Add particle effects
+        for (let i = 0; i < 50; i++) {
+          setTimeout(() => {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            particle.style.transform = `scale(${Math.random() * 2 + 1})`;
+            document.getElementById('introAnimation').appendChild(particle);
+            
+            // Remove particle after animation
+            setTimeout(() => {
+              particle.remove();
+            }, 2000);
+          }, Math.random() * 1000);
+        }
+        
         setTimeout(() => {
           startButton.style.animation = 'textEntry 0.5s forwards';
           startButton.style.animationDelay = '0.3s';
@@ -1260,6 +1350,9 @@
       }, 300);
       
       startButton.addEventListener('click', () => {
+        // Clear any existing particles
+        document.querySelectorAll('.particle').forEach(p => p.remove());
+        
         document.getElementById('introAnimation').style.display = 'none';
         document.getElementById('titleScreen').style.display = 'flex';
         
@@ -1513,8 +1606,6 @@
       // Set canvas to full window size
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      particleCanvas.width = window.innerWidth;
-      particleCanvas.height = window.innerHeight;
       
       // Calculate dynamic sizes based on canvas dimensions
       game.paddleWidth = Math.max(15, canvas.width * 0.015);
@@ -1534,7 +1625,8 @@
       const downBtnLeft = document.getElementById('downBtnLeft');
       const upBtnRight = document.getElementById('upBtnRight');
       const downBtnRight = document.getElementById('downBtnRight');
-      const powerBtnLeft = document.getElementById('powerBtnLeft');
+      const leftPowerBtn = document.getElementById('leftPowerBtn');
+      const rightPowerBtn = document.getElementById('rightPowerBtn');
       
       // Touch events
       const handleTouch = (btn, direction, isLeft) => (e) => {
@@ -1557,14 +1649,23 @@
       if (downBtnRight) downBtnRight.addEventListener('touchstart', handleTouch(downBtnRight, 'down', false));
       if (downBtnRight) downBtnRight.addEventListener('touchend', handleTouch(downBtnRight, 'none', false));
       
-      // Power button
-      if (powerBtnLeft) powerBtnLeft.addEventListener('touchstart', (e) => {
+      // Power buttons
+      if (leftPowerBtn) leftPowerBtn.addEventListener('touchstart', (e) => {
         e.preventDefault();
         game.mobileControls.leftPower = true;
       });
-      if (powerBtnLeft) powerBtnLeft.addEventListener('touchend', (e) => {
+      if (leftPowerBtn) leftPowerBtn.addEventListener('touchend', (e) => {
         e.preventDefault();
         game.mobileControls.leftPower = false;
+      });
+      
+      if (rightPowerBtn) rightPowerBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        game.mobileControls.rightPower = true;
+      });
+      if (rightPowerBtn) rightPowerBtn.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        game.mobileControls.rightPower = false;
       });
       
       // Mouse events for desktop testing
@@ -1576,14 +1677,10 @@
       if (upBtnRight) upBtnRight.addEventListener('mouseup', () => game.mobileControls.rightUp = false);
       if (downBtnRight) downBtnRight.addEventListener('mousedown', () => game.mobileControls.rightDown = true);
       if (downBtnRight) downBtnRight.addEventListener('mouseup', () => game.mobileControls.rightDown = false);
-      if (powerBtnLeft) powerBtnLeft.addEventListener('mousedown', () => game.mobileControls.leftPower = true);
-      if (powerBtnLeft) powerBtnLeft.addEventListener('mouseup', () => game.mobileControls.leftPower = false);
-      
-      // Show mobile controls on mobile devices for 1P and 2P modes
-      if (/Mobi|Android/i.test(navigator.userAgent)) {
-        const mobileControls = document.getElementById('mobileControls');
-        if (mobileControls) mobileControls.style.display = 'flex';
-      }
+      if (leftPowerBtn) leftPowerBtn.addEventListener('mousedown', () => game.mobileControls.leftPower = true);
+      if (leftPowerBtn) leftPowerBtn.addEventListener('mouseup', () => game.mobileControls.leftPower = false);
+      if (rightPowerBtn) rightPowerBtn.addEventListener('mousedown', () => game.mobileControls.rightPower = true);
+      if (rightPowerBtn) rightPowerBtn.addEventListener('mouseup', () => game.mobileControls.rightPower = false);
     }
 
     function setupKeyboardControls() {
@@ -1594,21 +1691,6 @@
 
     function handleKeyEvent(e) {
       switch(e.key) {
-        case 'p':
-        case 'P':
-          togglePause();
-          break;
-        case 'm':
-        case 'M':
-          toggleMute();
-          break;
-        case 'f':
-        case 'F':
-          toggleFullscreen();
-          break;
-        case 'Escape':
-          handleBackButton();
-          break;
         case 'w':
         case 'W':
           game.keysPressed['w'] = true;
@@ -1828,8 +1910,8 @@
       game.smashCounter = 0;
       game.smashTarget = Math.floor(Math.random() * 5) + 3; // 3-7 hits
       
-      // Randomly select ball color (white or black)
-      game.ballColor = Math.random() > 0.5 ? 'white' : 'black';
+      // Set ball color to white
+      game.ballColor = 'white';
     }
 
     function resetPaddles() {
@@ -1839,9 +1921,9 @@
       game.leftPaddle.y = centerY;
       game.rightPaddle.y = centerY;
       
-      // Randomly select paddle colors (white or black)
-      game.leftPaddleColor = Math.random() > 0.5 ? 'white' : 'black';
-      game.rightPaddleColor = Math.random() > 0.5 ? 'white' : 'black';
+      // Set paddle colors to white
+      game.leftPaddleColor = 'white';
+      game.rightPaddleColor = 'white';
       
       if (game.isFourPlayer) {
         game.leftTopPaddle.y = canvas.height * 0.25 - paddleHeight/2;
@@ -2005,16 +2087,12 @@
           // Draw fire particles
           if (game.leftCharged) {
             for (let i = 0; i < 3; i++) {
-              const particle = {
-                x: 20 + game.paddleWidth,
-                y: game.leftPaddle.y + Math.random() * paddleHeight,
-                size: Math.random() * 5 + 3,
-                color: `hsl(${20 + Math.random() * 20}, 100%, 50%)`,
-                life: 30 + Math.random() * 20,
-                vx: -1 - Math.random() * 2,
-                vy: -1 + Math.random() * 2
-              };
-              game.particles.push(particle);
+              createParticle(
+                20 + game.paddleWidth,
+                game.leftPaddle.y + Math.random() * paddleHeight,
+                -1 - Math.random() * 2,
+                -1 + Math.random() * 2
+              );
             }
           }
         }
@@ -2033,16 +2111,12 @@
           // Draw fire particles
           if (game.rightCharged) {
             for (let i = 0; i < 3; i++) {
-              const particle = {
-                x: canvas.width - 20,
-                y: game.rightPaddle.y + Math.random() * paddleHeight,
-                size: Math.random() * 5 + 3,
-                color: `hsl(${20 + Math.random() * 20}, 100%, 50%)`,
-                life: 30 + Math.random() * 20,
-                vx: 1 + Math.random() * 2,
-                vy: -1 + Math.random() * 2
-              };
-              game.particles.push(particle);
+              createParticle(
+                canvas.width - 20,
+                game.rightPaddle.y + Math.random() * paddleHeight,
+                1 + Math.random() * 2,
+                -1 + Math.random() * 2
+              );
             }
           }
         }
@@ -2061,16 +2135,12 @@
           // Draw fire particles
           if (game.teamLeftCharged) {
             for (let i = 0; i < 3; i++) {
-              const particle = {
-                x: 20 + game.paddleWidth,
-                y: (Math.random() > 0.5 ? game.leftTopPaddle.y : game.leftBottomPaddle.y) + Math.random() * paddleHeight,
-                size: Math.random() * 5 + 3,
-                color: `hsl(${20 + Math.random() * 20}, 100%, 50%)`,
-                life: 30 + Math.random() * 20,
-                vx: -1 - Math.random() * 2,
-                vy: -1 + Math.random() * 2
-              };
-              game.particles.push(particle);
+              createParticle(
+                20 + game.paddleWidth,
+                (Math.random() > 0.5 ? game.leftTopPaddle.y : game.leftBottomPaddle.y) + Math.random() * paddleHeight,
+                -1 - Math.random() * 2,
+                -1 + Math.random() * 2
+              );
             }
           }
         }
@@ -2090,16 +2160,12 @@
           // Draw fire particles
           if (game.teamRightCharged) {
             for (let i = 0; i < 3; i++) {
-              const particle = {
-                x: canvas.width - 20,
-                y: (Math.random() > 0.5 ? game.rightTopPaddle.y : game.rightBottomPaddle.y) + Math.random() * paddleHeight,
-                size: Math.random() * 5 + 3,
-                color: `hsl(${20 + Math.random() * 20}, 100%, 50%)`,
-                life: 30 + Math.random() * 20,
-                vx: 1 + Math.random() * 2,
-                vy: -1 + Math.random() * 2
-              };
-              game.particles.push(particle);
+              createParticle(
+                canvas.width - 20,
+                (Math.random() > 0.5 ? game.rightTopPaddle.y : game.rightBottomPaddle.y) + Math.random() * paddleHeight,
+                1 + Math.random() * 2,
+                -1 + Math.random() * 2
+              );
             }
           }
         }
@@ -2107,6 +2173,39 @@
         ctx.fillRect(canvas.width - 20 - game.paddleWidth, game.rightBottomPaddle.y, game.paddleWidth, paddleHeight);
       }
       ctx.shadowBlur = 0; // Reset shadow
+    }
+
+    function createParticle(x, y, vx, vy) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      particle.style.left = `${x}px`;
+      particle.style.top = `${y}px`;
+      particle.style.width = `${Math.random() * 8 + 4}px`;
+      particle.style.height = particle.style.width;
+      document.getElementById('gameContainer').appendChild(particle);
+      
+      let life = 30 + Math.random() * 20;
+      let currentX = x;
+      let currentY = y;
+      
+      const animate = () => {
+        if (life <= 0) {
+          particle.remove();
+          return;
+        }
+        
+        currentX += vx;
+        currentY += vy;
+        life--;
+        
+        particle.style.left = `${currentX}px`;
+        particle.style.top = `${currentY}px`;
+        particle.style.opacity = life / 50;
+        
+        requestAnimationFrame(animate);
+      };
+      
+      requestAnimationFrame(animate);
     }
 
     function drawBall() {
@@ -2129,16 +2228,12 @@
         // Add fire trail particles
         if (game.isSmashActive) {
           for (let i = 0; i < 3; i++) {
-            const particle = {
-              x: game.ball.x,
-              y: game.ball.y,
-              size: Math.random() * 4 + 2,
-              color: `hsl(${20 + Math.random() * 20}, 100%, 50%)`,
-              life: 20 + Math.random() * 10,
-              vx: -game.ball.dx * 0.1 * Math.random(),
-              vy: -game.ball.dy * 0.1 * Math.random()
-            };
-            game.particles.push(particle);
+            createParticle(
+              game.ball.x,
+              game.ball.y,
+              -game.ball.dx * 0.1 * Math.random(),
+              -game.ball.dy * 0.1 * Math.random()
+            );
           }
         }
       } else {
@@ -2162,30 +2257,6 @@
       ctx.setLineDash([]);
     }
 
-    function updateParticles() {
-      particleCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
-      
-      for (let i = game.particles.length - 1; i >= 0; i--) {
-        const p = game.particles[i];
-        
-        // Update particle
-        p.x += p.vx;
-        p.y += p.vy;
-        p.life--;
-        
-        // Draw particle
-        if (p.life > 0) {
-          particleCtx.globalAlpha = p.life / 50;
-          particleCtx.fillStyle = p.color;
-          particleCtx.beginPath();
-          particleCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-          particleCtx.fill();
-        } else {
-          game.particles.splice(i, 1);
-        }
-      }
-    }
-
     // Game loop functions
     function gameLoop(timestamp) {
       if (!game.gameStarted || game.isPaused || game.halftimeActive) {
@@ -2203,7 +2274,6 @@
       drawPaddles();
       drawBall();
       drawNet();
-      updateParticles();
 
       updateBall(deltaTime);
       updatePaddles(deltaTime);
@@ -2252,9 +2322,12 @@
       if (game.mobileControls.rightUp) game.rightPaddle.y -= paddleSpeed;
       if (game.mobileControls.rightDown) game.rightPaddle.y += paddleSpeed;
       
-      // Mobile power button
+      // Mobile power buttons
       if (game.mobileControls.leftPower && !game.leftCharged && game.leftCharge >= 100) {
         activateLeftPowerShot();
+      }
+      if (game.mobileControls.rightPower && !game.rightCharged && game.rightCharge >= 100) {
+        activateRightPowerShot();
       }
 
       // Keyboard controls
@@ -2339,6 +2412,12 @@
             startLeftCharge();
             if (!game.isPracticeMode && !game.isEndlessMode) {
               queueCommentary("POWER SHOT FROM " + game.leftPlayer + "!", true, true);
+            } else if (game.isPracticeMode && game.practiceType === 'powershot') {
+              game.practiceWins++;
+              if (game.practiceWins >= 10) {
+                queueCommentary("Good job! You have mastered power shots!", true, true);
+                game.practiceWins = 0;
+              }
             }
           } else {
             game.ball.dx = Math.abs(Math.cos(angle)) * game.ball.speed;
@@ -2375,6 +2454,12 @@
             startRightCharge();
             if (!game.isPracticeMode && !game.isEndlessMode) {
               queueCommentary("POWER SHOT FROM " + game.rightPlayer + "!", true, true);
+            } else if (game.isPracticeMode && game.practiceType === 'responding') {
+              game.practiceWins++;
+              if (game.practiceWins >= 10) {
+                queueCommentary("Excellent! You've mastered responding to shots!", true, true);
+                game.practiceWins = 0;
+              }
             }
           } else {
             game.ball.dx = -Math.abs(Math.cos(angle)) * game.ball.speed;
@@ -2697,6 +2782,8 @@
     function submitEndlessName() {
       const playerName = document.getElementById('endlessPlayerName').value.trim() || "PLAYER";
       const difficulty = document.getElementById('endlessDifficulty').value;
+      const showScore = document.getElementById('showScoreToggle').checked;
+      const enableCommentary = document.getElementById('commentaryToggle').checked;
       
       game.leftPlayer = playerName.toUpperCase();
       game.rightPlayer = "BOT";
@@ -2705,6 +2792,8 @@
       game.isFourPlayer = false;
       game.isPracticeMode = false;
       game.isEndlessMode = true;
+      game.showScore = showScore;
+      game.enableCommentary = enableCommentary;
       
       document.getElementById('endlessPrompt').style.display = 'none';
       document.getElementById('backButton').style.display = 'none';
@@ -2733,13 +2822,14 @@
       game.isPracticeMode = true;
       game.practiceType = "powershot";
       game.isEndlessMode = false;
+      game.practiceWins = 0;
       
       document.getElementById('practiceModePrompt').style.display = 'none';
       document.getElementById('backButton').style.display = 'none';
       
       showPracticeInstructions(
         "LEARN POWER SHOT",
-        "Press E when your power bar is full to unleash a powerful shot! The power bar fills automatically over time. Try hitting the ball with a power shot!"
+        "Press E when your power bar is full to unleash a powerful shot! The power bar fills automatically over time. Try hitting the ball with a power shot 10 times to complete this lesson."
       );
       playSelectSound();
     }
@@ -2753,13 +2843,14 @@
       game.isPracticeMode = true;
       game.practiceType = "responding";
       game.isEndlessMode = false;
+      game.practiceWins = 0;
       
       document.getElementById('practiceModePrompt').style.display = 'none';
       document.getElementById('backButton').style.display = 'none';
       
       showPracticeInstructions(
         "LEARN RESPONDING",
-        "The bot will hit shots at you. Try to return them! The bot will occasionally use power shots. Watch the ball carefully and position your paddle to hit it back."
+        "The bot will hit shots at you. Try to return them! The bot will occasionally use power shots. Watch the ball carefully and position your paddle to hit it back. Successfully return 10 shots to complete this lesson."
       );
       playSelectSound();
     }
@@ -2797,6 +2888,7 @@
       game.teamRightCharged = false;
       game.particles = [];
       game.lastFrameTime = 0;
+      game.practiceWins = 0;
       
       // Reset charge bars
       game.leftCharge = 0;
@@ -2820,11 +2912,25 @@
       startRightCharge();
       
       // Show game elements
-      document.getElementById('leftScore').style.display = "block";
-      document.getElementById('rightScore').style.display = "block";
-      document.getElementById('timer').style.display = "block";
-      document.getElementById('bonusPoints').style.display = "block";
-      document.getElementById('matchInfo').style.display = "block";
+      if (!game.isPracticeMode && !game.isEndlessMode) {
+        document.getElementById('leftScore').style.display = "block";
+        document.getElementById('rightScore').style.display = "block";
+        document.getElementById('timer').style.display = "block";
+        document.getElementById('bonusPoints').style.display = "block";
+        document.getElementById('matchInfo').style.display = "block";
+      } else if (game.isEndlessMode && game.showScore) {
+        document.getElementById('leftScore').style.display = "block";
+        document.getElementById('rightScore').style.display = "block";
+        document.getElementById('timer').style.display = "none";
+        document.getElementById('bonusPoints').style.display = "none";
+        document.getElementById('matchInfo').style.display = "none";
+      } else {
+        document.getElementById('leftScore').style.display = "none";
+        document.getElementById('rightScore').style.display = "none";
+        document.getElementById('timer').style.display = "none";
+        document.getElementById('bonusPoints').style.display = "none";
+        document.getElementById('matchInfo').style.display = "none";
+      }
       
       // Hide menu screens
       document.getElementById('titleScreen').style.display = "none";
@@ -2840,10 +2946,6 @@
         document.getElementById('timer').textContent = "1:30.000";
         document.getElementById('bonusPoints').textContent = "";
         document.getElementById('matchInfo').textContent = "1st Half | Extra Time: +0s";
-      } else {
-        document.getElementById('timer').style.display = "none";
-        document.getElementById('bonusPoints').style.display = "none";
-        document.getElementById('matchInfo').style.display = "none";
       }
       
       resetBall();
@@ -3060,6 +3162,8 @@
     }
 
     function queueCommentary(text, important = false, force = false) {
+      if (!game.enableCommentary && game.isEndlessMode) return;
+      
       if (force) {
         window.speechSynthesis.cancel();
         game.commentaryQueue = [];
@@ -3111,16 +3215,36 @@
       const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffffff'];
       
       for (let i = 0; i < 50; i++) {
-        const particle = {
-          x: Math.random() * canvas.width,
-          y: -10,
-          size: Math.random() * 8 + 4,
-          color: colors[Math.floor(Math.random() * colors.length)],
-          life: 100 + Math.random() * 50,
-          vx: -5 + Math.random() * 10,
-          vy: 2 + Math.random() * 5
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = '-10px';
+        particle.style.width = `${Math.random() * 8 + 4}px`;
+        particle.style.height = particle.style.width;
+        particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+        document.getElementById('gameContainer').appendChild(particle);
+        
+        let life = 100 + Math.random() * 50;
+        let currentY = -10;
+        const vx = -5 + Math.random() * 10;
+        const vy = 2 + Math.random() * 5;
+        
+        const animate = () => {
+          if (life <= 0) {
+            particle.remove();
+            return;
+          }
+          
+          currentY += vy;
+          life--;
+          
+          particle.style.top = `${currentY}px`;
+          particle.style.opacity = life / 150;
+          
+          requestAnimationFrame(animate);
         };
-        game.particles.push(particle);
+        
+        requestAnimationFrame(animate);
       }
     }
 
