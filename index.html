@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>🏆 PONG CHAMPIONSHIP 2.4 🏆</title>
+  <title>🏆 PONG CHAMPIONSHIP 2.5 🏆</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     :root {
@@ -39,14 +39,6 @@
       width: 100vw;
       height: 100vh;
       overflow: hidden;
-    }
-    
-    #particlesCanvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      pointer-events: none;
-      z-index: 5;
     }
     
     canvas {
@@ -206,8 +198,7 @@
     #musicMuteButton { top: 15px; right: 15px; }
     #backButton { top: 15px; right: 70px; }
     #dpadButton { top: 15px; right: 125px; }
-    #refreshButton { top: 15px; right: 180px; }
-    #whatsNewButton { top: 15px; left: 180px; }
+    #whatsNewButton { bottom: 20px; right: 20px; }
     
     #pauseScreen, #countdown, #halftimeScreen, #gameOverScreen {
       display: none;
@@ -299,6 +290,8 @@
       text-align: center;
       max-width: 90%;
       width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
       box-shadow: 0 0 30px rgba(0,0,0,0.6);
       border: 3px solid gold;
     }
@@ -677,18 +670,6 @@
       background: rgba(255,255,255,0.3);
     }
     
-    /* Fire trail effect */
-    .particle {
-      position: absolute;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 10;
-      background: radial-gradient(circle, yellow, orange, red);
-      box-shadow: 0 0 5px yellow;
-    }
-    
     /* Practice mode instructions */
     #practiceInstructions {
       position: absolute;
@@ -895,8 +876,7 @@
       #musicMuteButton { right: 10px; top: 10px; }
       #backButton { right: 60px; top: 10px; }
       #dpadButton { right: 110px; top: 10px; }
-      #refreshButton { right: 160px; top: 10px; }
-      #whatsNewButton { left: 160px; top: 10px; }
+      #whatsNewButton { bottom: 15px; right: 15px; }
       .mobile-btn {
         width: 60px;
         height: 60px;
@@ -993,12 +973,11 @@
 <body>
   <!-- Intro Animation Screen -->
   <div id="introAnimation">
-    <div id="introText">PONG CHAMPIONSHIP 2.4</div>
+    <div id="introText">PONG CHAMPIONSHIP 2.5</div>
     <button id="startButton">START</button>
   </div>
 
   <div id="gameContainer">
-    <canvas id="particlesCanvas"></canvas>
     <canvas id="pongCanvas"></canvas>
     
     <!-- Game elements (hidden during menu) -->
@@ -1007,7 +986,7 @@
     <div id="timer">1:30.000</div>
     <div id="bonusPoints"></div>
     <div id="matchInfo"></div>
-    <div id="commentary">WELCOME TO THE PONG CHAMPIONSHIP 2.4!</div>
+    <div id="commentary">WELCOME TO THE PONG CHAMPIONSHIP 2.5!</div>
     
     <!-- Power charge bars - now properly separated -->
     <div id="leftChargeContainer" class="paddle-charge-container">
@@ -1026,7 +1005,6 @@
     <button id="musicMuteButton" class="control-btn">🎵</button>
     <button id="backButton" class="control-btn" style="display: none;">↩️</button>
     <button id="dpadButton" class="control-btn">🎮</button>
-    <button id="refreshButton" class="control-btn" style="display: none;">🔄</button>
     <button id="whatsNewButton" class="control-btn">ℹ️</button>
     
     <div id="mobileControls" style="display: none;">
@@ -1063,7 +1041,7 @@
     </div>
 
     <div id="titleScreen" class="screen">
-      <h1>🏆 PONG CHAMPIONSHIP 2.4 🏆</h1>
+      <h1>🏆 PONG CHAMPIONSHIP 2.5 🏆</h1>
       <button class="btn-championship" id="twoPlayerButton">2 PLAYERS</button>
       <button class="btn-championship" id="singlePlayerButton">1 PLAYER VS BOT</button>
       <button class="btn-championship" id="fourPlayerButton">4 PLAYERS</button>
@@ -1097,6 +1075,7 @@
       </div>
       
       <button class="btn-championship" id="backToMenuButton" style="margin-top: 20px;">BACK TO MENU</button>
+      <button class="btn-championship" id="refreshLeaderboardButton" style="margin-top: 10px;">REFRESH</button>
     </div>
 
     <div id="endScreen" class="screen" style="display: none;">
@@ -1115,19 +1094,18 @@
   <!-- Whats New Modal -->
   <div id="whatsNewModal">
     <div id="whatsNewContent">
-      <h2>What's New in Pong Championship 2.4</h2>
+      <h2>What's New in Pong Championship 2.5</h2>
       <ul>
-        <li>Added separate power shot buttons for both players in mobile mode</li>
-        <li>New toggle switches in Endless Mode for 2P/Bot selection</li>
-        <li>Practice Mode now uses the same AI as 1 vs Bot mode</li>
-        <li>Practice Mode now shows "Good Job!" message after 10 wins</li>
-        <li>Practice Mode now resets immediately when ball hits edge</li>
-        <li>New canvas-based particle effects for fire shots</li>
-        <li>Added cool intro animation when starting the game</li>
-        <li>Added refresh button for Leaderboards</li>
-        <li>Added D-Pad controller option with power shot button</li>
-        <li>Added "What's New?" button to show these changes</li>
-        <li>Optimized performance for iPad 9th Gen</li>
+        <li>Improved Practice Mode - now uses the same AI as 1 vs Bot mode</li>
+        <li>Fixed scoring in Practice Mode - now properly tracks points</li>
+        <li>Instant ball reset in Practice Mode when hitting edges</li>
+        <li>Enhanced start animation with glowing text effects</li>
+        <li>Added refresh button to Leaderboards page</li>
+        <li>DPad controls now work for both players in 2-player modes</li>
+        <li>Moved "What's New?" button to menu screen</li>
+        <li>Optimized performance for iPad 9th Gen by removing particle canvas</li>
+        <li>Fixed display issues that required fullscreen mode</li>
+        <li>Improved Practice Mode feedback messages</li>
       </ul>
       <button class="modal-btn" id="closeWhatsNew">CLOSE</button>
     </div>
@@ -1273,25 +1251,23 @@
     const PADDLE_HEIGHT_RATIO = 0.2;
     const FOUR_PLAYER_PADDLE_HEIGHT_RATIO = 0.15;
     const BALL_RADIUS_RATIO = 0.012;
-    const INITIAL_BALL_SPEED = 9; // Increased speed
-    const MAX_BALL_SPEED = 16; // Increased max speed
-    const FOUR_PLAYER_BALL_SPEED = 10; // Increased speed
-    const PADDLE_SPEED = 10; // Increased paddle speed
+    const INITIAL_BALL_SPEED = 9;
+    const MAX_BALL_SPEED = 16;
+    const FOUR_PLAYER_BALL_SPEED = 10;
+    const PADDLE_SPEED = 10;
     const WINNING_SCORE = 10;
-    const HALF_TIME = 90; // 1 minute 30 seconds per half
-    const HALF_TIME_BREAK = 10; // 10 second break
-    const OVERTIME_TIME = 30; // 30 seconds for overtime
-    const BALL_SPEED_INCREMENT = 0.7; // Increased speed increment
-    const SMASH_SPEED_MULTIPLIER = 2.0; // Increased smash multiplier
-    const SMASH_DURATION = 800; // ms
-    const CHARGE_TIME = 4000; // Reduced charge time to 4 seconds
-    const POWER_SHOT_DURATION = 3000; // 3 seconds to use power shot
+    const HALF_TIME = 90;
+    const HALF_TIME_BREAK = 10;
+    const OVERTIME_TIME = 30;
+    const BALL_SPEED_INCREMENT = 0.7;
+    const SMASH_SPEED_MULTIPLIER = 2.0;
+    const SMASH_DURATION = 800;
+    const CHARGE_TIME = 4000;
+    const POWER_SHOT_DURATION = 3000;
     
     // Game Elements
     const canvas = document.getElementById('pongCanvas');
     const ctx = canvas.getContext('2d');
-    const particlesCanvas = document.getElementById('particlesCanvas');
-    const particlesCtx = particlesCanvas.getContext('2d');
     
     // Audio Elements
     const backgroundMusic = document.getElementById('backgroundMusic');
@@ -1392,8 +1368,6 @@
       soundEnabled: false,
       teamLeftCharged: false,
       teamRightCharged: false,
-      particles: [],
-      lastFrameTime: 0,
       isPracticeMode: false,
       practiceType: null,
       isEndlessMode: false,
@@ -1484,12 +1458,9 @@
       const introText = document.getElementById('introText');
       const startButton = document.getElementById('startButton');
       
-      // Enhanced intro animation with fireworks
+      // Enhanced intro animation with glowing text
       setTimeout(() => {
-        introText.style.animation = 'textEntry 1s forwards';
-        
-        // Create fireworks effect
-        createFireworks(10);
+        introText.style.animation = 'textEntry 1s forwards, textGlow 2s infinite alternate';
         
         setTimeout(() => {
           startButton.style.animation = 'textEntry 0.5s forwards';
@@ -1498,9 +1469,6 @@
       }, 300);
       
       startButton.addEventListener('click', () => {
-        // Clear any existing particles
-        particlesCtx.clearRect(0, 0, particlesCanvas.width, particlesCanvas.height);
-        
         document.getElementById('introAnimation').style.display = 'none';
         document.getElementById('titleScreen').style.display = 'flex';
         
@@ -1510,37 +1478,6 @@
         randomIntroSound.volume = 0.5;
         randomIntroSound.play().catch(e => console.log("Audio play error:", e));
       });
-    }
-
-    function createFireworks(count) {
-      for (let i = 0; i < count; i++) {
-        setTimeout(() => {
-          const x = Math.random() * particlesCanvas.width;
-          const y = Math.random() * particlesCanvas.height / 2;
-          createFirework(x, y);
-        }, i * 300);
-      }
-    }
-
-    function createFirework(x, y) {
-      const colors = ['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#0000ff', '#ff00ff', '#ffffff'];
-      
-      for (let i = 0; i < 50; i++) {
-        const angle = Math.random() * Math.PI * 2;
-        const speed = Math.random() * 5 + 2;
-        const size = Math.random() * 4 + 2;
-        const color = colors[Math.floor(Math.random() * colors.length)];
-        
-        game.particles.push({
-          x: x,
-          y: y,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed,
-          size: size,
-          color: color,
-          life: 100 + Math.random() * 50
-        });
-      }
     }
 
     function setupButtonSounds() {
@@ -1564,6 +1501,7 @@
       document.getElementById('endlessButton').addEventListener('click', showEndlessPrompt);
       document.getElementById('leaderboardButton').addEventListener('click', showLeaderboards);
       document.getElementById('backToMenuButton').addEventListener('click', hideLeaderboards);
+      document.getElementById('refreshLeaderboardButton').addEventListener('click', refreshLeaderboards);
       document.getElementById('learnPongButton').addEventListener('click', () => {
         window.open('https://en.wikipedia.org/wiki/Pong', '_blank');
       });
@@ -1593,7 +1531,6 @@
       document.getElementById('endScreenBtn').addEventListener('click', returnToMenu);
       document.getElementById('backButton').addEventListener('click', handleBackButton);
       document.getElementById('dpadButton').addEventListener('click', toggleDPad);
-      document.getElementById('refreshButton').addEventListener('click', refreshLeaderboards);
       document.getElementById('whatsNewButton').addEventListener('click', showWhatsNew);
       
       // D-Pad controls
@@ -1691,7 +1628,6 @@
       document.getElementById('titleScreen').style.display = 'none';
       document.getElementById('leaderboardScreen').style.display = 'flex';
       document.getElementById('backButton').style.display = 'flex';
-      document.getElementById('refreshButton').style.display = 'flex';
       playSelectSound();
     }
 
@@ -1699,7 +1635,6 @@
       document.getElementById('leaderboardScreen').style.display = 'none';
       document.getElementById('titleScreen').style.display = 'flex';
       document.getElementById('backButton').style.display = 'none';
-      document.getElementById('refreshButton').style.display = 'none';
       playSelectSound();
     }
 
@@ -1838,8 +1773,6 @@
       // Set canvas to full window size
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      particlesCanvas.width = window.innerWidth;
-      particlesCanvas.height = window.innerHeight;
       
       // Calculate dynamic sizes based on canvas dimensions
       game.paddleWidth = Math.max(15, canvas.width * 0.015);
@@ -2319,17 +2252,6 @@
           ctx.fillStyle = 'gold';
           ctx.shadowBlur = 15;
           ctx.shadowColor = 'orange';
-          
-          // Draw fire particles
-          if (game.leftCharged) {
-            createParticle(
-              20 + game.paddleWidth,
-              game.leftPaddle.y + Math.random() * paddleHeight,
-              -1 - Math.random() * 2,
-              -1 + Math.random() * 2,
-              'rgba(255,215,0,0.8)'
-            );
-          }
         }
         ctx.fillRect(20, game.leftPaddle.y, game.paddleWidth, paddleHeight);
         
@@ -2342,17 +2264,6 @@
           ctx.fillStyle = 'gold';
           ctx.shadowBlur = 15;
           ctx.shadowColor = 'orange';
-          
-          // Draw fire particles
-          if (game.rightCharged) {
-            createParticle(
-              canvas.width - 20,
-              game.rightPaddle.y + Math.random() * paddleHeight,
-              1 + Math.random() * 2,
-              -1 + Math.random() * 2,
-              'rgba(255,215,0,0.8)'
-            );
-          }
         }
         ctx.fillRect(canvas.width - 20 - game.paddleWidth, game.rightPaddle.y, game.paddleWidth, paddleHeight);
       } else {
@@ -2365,17 +2276,6 @@
           ctx.fillStyle = 'gold';
           ctx.shadowBlur = 15;
           ctx.shadowColor = 'orange';
-          
-          // Draw fire particles
-          if (game.teamLeftCharged) {
-            createParticle(
-              20 + game.paddleWidth,
-              (Math.random() > 0.5 ? game.leftTopPaddle.y : game.leftBottomPaddle.y) + Math.random() * paddleHeight,
-              -1 - Math.random() * 2,
-              -1 + Math.random() * 2,
-              'rgba(255,215,0,0.8)'
-            );
-          }
         }
         ctx.fillRect(20, game.leftTopPaddle.y, game.paddleWidth, paddleHeight);
         ctx.fillRect(20, game.leftBottomPaddle.y, game.paddleWidth, paddleHeight);
@@ -2389,58 +2289,11 @@
           ctx.fillStyle = 'gold';
           ctx.shadowBlur = 15;
           ctx.shadowColor = 'orange';
-          
-          // Draw fire particles
-          if (game.teamRightCharged) {
-            createParticle(
-              canvas.width - 20,
-              (Math.random() > 0.5 ? game.rightTopPaddle.y : game.rightBottomPaddle.y) + Math.random() * paddleHeight,
-              1 + Math.random() * 2,
-              -1 + Math.random() * 2,
-              'rgba(255,215,0,0.8)'
-            );
-          }
         }
         ctx.fillRect(canvas.width - 20 - game.paddleWidth, game.rightTopPaddle.y, game.paddleWidth, paddleHeight);
         ctx.fillRect(canvas.width - 20 - game.paddleWidth, game.rightBottomPaddle.y, game.paddleWidth, paddleHeight);
       }
       ctx.shadowBlur = 0; // Reset shadow
-    }
-
-    function createParticle(x, y, vx, vy, color) {
-      game.particles.push({
-        x: x,
-        y: y,
-        vx: vx,
-        vy: vy,
-        size: Math.random() * 6 + 3,
-        color: color || `rgba(255, ${Math.random() * 155 + 100}, 0, 0.8)`,
-        life: 30 + Math.random() * 20
-      });
-    }
-
-    function drawParticles() {
-      particlesCtx.clearRect(0, 0, particlesCanvas.width, particlesCanvas.height);
-      
-      for (let i = 0; i < game.particles.length; i++) {
-        const p = game.particles[i];
-        
-        particlesCtx.beginPath();
-        particlesCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        particlesCtx.fillStyle = p.color;
-        particlesCtx.fill();
-        
-        // Update particle position
-        p.x += p.vx;
-        p.y += p.vy;
-        p.life--;
-        
-        // Remove dead particles
-        if (p.life <= 0) {
-          game.particles.splice(i, 1);
-          i--;
-        }
-      }
     }
 
     function drawBall() {
@@ -2459,17 +2312,6 @@
         ctx.fillStyle = gradient;
         ctx.shadowBlur = 10;
         ctx.shadowColor = 'orange';
-        
-        // Add fire trail particles
-        if (game.isSmashActive) {
-          createParticle(
-            game.ball.x,
-            game.ball.y,
-            -game.ball.dx * 0.1 * Math.random(),
-            -game.ball.dy * 0.1 * Math.random(),
-            'rgba(255,215,0,0.8)'
-          );
-        }
       } else {
         ctx.fillStyle = game.ballColor;
         ctx.shadowBlur = 0;
@@ -2508,7 +2350,6 @@
       drawPaddles();
       drawBall();
       drawNet();
-      drawParticles();
 
       updateBall(deltaTime);
       updatePaddles(deltaTime);
@@ -2792,11 +2633,13 @@
           document.getElementById('rightScore').textContent = game.rightPaddle.score;
           game.lastScorer = game.rightPlayer;
           handleScore();
-        } else if (game.isPracticeMode && game.practiceType === 'responding') {
-          // In practice mode, just reset the ball
+        } else if (game.isPracticeMode) {
+          // In practice mode, just reset the ball immediately
           resetBall();
           game.ball.dx = -Math.abs(game.ball.dx);
-          queueCommentary("Try again! Press E for a power shot!", true);
+          if (game.practiceType === 'responding') {
+            queueCommentary("Try again! Press E for a power shot!", true);
+          }
         } else if (game.isEndlessMode) {
           resetBall();
           game.ball.dx = -Math.abs(game.ball.dx);
@@ -2810,7 +2653,9 @@
           game.lastScorer = game.leftPlayer;
           handleScore();
         } else if (game.isPracticeMode || game.isEndlessMode) {
-          // In practice/endless mode, just reset the ball
+          // In practice/endless mode, just reset the ball immediately
+          game.leftPaddle.score++;
+          document.getElementById('leftScore').textContent = game.leftPaddle.score;
           resetBall();
           game.ball.dx = Math.abs(game.ball.dx);
           if (game.isPracticeMode && game.practiceType === 'powershot') {
