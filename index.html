@@ -2861,8 +2861,7 @@
               queueCommentary("TEAM POWER SHOT FROM " + game.rightPlayer + "!", true, true);
             } else {
               game.ball.dx = -Math.abs(Math.cos(angle)) * game.ball.speed;
-              game.ball.dy =       } else {
-        queueCommentary("Commentary unmuted", true, true);
+              game.ball.dy =  Math.sin(angle) * game.ball.speed;
       }
     }
 
@@ -2961,3 +2960,4 @@
   </script>
 </body>
 </html>
+
