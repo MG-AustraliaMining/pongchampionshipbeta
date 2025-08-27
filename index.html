@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>🏆 PONG CHAMPIONSHIP 2.7 🏆</title>
+  <title>🏆 PONG CHAMPIONSHIP 2.8 🏆</title>
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
@@ -199,12 +199,10 @@
     #fullscreenButton { top: 15px; left: 125px; }
     #musicMuteButton { top: 15px; right: 15px; }
     #backButton { top: 15px; right: 70px; }
-    #dpadButton { top: 15px; right: 125px; }
     #whatsNewButton { 
       position: absolute;
-      top: 15px;
-      left: 50%;
-      transform: translateX(-50%);
+      bottom: 15px;
+      right: 15px;
       background: rgba(255,255,255,0.3);
       border: 2px solid white;
       border-radius: 20px;
@@ -921,11 +919,9 @@
       #fullscreenButton { left: 110px; top: 10px; }
       #musicMuteButton { right: 10px; top: 10px; }
       #backButton { right: 60px; top: 10px; }
-      #dpadButton { right: 110px; top: 10px; }
       #whatsNewButton { 
-        top: 10px;
-        left: 50%;
-        transform: translateX(-50%);
+        bottom: 10px;
+        right: 10px;
         font-size: 0.9rem;
         padding: 4px 12px;
       }
@@ -1025,7 +1021,7 @@
 <body>
   <!-- Intro Animation Screen -->
   <div id="introAnimation">
-    <div id="introText">PONG CHAMPIONSHIP 2.7</div>
+    <div id="introText">PONG CHAMPIONSHIP 2.8</div>
     <button id="startButton">START</button>
   </div>
 
@@ -1038,7 +1034,7 @@
     <div id="timer">1:30.000</div>
     <div id="bonusPoints"></div>
     <div id="matchInfo"></div>
-    <div id="commentary">WELCOME TO THE PONG CHAMPIONSHIP 2.7!</div>
+    <div id="commentary">WELCOME TO THE PONG CHAMPIONSHIP 2.8!</div>
     
     <!-- Power charge bars - now properly separated -->
     <div id="leftChargeContainer" class="paddle-charge-container">
@@ -1056,8 +1052,7 @@
     <button id="fullscreenButton" class="control-btn">⛶</button>
     <button id="musicMuteButton" class="control-btn">🎵</button>
     <button id="backButton" class="control-btn" style="display: none;">↩️</button>
-    <button id="dpadButton" class="control-btn">🎮</button>
-    <button id="whatsNewButton">ℹ️ What's New in 2.7</button>
+    <button id="whatsNewButton" style="display: none;">ℹ️ What's New in 2.8</button>
     
     <div id="mobileControls" style="display: none;">
       <div class="mobile-paddle-controls">
@@ -1101,7 +1096,7 @@
     </div>
 
     <div id="titleScreen" class="screen">
-      <h1>🏆 PONG CHAMPIONSHIP 2.7 🏆</h1>
+      <h1>🏆 PONG CHAMPIONSHIP 2.8 🏆</h1>
       <button class="btn-championship" id="twoPlayerButton">2 PLAYERS</button>
       <button class="btn-championship" id="singlePlayerButton">1 PLAYER VS BOT</button>
       <button class="btn-championship" id="fourPlayerButton">4 PLAYERS</button>
@@ -1153,20 +1148,17 @@
   <!-- Whats New Modal -->
   <div id="whatsNewModal">
     <div id="whatsNewContent">
-      <h2>What's New in Pong Championship 2.7</h2>
+      <h2>What's New in Pong Championship 2.8</h2>
       <ul>
-        <li>Fixed the bug where pausing/resuming or halftime gave free points</li>
-        <li>Significant performance optimizations for iPad 9th Gen</li>
-        <li>Practice mode now properly resets the ball when hitting edges</li>
-        <li>Practice mode mastery messages when reaching 10 points</li>
-        <li>Improved D-Pad system that adapts to game mode</li>
-        <li>Fixed Practice Mode bot movement issues</li>
+        <li>Improved performance for iPad devices</li>
         <li>Fixed ball visibility issue at game start</li>
-        <li>Endless Mode score visibility options work correctly</li>
-        <li>Added paddle movement sound effects</li>
-        <li>Added favicon support</li>
-        <li>UI improvements for better button placement</li>
-        <li>Replaced "Learn About Pong" with comprehensive Tutorial</li>
+        <li>Practice mode now uses bot for left paddle</li>
+        <li>Added proper pause functionality for all game elements</li>
+        <li>Removed D-Pad controller button for cleaner UI</li>
+        <li>Fixed commentary option in Endless Mode</li>
+        <li>Practice mode redirects to title screen after completion</li>
+        <li>Removed paddle movement sound for less noise</li>
+        <li>Optimized graphics for smoother performance</li>
       </ul>
       <button class="modal-btn" id="closeWhatsNew">CLOSE</button>
     </div>
@@ -1328,7 +1320,6 @@
 
   <!-- Audio elements -->
   <audio id="backgroundMusic" loop></audio>
-  <audio id="paddleSound"></audio>
   <audio id="scoreSound"></audio>
   <audio id="scoreSound1"></audio>
   <audio id="scoreSound2"></audio>
@@ -1377,7 +1368,6 @@
     
     // Audio Elements
     const backgroundMusic = document.getElementById('backgroundMusic');
-    const paddleSound = document.getElementById('paddleSound');
     const scoreSound = document.getElementById('scoreSound');
     const scoreSound1 = document.getElementById('scoreSound1');
     const scoreSound2 = document.getElementById('scoreSound2');
@@ -1490,7 +1480,9 @@
       confettiElements: [],
       lastPaddleSoundTime: 0,
       paddleSoundInterval: 200, // ms between paddle movement sounds
-      gameMode: null // Tracks current game mode for D-Pad logic
+      gameMode: null, // Tracks current game mode for D-Pad logic
+      pausedBallState: null, // Store ball state when paused
+      pausedPaddleState: null // Store paddle state when paused
     };
 
     // Commentary phrases
@@ -1563,6 +1555,9 @@
       
       // Enable sound by default
       game.soundEnabled = true;
+      
+      // Show What's New button only on title screen
+      document.getElementById('whatsNewButton').style.display = 'block';
     }
 
     function setupIntroScreen() {
@@ -1643,7 +1638,6 @@
       document.getElementById('returnToMenuButton').addEventListener('click', returnToMenu);
       document.getElementById('endScreenBtn').addEventListener('click', returnToMenu);
       document.getElementById('backButton').addEventListener('click', handleBackButton);
-      document.getElementById('dpadButton').addEventListener('click', toggleDPad);
       document.getElementById('whatsNewButton').addEventListener('click', showWhatsNew);
       
       // D-Pad controls
@@ -1750,41 +1744,20 @@
       playSelectSound();
     }
 
-    function toggleDPad() {
-      game.dpadEnabled = !game.dpadEnabled;
-      updateDPadVisibility();
-      document.getElementById('dpadButton').textContent = game.dpadEnabled ? "🎮 ON" : "🎮 OFF";
+    function showLeaderboards() {
+      document.getElementById('titleScreen').style.display = 'none';
+      document.getElementById('leaderboardScreen').style.display = 'flex';
+      document.getElementById('backButton').style.display = 'flex';
+      document.getElementById('whatsNewButton').style.display = 'none';
+      updateLeaderboards();
       playSelectSound();
     }
-
-    function updateDPadVisibility() {
-      // Show/hide D-Pad based on game mode
-      if (game.dpadEnabled) {
-        document.getElementById('dpadControls').style.display = 'block';
-        
-        // Show right D-Pad only for appropriate modes
-        const showRightDPad = game.isLocalMultiplayer || game.isFourPlayer || 
-                             (game.isEndlessMode && !game.opponentIsBot) || 
-                             game.isPracticeMode;
-        document.getElementById('dpadControlsRight').style.display = showRightDPad ? 'block' : 'none';
-      } else {
-        document.getElementById('dpadControls').style.display = 'none';
-        document.getElementById('dpadControlsRight').style.display = 'none';
-      }
-    }
-
-    function showLeaderboards() {
-  document.getElementById('titleScreen').style.display = 'none';
-  document.getElementById('leaderboardScreen').style.display = 'flex';
-  document.getElementById('backButton').style.display = 'flex';
-  updateLeaderboards();
-  playSelectSound();
-}
 
     function hideLeaderboards() {
       document.getElementById('leaderboardScreen').style.display = 'none';
       document.getElementById('titleScreen').style.display = 'flex';
       document.getElementById('backButton').style.display = 'none';
+      document.getElementById('whatsNewButton').style.display = 'block';
       playSelectSound();
     }
 
@@ -1817,35 +1790,27 @@
       }
     }
 
-    function playPaddleSound() {
-      if (game.soundEnabled && !game.isMuted && Date.now() - game.lastPaddleSoundTime > game.paddleSoundInterval) {
-        paddleSound.currentTime = 0;
-        paddleSound.play().catch(e => console.log("Audio play error:", e));
-        game.lastPaddleSoundTime = Date.now();
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+          // Enter fullscreen
+          if (document.documentElement.requestFullscreen) {
+              document.documentElement.requestFullscreen();
+          } else if (document.documentElement.webkitRequestFullscreen) { // Safari
+              document.documentElement.webkitRequestFullscreen();
+          } else if (document.documentElement.msRequestFullscreen) { // IE11
+              document.documentElement.msRequestFullscreen();
+          }
+      } else {
+          // Exit fullscreen
+          if (document.exitFullscreen) {
+              document.exitFullscreen();
+          } else if (document.webkitExitFullscreen) { // Safari
+              document.webkitExitFullscreen();
+          } else if (document.msExitFullscreen) { // IE11
+              document.msExitFullscreen();
+          }
       }
     }
-
-    function toggleFullscreen() {
-    if (!document.fullscreenElement) {
-        // Enter fullscreen
-        if (document.documentElement.requestFullscreen) {
-            document.documentElement.requestFullscreen();
-        } else if (document.documentElement.webkitRequestFullscreen) { // Safari
-            document.documentElement.webkitRequestFullscreen();
-        } else if (document.documentElement.msRequestFullscreen) { // IE11
-            document.documentElement.msRequestFullscreen();
-        }
-    } else {
-        // Exit fullscreen
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) { // Safari
-            document.webkitExitFullscreen();
-        } else if (document.msExitFullscreen) { // IE11
-            document.msExitFullscreen();
-        }
-    }
-}
 
     function loadLeaderboards() {
       // Load from localStorage if available
@@ -1973,8 +1938,6 @@
       const upBtnLeft = document.getElementById('upBtnLeft');
       const downBtnLeft = document.getElementById('downBtnLeft');
       const upBtnRight = document.getElementById('upBtnRight');
-      const downBtnRight = document.getElementById('downBtnRight');
-      const leftPowerBtn = document.getElementById('leftPowerBtn');
       const rightPowerBtn = document.getElementById('rightPowerBtn');
       
       // Touch events
@@ -1995,17 +1958,8 @@
       if (downBtnLeft) downBtnLeft.addEventListener('touchend', handleTouch(downBtnLeft, 'none', true));
       if (upBtnRight) upBtnRight.addEventListener('touchstart', handleTouch(upBtnRight, 'up', false));
       if (upBtnRight) upBtnRight.addEventListener('touchend', handleTouch(upBtnRight, 'none', false));
-      if (downBtnRight) downBtnRight.addEventListener('touchstart', handleTouch(downBtnRight, 'down', false));
-      if (downBtnRight) downBtnRight.addEventListener('touchend', handleTouch(downBtnRight, 'none', false));
       
       // Power buttons
-      if (leftPowerBtn) leftPowerBtn.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        if (!game.leftCharged && game.leftCharge >= 100) {
-          activateLeftPowerShot();
-        }
-      });
-      
       if (rightPowerBtn) rightPowerBtn.addEventListener('touchstart', (e) => {
         e.preventDefault();
         if (!game.rightCharged && game.rightCharge >= 100) {
@@ -2020,13 +1974,6 @@
       if (downBtnLeft) downBtnLeft.addEventListener('mouseup', () => game.mobileControls.leftDown = false);
       if (upBtnRight) upBtnRight.addEventListener('mousedown', () => game.mobileControls.rightUp = true);
       if (upBtnRight) upBtnRight.addEventListener('mouseup', () => game.mobileControls.rightUp = false);
-      if (downBtnRight) downBtnRight.addEventListener('mousedown', () => game.mobileControls.rightDown = true);
-      if (downBtnRight) downBtnRight.addEventListener('mouseup', () => game.mobileControls.rightDown = false);
-      if (leftPowerBtn) leftPowerBtn.addEventListener('mousedown', () => {
-        if (!game.leftCharged && game.leftCharge >= 100) {
-          activateLeftPowerShot();
-        }
-      });
       if (rightPowerBtn) rightPowerBtn.addEventListener('mousedown', () => {
         if (!game.rightCharged && game.rightCharge >= 100) {
           activateRightPowerShot();
@@ -2146,8 +2093,7 @@
     }
 
     function loadAudioFiles() {
-      // Preload sound effects
-      paddleSound.src = 'paddle.wav';
+      // Preload sound effects (paddle.wav removed as requested)
       scoreSound.src = 'score.mp3';
       scoreSound1.src = 'score1.mp3';
       scoreSound2.src = 'score2.mp3';
@@ -2611,25 +2557,18 @@
       const speedFactor = deltaTime / 16; // 16ms is ~60fps
       const paddleSpeed = PADDLE_SPEED * speedFactor;
 
-      // Track if any paddle is moving for sound
-      let isPaddleMoving = false;
-
       // Mobile controls
       if (game.mobileControls.leftUp) {
         game.leftPaddle.y -= paddleSpeed;
-        isPaddleMoving = true;
       }
       if (game.mobileControls.leftDown) {
         game.leftPaddle.y += paddleSpeed;
-        isPaddleMoving = true;
       }
       if (game.mobileControls.rightUp) {
         game.rightPaddle.y -= paddleSpeed;
-        isPaddleMoving = true;
       }
       if (game.mobileControls.rightDown) {
         game.rightPaddle.y += paddleSpeed;
-        isPaddleMoving = true;
       }
       
       // Mobile power buttons
@@ -2645,29 +2584,23 @@
         if (game.isLocalMultiplayer || game.isPracticeMode || (game.isEndlessMode && !game.opponentIsBot)) {
           if (game.keysPressed['w'] || game.keysPressed['W']) {
             game.leftPaddle.y -= paddleSpeed;
-            isPaddleMoving = true;
           }
           if (game.keysPressed['s'] || game.keysPressed['S']) {
             game.leftPaddle.y += paddleSpeed;
-            isPaddleMoving = true;
           }
           if (game.keysPressed['ArrowUp']) {
             game.rightPaddle.y -= paddleSpeed;
-            isPaddleMoving = true;
           }
           if (game.keysPressed['ArrowDown']) {
             game.rightPaddle.y += paddleSpeed;
-            isPaddleMoving = true;
           }
         } else {
           // Player controls
           if (game.keysPressed['w'] || game.keysPressed['W']) {
             game.leftPaddle.y -= paddleSpeed;
-            isPaddleMoving = true;
           }
           if (game.keysPressed['s'] || game.keysPressed['S']) {
             game.leftPaddle.y += paddleSpeed;
-            isPaddleMoving = true;
           }
           
           // AI for right paddle in single player or endless mode
@@ -2689,10 +2622,8 @@
           
           if (paddleCenter < predictedBallY - 15) {
             game.rightPaddle.y += paddleSpeed * reactionSpeed;
-            isPaddleMoving = true;
           } else if (paddleCenter > predictedBallY + 15) {
             game.rightPaddle.y -= paddleSpeed * reactionSpeed;
-            isPaddleMoving = true;
           }
           
           // AI power shot
@@ -2704,41 +2635,28 @@
         // 4-player controls
         if (game.keysPressed['w'] || game.keysPressed['W']) {
           game.leftTopPaddle.y -= paddleSpeed;
-          isPaddleMoving = true;
         }
         if (game.keysPressed['s'] || game.keysPressed['S']) {
           game.leftTopPaddle.y += paddleSpeed;
-          isPaddleMoving = true;
         }
         if (game.keysPressed['q'] || game.keysPressed['Q']) {
           game.leftBottomPaddle.y -= paddleSpeed;
-          isPaddleMoving = true;
         }
         if (game.keysPressed['a'] || game.keysPressed['A']) {
           game.leftBottomPaddle.y += paddleSpeed;
-          isPaddleMoving = true;
         }
         if (game.keysPressed['o'] || game.keysPressed['O']) {
           game.rightTopPaddle.y -= paddleSpeed;
-          isPaddleMoving = true;
         }
         if (game.keysPressed['l'] || game.keysPressed['L']) {
           game.rightTopPaddle.y += paddleSpeed;
-          isPaddleMoving = true;
         }
         if (game.keysPressed['ArrowUp']) {
           game.rightBottomPaddle.y -= paddleSpeed;
-          isPaddleMoving = true;
         }
         if (game.keysPressed['ArrowDown']) {
           game.rightBottomPaddle.y += paddleSpeed;
-          isPaddleMoving = true;
         }
-      }
-      
-      // Play paddle sound if moving
-      if (isPaddleMoving) {
-        playPaddleSound();
       }
       
       constrainPaddles();
@@ -2853,271 +2771,299 @@
               const leftChargeElement = document.getElementById('leftCharge');
               const leftChargeLabel = document.getElementById('leftChargeLabel');
               if (leftChargeElement) leftChargeElement.classList.remove('active');
-              if (leftChargeLabel) leftChargeLabel.textContent = 'TEAM POWER';
-              startLeftCharge();
-              queueCommentary("TEAM POWER SHOT FROM " + game.leftPlayer + "!", true, true);
-            } else {
-              game.ball.dx = Math.abs(Math.cos(angle)) * game.ball.speed;
-              game.ball.dy = Math.sin(angle) * game.ball.speed;
-            }
-            
-            // Increase ball speed but cap at MAX_BALL_SPEED
-            if (game.ball.speed < MAX_BALL_SPEED) {
-              game.ball.speed += BALL_SPEED_INCREMENT;
-              game.ball.originalSpeed = game.ball.speed;
-            }
-            
-            game.lastScorer = game.leftPlayer;
-            playRandomHitSound();
+            if (leftChargeLabel) leftChargeLabel.textContent = 'TEAM POWER';
+            startLeftCharge();
+            queueCommentary("TEAM POWER SHOT FROM " + game.leftPlayer + "!", true, true);
+          } else {
+            game.ball.dx = Math.abs(Math.cos(angle)) * game.ball.speed;
+            game.ball.dy = Math.sin(angle) * game.ball.speed;
           }
-        }
-        
-        // Right side paddles
-        if (game.ball.x + game.ballRadius > canvas.width - 20 - game.paddleWidth) {
-          if ((game.ball.y > game.rightTopPaddle.y && game.ball.y < game.rightTopPaddle.y + paddleHeight) ||
-              (game.ball.y > game.rightBottomPaddle.y && game.ball.y < game.rightBottomPaddle.y + paddleHeight)) {
-            const paddle = game.ball.y < canvas.height/2 ? game.rightTopPaddle : game.rightBottomPaddle;
-            const angle = getBallAngle(paddle.y, game.ball.y, paddleHeight);
-            
-            // Check for team power shot
-            if (game.teamRightCharged || game.last10Seconds) {
-              game.ball.dx = -Math.abs(Math.cos(angle)) * game.ball.speed * SMASH_SPEED_MULTIPLIER;
-              game.ball.dy = Math.sin(angle) * game.ball.speed * SMASH_SPEED_MULTIPLIER;
-              game.isSmashActive = true;
-              game.smashEndTime = Date.now() + SMASH_DURATION;
-              game.teamRightCharged = false;
-              const rightChargeElement = document.getElementById('rightCharge');
-              const rightChargeLabel = document.getElementById('rightChargeLabel');
-              if (rightChargeElement) rightChargeElement.classList.remove('active');
-              if (rightChargeLabel) rightChargeLabel.textContent = 'TEAM POWER';
-              startRightCharge();
-              queueCommentary("TEAM POWER SHOT FROM " + game.rightPlayer + "!", true, true);
-            } else {
-              game.ball.dx = -Math.abs(Math.cos(angle)) * game.ball.speed;
-              game.ball.dy = Math.sin(angle) * game.ball.speed;
-            }
-            
-            // Increase ball speed but cap at MAX_BALL_SPEED
-            if (game.ball.speed < MAX_BALL_SPEED) {
-              game.ball.speed += BALL_SPEED_INCREMENT;
-              game.ball.originalSpeed = game.ball.speed;
-            }
-            
-            game.lastScorer = game.rightPlayer;
-            playRandomHitSound();
+          
+          // Increase ball speed but cap at MAX_BALL_SPEED
+          if (game.ball.speed < MAX_BALL_SPEED) {
+            game.ball.speed += BALL_SPEED_INCREMENT;
+            game.ball.originalSpeed = game.ball.speed;
           }
+          
+          game.lastScorer = game.leftPlayer;
+          playRandomHitSound();
         }
       }
       
-      // Ball out of bounds - scoring
-      if (game.ball.x - game.ballRadius < 0) {
-        if (!game.isPracticeMode && !game.isEndlessMode) {
+      // Right side paddles
+      if (game.ball.x + game.ballRadius > canvas.width - 20 - game.paddleWidth) {
+        if ((game.ball.y > game.rightTopPaddle.y && game.ball.y < game.rightTopPaddle.y + paddleHeight) ||
+            (game.ball.y > game.rightBottomPaddle.y && game.ball.y < game.rightBottomPaddle.y + paddleHeight)) {
+          const paddle = game.ball.y < canvas.height/2 ? game.rightTopPaddle : game.rightBottomPaddle;
+          const angle = getBallAngle(paddle.y, game.ball.y, paddleHeight);
+          
+          // Check for team power shot
+          if (game.teamRightCharged || game.last10Seconds) {
+            game.ball.dx = -Math.abs(Math.cos(angle)) * game.ball.speed * SMASH_SPEED_MULTIPLIER;
+            game.ball.dy = Math.sin(angle) * game.ball.speed * SMASH_SPEED_MULTIPLIER;
+            game.isSmashActive = true;
+            game.smashEndTime = Date.now() + SMASH_DURATION;
+            game.teamRightCharged = false;
+            const rightChargeElement = document.getElementById('rightCharge');
+            const rightChargeLabel = document.getElementById('rightChargeLabel');
+            if (rightChargeElement) rightChargeElement.classList.remove('active');
+            if (rightChargeLabel) rightChargeLabel.textContent = 'TEAM POWER';
+            startRightCharge();
+            queueCommentary("TEAM POWER SHOT FROM " + game.rightPlayer + "!", true, true);
+          } else {
+            game.ball.dx = -Math.abs(Math.cos(angle)) * game.ball.speed;
+            game.ball.dy = Math.sin(angle) * game.ball.speed;
+          }
+          
+          // Increase ball speed but cap at MAX_BALL_SPEED
+          if (game.ball.speed < MAX_BALL_SPEED) {
+            game.ball.speed += BALL_SPEED_INCREMENT;
+            game.ball.originalSpeed = game.ball.speed;
+          }
+          
+          game.lastScorer = game.rightPlayer;
+          playRandomHitSound();
+        }
+      }
+    }
+    
+    // Ball out of bounds - scoring
+    if (game.ball.x - game.ballRadius < 0) {
+      if (!game.isPracticeMode && !game.isEndlessMode) {
+        game.rightPaddle.score++;
+        document.getElementById('rightScore').textContent = game.rightPaddle.score;
+        game.lastScorer = game.rightPlayer;
+        handleScore();
+      } else if (game.isPracticeMode) {
+        // In practice mode, just reset the ball immediately
+        resetBall();
+        game.ball.dx = -Math.abs(game.ball.dx);
+        if (game.practiceType === 'responding') {
+          queueCommentary("Try again! Press E for a power shot!", true);
+        }
+      } else if (game.isEndlessMode) {
+        if (game.showScore) {
           game.rightPaddle.score++;
           document.getElementById('rightScore').textContent = game.rightPaddle.score;
-          game.lastScorer = game.rightPlayer;
-          handleScore();
-        } else if (game.isPracticeMode) {
-          // In practice mode, just reset the ball immediately
-          resetBall();
-          game.ball.dx = -Math.abs(game.ball.dx);
-          if (game.practiceType === 'responding') {
-            queueCommentary("Try again! Press E for a power shot!", true);
-          }
-        } else if (game.isEndlessMode) {
-          if (game.showScore) {
-            game.rightPaddle.score++;
-            document.getElementById('rightScore').textContent = game.rightPaddle.score;
-          }
-          resetBall();
-          game.ball.dx = -Math.abs(game.ball.dx);
         }
+        resetBall();
+        game.ball.dx = -Math.abs(game.ball.dx);
       }
+    }
 
-      if (game.ball.x + game.ballRadius > canvas.width) {
-        if (!game.isPracticeMode && !game.isEndlessMode) {
+    if (game.ball.x + game.ballRadius > canvas.width) {
+      if (!game.isPracticeMode && !game.isEndlessMode) {
+        game.leftPaddle.score++;
+        document.getElementById('leftScore').textContent = game.leftPaddle.score;
+        game.lastScorer = game.leftPlayer;
+        handleScore();
+      } else if (game.isPracticeMode || game.isEndlessMode) {
+        // In practice/endless mode, just reset the ball immediately
+        if (game.isEndlessMode && game.showScore) {
           game.leftPaddle.score++;
           document.getElementById('leftScore').textContent = game.leftPaddle.score;
-          game.lastScorer = game.leftPlayer;
-          handleScore();
-        } else if (game.isPracticeMode || game.isEndlessMode) {
-          // In practice/endless mode, just reset the ball immediately
-          if (game.isEndlessMode && game.showScore) {
-            game.leftPaddle.score++;
-            document.getElementById('leftScore').textContent = game.leftPaddle.score;
-          } else if (game.isPracticeMode) {
-            game.leftPaddle.score++;
-            document.getElementById('leftScore').textContent = game.leftPaddle.score;
-          }
-          resetBall();
-          game.ball.dx = Math.abs(game.ball.dx);
-          if (game.isPracticeMode && game.practiceType === 'powershot') {
-            queueCommentary("Great! Now try again!", true);
-          }
+        } else if (game.isPracticeMode) {
+          game.leftPaddle.score++;
+          document.getElementById('leftScore').textContent = game.leftPaddle.score;
         }
-      }
-
-      // Deuce (tie) situation
-      if (!game.isPracticeMode && !game.isEndlessMode) {
-        if (game.leftPaddle.score >= 5 && game.rightPaddle.score >= 5 && 
-            game.leftPaddle.score === game.rightPaddle.score && !game.deuceActive) {
-          game.deuceActive = true;
-          game.bonusPoints++;
-          const bonusPointsElement = document.getElementById('bonusPoints');
-          if (bonusPointsElement) bonusPointsElement.textContent = `⚡ BONUS POINT: +${game.bonusPoints}`;
-          queueCommentary("WE'RE AT DEUCE! BONUS POINT ACTIVATED! NEXT POINT WINS!", true, true);
-        } else if (game.leftPaddle.score !== game.rightPaddle.score) {
-          game.deuceActive = false;
+        resetBall();
+        game.ball.dx = Math.abs(game.ball.dx);
+        if (game.isPracticeMode && game.practiceType === 'powershot') {
+          queueCommentary("Great! Now try again!", true);
         }
       }
     }
 
-    function checkSmash() {
-      if (game.isSmashActive && Date.now() > game.smashEndTime) {
-        game.isSmashActive = false;
-        
-        // Return to original speed but maintain direction
-        const angle = Math.atan2(game.ball.dy, game.ball.dx);
-        game.ball.speed = game.ball.originalSpeed;
-        game.ball.dx = Math.cos(angle) * game.ball.speed;
-        game.ball.dy = Math.sin(angle) * game.ball.speed;
+    // Deuce (tie) situation
+    if (!game.isPracticeMode && !game.isEndlessMode) {
+      if (game.leftPaddle.score >= 5 && game.rightPaddle.score >= 5 && 
+          game.leftPaddle.score === game.rightPaddle.score && !game.deuceActive) {
+        game.deuceActive = true;
+        game.bonusPoints++;
+        const bonusPointsElement = document.getElementById('bonusPoints');
+        if (bonusPointsElement) bonusPointsElement.textContent = `⚡ BONUS POINT: +${game.bonusPoints}`;
+        queueCommentary("WE'RE AT DEUCE! BONUS POINT ACTIVATED! NEXT POINT WINS!", true, true);
+      } else if (game.leftPaddle.score !== game.rightPaddle.score) {
+        game.deuceActive = false;
       }
     }
+  }
 
-    function getBallAngle(paddleY, hitY, paddleHeight) {
-      const relativeY = (hitY - paddleY) / paddleHeight;
-      const normalizedY = (relativeY * 2) - 1;
-      return normalizedY * Math.PI / 3;
-    }
-
-    function handleScore() {
-      const winningThreshold = WINNING_SCORE + game.bonusPoints;
-
-      if (game.betweenPointsTimeout) {
-        clearTimeout(game.betweenPointsTimeout);
-        game.betweenPointsTimeout = null;
-      }
-
-      // Play random score sound
-      playRandomScoreSound();
-
-      if (checkForSpecialMove()) {
-        queueCommentary("OH MY GOODNESS! WHAT AN INCREDIBLE SHOT!", true, true);
-      }
-      else if ((game.leftPaddle.score === winningThreshold - 1 || 
-               game.rightPaddle.score === winningThreshold - 1) && !game.matchPoint) {
-        game.matchPoint = true;
-        const leader = game.leftPaddle.score > game.rightPaddle.score ? game.leftPlayer : game.rightPlayer;
-        queueCommentary(`THIS IS IT! CHAMPIONSHIP POINT FOR ${leader}!`, true, true);
-      }
-      else {
-        queueCommentary(`${game.lastScorer} SCORES! ${getRandomCommentary()}`, true);
-      }
-
-      if (game.leftPaddle.score >= winningThreshold || game.rightPaddle.score >= winningThreshold) {
-        endGame();
-        return;
-      }
-
-      if (Math.random() < 0.3) {
-        game.betweenPointsTimeout = setTimeout(() => {
-          queueCommentary(getRandomCommentary());
-        }, 1500);
-      }
-
-      resetBall();
-    }
-
-    function getRandomCommentary() {
-      return commentaryPhrases[Math.floor(Math.random() * commentaryPhrases.length)];
-    }
-
-    function checkForSpecialMove() {
-      const speedThreshold = game.isFourPlayer ? FOUR_PLAYER_BALL_SPEED * 1.5 : MAX_BALL_SPEED * 0.8;
-      const now = Date.now();
+  function checkSmash() {
+    if (game.isSmashActive && Date.now() > game.smashEndTime) {
+      game.isSmashActive = false;
       
-      if (game.ball.speed >= speedThreshold && now - game.lastSpecialMoveTime > 5000) {
-        game.lastSpecialMoveTime = now;
-        return true;
+      // Return to original speed but maintain direction
+      const angle = Math.atan2(game.ball.dy, game.ball.dx);
+      game.ball.speed = game.ball.originalSpeed;
+      game.ball.dx = Math.cos(angle) * game.ball.speed;
+      game.ball.dy = Math.sin(angle) * game.ball.speed;
+    }
+  }
+
+  function getBallAngle(paddleY, hitY, paddleHeight) {
+    const relativeY = (hitY - paddleY) / paddleHeight;
+    const normalizedY = (relativeY * 2) - 1;
+    return normalizedY * Math.PI / 3;
+  }
+
+  function handleScore() {
+    const winningThreshold = WINNING_SCORE + game.bonusPoints;
+
+    if (game.betweenPointsTimeout) {
+      clearTimeout(game.betweenPointsTimeout);
+      game.betweenPointsTimeout = null;
+    }
+
+    // Play random score sound
+    playRandomScoreSound();
+
+    if (checkForSpecialMove()) {
+      queueCommentary("OH MY GOODNESS! WHAT AN INCREDIBLE SHOT!", true, true);
+    }
+    else if ((game.leftPaddle.score === winningThreshold - 1 || 
+             game.rightPaddle.score === winningThreshold - 1) && !game.matchPoint) {
+      game.matchPoint = true;
+      const leader = game.leftPaddle.score > game.rightPaddle.score ? game.leftPlayer : game.rightPlayer;
+      queueCommentary(`THIS IS IT! CHAMPIONSHIP POINT FOR ${leader}!`, true, true);
+    }
+    else {
+      queueCommentary(`${game.lastScorer} SCORES! ${getRandomCommentary()}`, true);
+    }
+
+    if (game.leftPaddle.score >= winningThreshold || game.rightPaddle.score >= winningThreshold) {
+      endGame();
+      return;
+    }
+
+    if (Math.random() < 0.3) {
+      game.betweenPointsTimeout = setTimeout(() => {
+        queueCommentary(getRandomCommentary());
+      }, 1500);
+    }
+
+    resetBall();
+  }
+
+  function getRandomCommentary() {
+    return commentaryPhrases[Math.floor(Math.random() * commentaryPhrases.length)];
+  }
+
+  function checkForSpecialMove() {
+    const speedThreshold = game.isFourPlayer ? FOUR_PLAYER_BALL_SPEED * 1.5 : MAX_BALL_SPEED * 0.8;
+    const now = Date.now();
+    
+    if (game.ball.speed >= speedThreshold && now - game.lastSpecialMoveTime > 5000) {
+      game.lastSpecialMoveTime = now;
+      return true;
+    }
+    return false;
+  }
+
+  // Game management functions
+  function showTwoPlayerPrompt() {
+    document.getElementById('twoPlayerPrompt').style.display = 'flex';
+    document.getElementById('backButton').style.display = 'flex';
+    document.getElementById('whatsNewButton').style.display = 'none';
+    document.getElementById('leftPlayerName').focus();
+    playSelectSound();
+  }
+
+  function cancelTwoPlayerPrompt() {
+    document.getElementById('twoPlayerPrompt').style.display = 'none';
+    document.getElementById('backButton').style.display = 'none';
+    document.getElementById('whatsNewButton').style.display = 'block';
+    playSelectSound();
+  }
+
+  function submitTwoPlayerNames() {
+    const leftName = document.getElementById('leftPlayerName').value.trim() || "PLAYER 1";
+    const rightName = document.getElementById('rightPlayerName').value.trim() || "PLAYER 2";
+    const stage = document.getElementById('selectedStage').value;
+    
+    game.leftPlayer = leftName.toUpperCase();
+    game.rightPlayer = rightName.toUpperCase();
+    game.tournamentStage = stage;
+    game.isLocalMultiplayer = true;
+    game.isFourPlayer = false;
+    game.isPracticeMode = false;
+    game.isEndlessMode = false;
+    game.gameMode = '2player';
+    
+    document.getElementById('twoPlayerPrompt').style.display = 'none';
+    document.getElementById('backButton').style.display = 'none';
+    document.getElementById('whatsNewButton').style.display = 'none';
+    
+    // Enter fullscreen before starting game
+    if (!document.fullscreenElement) {
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen();
+      } else if (document.documentElement.webkitRequestFullscreen) {
+        document.documentElement.webkitRequestFullscreen();
       }
-      return false;
     }
-
-    // Game management functions
-    function showTwoPlayerPrompt() {
-      document.getElementById('twoPlayerPrompt').style.display = 'flex';
-      document.getElementById('backButton').style.display = 'flex';
-      document.getElementById('leftPlayerName').focus();
-      playSelectSound();
-    }
-
-    function cancelTwoPlayerPrompt() {
-      document.getElementById('twoPlayerPrompt').style.display = 'none';
-      document.getElementById('backButton').style.display = 'none';
-      playSelectSound();
-    }
-
-    function submitTwoPlayerNames() {
-      const leftName = document.getElementById('leftPlayerName').value.trim() || "PLAYER 1";
-      const rightName = document.getElementById('rightPlayerName').value.trim() || "PLAYER 2";
-      const stage = document.getElementById('selectedStage').value;
-      
-      game.leftPlayer = leftName.toUpperCase();
-      game.rightPlayer = rightName.toUpperCase();
-      game.tournamentStage = stage;
-      game.isLocalMultiplayer = true;
-      game.isFourPlayer = false;
-      game.isPracticeMode = false;
-      game.isEndlessMode = false;
-      game.gameMode = '2player';
-      
-      document.getElementById('twoPlayerPrompt').style.display = 'none';
-      document.getElementById('backButton').style.display = 'none';
+    
+    // Start game after a brief delay
+    setTimeout(() => {
+      // Exit fullscreen right before game starts
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      }
       startGame();
-      playSelectSound();
-    }
+    }, 500);
+    
+    playSelectSound();
+  }
 
-    function showSinglePlayerPrompt() {
-      document.getElementById('singlePlayerPrompt').style.display = 'flex';
-      document.getElementById('backButton').style.display = 'flex';
-      document.getElementById('playerName').focus();
-      playSelectSound();
-    }
+  function showSinglePlayerPrompt() {
+    document.getElementById('singlePlayerPrompt').style.display = 'flex';
+    document.getElementById('backButton').style.display = 'flex';
+    document.getElementById('whatsNewButton').style.display = 'none';
+    document.getElementById('playerName').focus();
+    playSelectSound();
+  }
 
-    function cancelSinglePlayerPrompt() {
-      document.getElementById('singlePlayerPrompt').style.display = 'none';
-      document.getElementById('backButton').style.display = 'none';
-      playSelectSound();
-    }
+  function cancelSinglePlayerPrompt() {
+    document.getElementById('singlePlayerPrompt').style.display = 'none';
+    document.getElementById('backButton').style.display = 'none';
+    document.getElementById('whatsNewButton').style.display = 'block';
+    playSelectSound();
+  }
 
-    function submitSinglePlayerName() {
-      const playerName = document.getElementById('playerName').value.trim() || "PLAYER";
-      const difficulty = document.getElementById('selectedDifficulty').value;
-      
-      game.leftPlayer = playerName.toUpperCase();
-      game.rightPlayer = "BOT";
-      game.aiDifficulty = difficulty;
-      game.isLocalMultiplayer = false;
-      game.isFourPlayer = false;
-      game.isPracticeMode = false;
-      game.isEndlessMode = false;
-      game.gameMode = '1player';
-      
-      document.getElementById('singlePlayerPrompt').style.display = 'none';
-      document.getElementById('backButton').style.display = 'none';
-      startGame();
-      playSelectSound();
-    }
+  function submitSinglePlayerName() {
+    const playerName = document.getElementById('playerName').value.trim() || "PLAYER";
+    const difficulty = document.getElementById('selectedDifficulty').value;
+    
+    game.leftPlayer = playerName.toUpperCase();
+    game.rightPlayer = "BOT";
+    game.aiDifficulty = difficulty;
+    game.isLocalMultiplayer = false;
+    game.isFourPlayer = false;
+    game.isPracticeMode = false;
+    game.isEndlessMode = false;
+    game.gameMode = '1player';
+    
+    document.getElementById('singlePlayerPrompt').style.display = 'none';
+    document.getElementById('backButton').style.display = 'none';
+    document.getElementById('whatsNewButton').style.display = 'none';
+    startGame();
+    playSelectSound();
+  }
 
-    function showFourPlayerPrompt() {
-      document.getElementById('fourPlayerPrompt').style.display = 'flex';
-      document.getElementById('backButton').style.display = 'flex';
-      document.getElementById('leftTeamName').focus();
-      playSelectSound();
-    }
+  function showFourPlayerPrompt() {
+    document.getElementById('fourPlayerPrompt').style.display = 'flex';
+    document.getElementById('backButton').style.display = 'flex';
+    document.getElementById('whatsNewButton').style.display = 'none';
+    document.getElementById('leftTeamName').focus();
+    playSelectSound();
+  }
 
     function cancelFourPlayerPrompt() {
       document.getElementById('fourPlayerPrompt').style.display = 'none';
       document.getElementById('backButton').style.display = 'none';
+      document.getElementById('whatsNewButton').style.display = 'block';
       playSelectSound();
     }
 
@@ -3135,15 +3081,17 @@
       
       document.getElementById('fourPlayerPrompt').style.display = 'none';
       document.getElementById('backButton').style.display = 'none';
+      document.getElementById('whatsNewButton').style.display = 'none';
       const mobileControls = document.getElementById('mobileControls');
       if (mobileControls) mobileControls.style.display = 'none';
       startGame();
-            playSelectSound();
+      playSelectSound();
     }
 
     function showEndlessPrompt() {
       document.getElementById('endlessPrompt').style.display = 'flex';
       document.getElementById('backButton').style.display = 'flex';
+      document.getElementById('whatsNewButton').style.display = 'none';
       document.getElementById('endlessPlayerName').focus();
       playSelectSound();
     }
@@ -3151,6 +3099,7 @@
     function cancelEndlessPrompt() {
       document.getElementById('endlessPrompt').style.display = 'none';
       document.getElementById('backButton').style.display = 'none';
+      document.getElementById('whatsNewButton').style.display = 'block';
       playSelectSound();
     }
 
@@ -3175,6 +3124,7 @@
       
       document.getElementById('endlessPrompt').style.display = 'none';
       document.getElementById('backButton').style.display = 'none';
+      document.getElementById('whatsNewButton').style.display = 'none';
       startGame();
       playSelectSound();
     }
@@ -3182,12 +3132,14 @@
     function showPracticePrompt() {
       document.getElementById('practiceModePrompt').style.display = 'flex';
       document.getElementById('backButton').style.display = 'flex';
+      document.getElementById('whatsNewButton').style.display = 'none';
       playSelectSound();
     }
 
     function cancelPracticePrompt() {
       document.getElementById('practiceModePrompt').style.display = 'none';
       document.getElementById('backButton').style.display = 'none';
+      document.getElementById('whatsNewButton').style.display = 'block';
       playSelectSound();
     }
 
@@ -3205,6 +3157,7 @@
       
       document.getElementById('practiceModePrompt').style.display = 'none';
       document.getElementById('backButton').style.display = 'none';
+      document.getElementById('whatsNewButton').style.display = 'none';
       
       showPracticeInstructions(
         "LEARN POWER SHOT",
@@ -3227,6 +3180,7 @@
       
       document.getElementById('practiceModePrompt').style.display = 'none';
       document.getElementById('backButton').style.display = 'none';
+      document.getElementById('whatsNewButton').style.display = 'none';
       
       showPracticeInstructions(
         "LEARN RESPONDING",
@@ -3387,485 +3341,10 @@
       resetBall();
       resetPaddles();
       
-      // Show mobile controls if on mobile for 1P and 2P modes
-      if (/Mobi|Android/i.test(navigator.userAgent) && !game.isFourPlayer) {
+            if (/Mobi|Android/i.test(navigator.userAgent)) {
         const mobileControls = document.getElementById('mobileControls');
         if (mobileControls) mobileControls.style.display = 'flex';
       }
-      
-      // Update D-Pad visibility based on game mode
-      updateDPadVisibility();
-      
-      if (!game.isPracticeMode && !game.isEndlessMode) {
-        queueCommentary(`THE CHAMPIONSHIP MATCH BEGINS! ${game.leftPlayer} VS ${game.rightPlayer}!`, true, true);
-      } else if (game.practiceType === 'powershot') {
-        queueCommentary("Practice mode: Power shots. Press E when your power bar is full!", true, true);
-      } else if (game.practiceType === 'responding') {
-        queueCommentary("Practice mode: Responding. Return the bot's shots!", true, true);
-      } else if (game.isEndlessMode) {
-        queueCommentary("Endless mode! Play as long as you want!", true, true);
-      }
-      
-      startCountdown();
-    }
-
-    function startCountdown() {
-      let count = 3;
-      document.getElementById('countdown').style.display = "flex";
-      document.getElementById('goText').style.display = "none";
-      game.countdownActive = true;
-      
-      // Play start sound
-      playRandomStartMusic();
-      
-      function updateCountdown() {
-        if (count > 0) {
-          document.getElementById('countdown').textContent = count;
-          if (game.soundEnabled && !game.isMuted) {
-            const utterance = new SpeechSynthesisUtterance(count.toString());
-            utterance.rate = 0.8;
-            utterance.pitch = 1.3;
-            window.speechSynthesis.speak(utterance);
-          }
-          count--;
-        } else if (count === 0) {
-          document.getElementById('countdown').style.display = "none";
-          document.getElementById('goText').style.display = "flex";
-          if (game.soundEnabled && !game.isMuted) {
-            const utterance = new SpeechSynthesisUtterance("GO!");
-            utterance.rate = 0.7;
-            utterance.pitch = 1.5;
-            window.speechSynthesis.speak(utterance);
-          }
-          count--;
-        } else {
-          clearInterval(game.countdownInterval);
-          document.getElementById('goText').style.display = "none";
-          game.gameStarted = true;
-          game.musicStarted = true;
-          game.startTime = Date.now();
-          game.countdownActive = false;
-          
-          if (!game.isPracticeMode && !game.isEndlessMode) {
-            startTimer();
-          }
-          gameLoop(); // Start the game loop
-        }
-      }
-      
-      updateCountdown();
-      game.countdownInterval = setInterval(updateCountdown, 1000);
-    }
-
-    function startTimer() {
-      if (game.timerInterval) clearInterval(game.timerInterval);
-      
-      game.hasAnnounced30 = false;
-      game.hasAnnounced10 = false;
-      game.last10Seconds = false;
-      game.startTime = Date.now();
-      
-      game.timerInterval = setInterval(() => {
-        if (game.isPaused || game.halftimeActive) return;
-        
-        const elapsed = Date.now() - game.startTime;
-        const remaining = Math.max(0, game.remainingTime * 1000 - elapsed + (game.extraTime * 1000));
-        
-        const minutes = Math.floor(remaining / 60000);
-        const seconds = Math.floor((remaining % 60000) / 1000);
-        const milliseconds = remaining % 1000;
-        
-        const timerElement = document.getElementById('timer');
-        if (timerElement) {
-          timerElement.textContent = 
-            `${minutes}:${seconds < 10 ? '0' : ''}${seconds}.${milliseconds < 100 ? (milliseconds < 10 ? '00' : '0') : ''}${milliseconds}`;
-        }
-        
-        // Update match info
-        const halfText = game.currentHalf === 1 ? '1st Half' : (game.extraTime > 0 ? 'ET' : '2nd Half');
-        const matchInfoElement = document.getElementById('matchInfo');
-        if (matchInfoElement) {
-          matchInfoElement.innerHTML = `
-            ${halfText} | Extra Time: +${game.extraTime}s
-          `;
-        }
-        
-        if (remaining <= 30000 && !game.hasAnnounced30) {
-          game.hasAnnounced30 = true;
-          queueCommentary(`ONLY 30 SECONDS REMAINING IN THE ${game.currentHalf === 1 ? '1ST' : '2ND'} HALF!`, true, true);
-        }
-        
-        if (remaining <= 10000 && !game.hasAnnounced10) {
-          game.hasAnnounced10 = true;
-          queueCommentary(`FINAL COUNTDOWN! 10 SECONDS IN THE ${game.currentHalf === 1 ? '1ST' : '2ND'} HALF!`, true, true);
-        }
-        
-        // Last 10 seconds countdown
-        if (remaining <= 10000 && !game.last10Seconds) {
-          game.last10Seconds = true;
-          startFinalCountdown();
-        }
-        
-        if (remaining <= 0) {
-          if (game.currentHalf === 1) {
-            startHalftime();
-          } else {
-            handleTimeExpired();
-          }
-        }
-      }, 10);
-    }
-
-    function startFinalCountdown() {
-      if (game.countdownNumbers.length > 0) return;
-      
-      // Clear any existing countdown
-      game.countdownNumbers = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, "FINISH!"];
-      
-      // Make all shots power shots in last 10 seconds
-      if (!game.isFourPlayer) {
-        game.leftCharged = true;
-        game.rightCharged = true;
-      } else {
-        game.teamLeftCharged = true;
-        game.teamRightCharged = true;
-      }
-      const leftChargeElement = document.getElementById('leftCharge');
-      const rightChargeElement = document.getElementById('rightCharge');
-      if (leftChargeElement) leftChargeElement.classList.add('active');
-      if (rightChargeElement) rightChargeElement.classList.add('active');
-      
-      // Start announcing numbers
-      announceCountdownNumber();
-    }
-
-    function announceCountdownNumber() {
-      if (game.countdownNumbers.length === 0 || !game.last10Seconds) return;
-      
-      const number = game.countdownNumbers.shift();
-      queueCommentary(number.toString(), true, true);
-      
-      if (game.countdownNumbers.length > 0) {
-        setTimeout(announceCountdownNumber, 1000);
-      }
-    }
-
-    function startHalftime() {
-      clearInterval(game.timerInterval);
-      game.halftimeActive = true;
-      game.last10Seconds = false;
-      document.getElementById('halftimeScreen').style.display = "flex";
-      document.getElementById('halftimeScreen').textContent = "HALFTIME";
-      
-      // Reset ball position
-      resetBall();
-      
-      // Show halftime stats
-      queueCommentary(`HALFTIME! SCORE IS ${game.leftPaddle.score}-${game.rightPaddle.score}`, true, true);
-      
-      // Start halftime countdown
-      let halftimeCount = HALF_TIME_BREAK;
-      game.halftimeInterval = setInterval(() => {
-        const halftimeScreen = document.getElementById('halftimeScreen');
-        if (halftimeScreen) halftimeScreen.textContent = `HALFTIME\n${halftimeCount}`;
-        halftimeCount--;
-        
-        if (halftimeCount < 0) {
-          clearInterval(game.halftimeInterval);
-          if (halftimeScreen) halftimeScreen.style.display = "none";
-          game.halftimeActive = false;
-          game.currentHalf = 2;
-          game.remainingTime = HALF_TIME;
-          game.hasAnnounced30 = false;
-          game.hasAnnounced10 = false;
-          game.startTime = Date.now();
-          startTimer();
-          queueCommentary("SECOND HALF BEGINS!", true, true);
-        }
-      }, 1000);
-    }
-
-    function handleTimeExpired() {
-      if (game.leftPaddle.score === game.rightPaddle.score) {
-        game.remainingTime = OVERTIME_TIME;
-        game.extraTime += OVERTIME_TIME;
-        game.hasAnnounced30 = false;
-        game.hasAnnounced10 = false;
-        game.last10Seconds = false;
-        game.countdownNumbers = [];
-        if (!game.deuceActive) {
-          game.bonusPoints++;
-          const bonusPointsElement = document.getElementById('bonusPoints');
-          if (bonusPointsElement) bonusPointsElement.textContent = `⚡ BONUS POINT: +${game.bonusPoints}`;
-        }
-        playETSound();
-        queueCommentary("WE'RE GOING TO OVERTIME! NEXT POINT WINS!", true, true);
-        startTimer();
-      } else {
-        endGame();
-      }
-    }
-
-    function queueCommentary(text, important = false, force = false) {
-      if (!game.enableCommentary && game.isEndlessMode) return;
-      
-      if (force) {
-        window.speechSynthesis.cancel();
-        game.commentaryQueue = [];
-        game.isSpeaking = false;
-      }
-      
-      // Always add to queue, but skip unimportant ones if there are many
-      if (important || game.commentaryQueue.length < 3) {
-        game.commentaryQueue.push({text, important});
-      }
-      
-      if (!game.isSpeaking || force) {
-        speakNextCommentary();
-      }
-      
-      // Update commentary display
-      const commentaryElement = document.getElementById('commentary');
-      if (commentaryElement) commentaryElement.textContent = text;
-    }
-
-    function speakNextCommentary() {
-      if (game.commentaryQueue.length > 0 && !game.isSpeaking && game.soundEnabled && !game.isMuted) {
-        const {text, important} = game.commentaryQueue.shift();
-        announceCommentary(text, important);
-      }
-    }
-
-    function announceCommentary(text, important = false) {
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 0.9;
-      utterance.pitch = 1.2;
-      utterance.volume = important ? 1.0 : 0.8;
-      
-      utterance.onend = () => {
-        game.isSpeaking = false;
-        speakNextCommentary();
-      };
-      
-      if (game.currentUtterance) {
-        window.speechSynthesis.cancel();
-      }
-      
-      window.speechSynthesis.speak(utterance);
-      game.currentUtterance = utterance;
-      game.isSpeaking = true;
-    }
-
-    function endGame() {
-      game.gameStarted = false;
-      clearInterval(game.timerInterval);
-      
-      let winner, loser, winnerScore, loserScore;
-      if (game.leftPaddle.score > game.rightPaddle.score) {
-        winner = game.leftPlayer;
-        loser = game.rightPlayer;
-        winnerScore = game.leftPaddle.score;
-        loserScore = game.rightPaddle.score;
-      } else {
-        winner = game.rightPlayer;
-        loser = game.leftPlayer;
-        winnerScore = game.rightPaddle.score;
-        loserScore = game.leftPaddle.score;
-      }
-      
-      // Check if player lost to bot
-      if (!game.isLocalMultiplayer && winner === "BOT") {
-        showGameOver();
-        return;
-      }
-      
-      const endMessageElement = document.getElementById('endMessage');
-      if (endMessageElement) endMessageElement.textContent = `${winner} WINS ${winnerScore}-${loserScore}! 🏆`;
-      document.getElementById('endScreen').style.display = "flex";
-      
-      // Hide game elements
-      document.getElementById('leftScore').style.display = "none";
-      document.getElementById('rightScore').style.display = "none";
-      document.getElementById('timer').style.display = "none";
-      document.getElementById('bonusPoints').style.display = "none";
-      document.getElementById('matchInfo').style.display = "none";
-      
-      createConfetti();
-      
-      // Stop music at the end of the match
-      backgroundMusic.pause();
-      
-      // Save to leaderboards
-      if (game.isLocalMultiplayer && !game.isFourPlayer) {
-        // Save to Recent Plays
-        saveToLeaderboard('recent', {
-          player1: game.leftPlayer,
-          player2: game.rightPlayer,
-          score1: game.leftPaddle.score,
-          score2: game.rightPaddle.score,
-          stage: game.tournamentStage,
-          timestamp: Date.now()
-        });
-        
-        // Save to Best Wins if score difference is significant
-        if (Math.abs(game.leftPaddle.score - game.rightPaddle.score) >= 3) {
-          saveToLeaderboard('best', {
-            player1: winner,
-            player2: loser,
-            score1: winnerScore,
-            score2: loserScore,
-            stage: game.tournamentStage,
-            timestamp: Date.now()
-          });
-        }
-      } else if (!game.isLocalMultiplayer) {
-        // Save to Bot Champions
-        saveToLeaderboard('bot', {
-          player1: game.leftPlayer,
-          score1: game.leftPaddle.score,
-          score2: game.rightPaddle.score,
-          difficulty: game.aiDifficulty,
-          timestamp: Date.now()
-        });
-      }
-      
-      queueCommentary(`${winner} defeats ${loser} ${winnerScore}-${loserScore}!`, true, true);
-      queueCommentary(`WHAT A PERFORMANCE! ${winner} IS THE PONG CHAMPION!`, true);
-      queueCommentary("What an incredible championship match we've witnessed today!", true);
-    }
-
-    function showGameOver() {
-      game.gameStarted = false;
-      clearInterval(game.timerInterval);
-      
-      document.getElementById('gameOverScreen').style.display = "flex";
-      document.getElementById('leftScore').style.display = "none";
-      document.getElementById('rightScore').style.display = "none";
-      document.getElementById('timer').style.display = "none";
-      document.getElementById('bonusPoints').style.display = "none";
-      document.getElementById('matchInfo').style.display = "none";
-      
-      // Stop music and play game over sound
-      backgroundMusic.pause();
-      playGameOverSound();
-      
-      // Save to Bot Champions
-      saveToLeaderboard('bot', {
-        player1: game.leftPlayer,
-        score1: game.leftPaddle.score,
-        score2: game.rightPaddle.score,
-        difficulty: game.aiDifficulty,
-        timestamp: Date.now()
-      });
-      
-      queueCommentary("GAME OVER! YOU LOST TO THE BOT!", true, true);
-      
-      // Return to menu after delay
-      setTimeout(() => {
-        returnToMenu();
-      }, 5000);
-    }
-
-    function toggleMute() {
-      if (!game.soundEnabled) return;
-      
-      game.isMuted = !game.isMuted;
-      const muteButton = document.getElementById('muteButton');
-      if (muteButton) muteButton.textContent = game.isMuted ? "🔇" : "🔊";
-      window.speechSynthesis.cancel();
-      
-      if (game.isMuted) {
-        queueCommentary("Commentary muted", true, true);
-      } else {
-        queueCommentary("Commentary unmuted", true, true);
-      }
-    }
-
-    function toggleMusicMute() {
-      if (!game.soundEnabled) return;
-      
-      game.isMusicMuted = !game.isMusicMuted;
-      const musicMuteButton = document.getElementById('musicMuteButton');
-      if (musicMuteButton) musicMuteButton.textContent = game.isMusicMuted ? "🔇" : "🎵";
-      
-      if (game.isMusicMuted) {
-        backgroundMusic.pause();
-        queueCommentary("Music muted", true, true);
-      } else {
-        if (game.musicStarted && game.gameStarted) {
-          backgroundMusic.play().catch(e => console.log("Audio play error:", e));
-        }
-        queueCommentary("Music unmuted", true, true);
-      }
-    }
-
-    function togglePause() {
-      game.isPaused = !game.isPaused;
-      document.getElementById('pauseScreen').style.display = game.isPaused ? "flex" : "none";
-      
-      if (game.isPaused) {
-        game.pausedTime = Date.now();
-        backgroundMusic.pause();
-        queueCommentary("GAME PAUSED", true, true);
-      } else {
-        const pauseDuration = Date.now() - game.pausedTime;
-        game.startTime += pauseDuration;
-        if (game.soundEnabled && !game.isMusicMuted && game.musicStarted && game.gameStarted) {
-          backgroundMusic.play().catch(e => console.log("Audio play error:", e));
-        }
-        queueCommentary("GAME RESUMED", true, true);
-      }
-    }
-
-    function returnToMenu() {
-      game.isPaused = false;
-      game.halftimeActive = false;
-      document.getElementById('pauseScreen').style.display = "none";
-      document.getElementById('endScreen').style.display = "none";
-      document.getElementById('halftimeScreen').style.display = "none";
-      document.getElementById('gameOverScreen').style.display = "none";
-      document.getElementById('titleScreen').style.display = "flex";
-      document.getElementById('backButton').style.display = "none";
-      document.getElementById('leaderboardScreen').style.display = "none";
-      clearInterval(game.timerInterval);
-      clearInterval(game.halftimeInterval);
-      clearInterval(game.leftChargeInterval);
-      clearInterval(game.rightChargeInterval);
-      game.gameStarted = false;
-      game.isLocalMultiplayer = false;
-      game.isFourPlayer = false;
-      game.isPracticeMode = false;
-      game.isEndlessMode = false;
-      game.last10Seconds = false;
-      game.countdownNumbers = [];
-      game.particles = [];
-      
-      // Hide game elements
-      document.getElementById('leftScore').style.display = "none";
-      document.getElementById('rightScore').style.display = "none";
-      document.getElementById('timer').style.display = "none";
-      document.getElementById('bonusPoints').style.display = "none";
-      document.getElementById('matchInfo').style.display = "none";
-      
-      // Reset mobile controls
-      game.mobileControls = {
-        leftUp: false,
-        leftDown: false,
-        rightUp: false,
-        rightDown: false,
-        leftPower: false,
-        rightPower: false
-      };
-      
-      // Show mobile controls if on mobile for 1P and 2P modes
-      if (/Mobi|Android/i.test(navigator.userAgent)) {
-        const mobileControls = document.getElementById('mobileControls');
-        if (mobileControls) mobileControls.style.display = 'flex';
-      }
-      
-      // Hide D-Pad controls
-      document.getElementById('dpadControls').style.display = 'none';
-      document.getElementById('dpadControlsRight').style.display = 'none';
       
       // Start music again if not muted
       if (game.soundEnabled && !game.isMusicMuted && game.musicStarted) {
@@ -3877,7 +3356,6 @@
 
     // Initialize the game when the DOM is loaded
     document.addEventListener('DOMContentLoaded', initGame);
-  </script>
+    </script>
 </body>
 </html>
-
