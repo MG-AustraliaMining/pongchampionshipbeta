@@ -1490,8 +1490,7 @@
       confettiElements: [],
       lastPaddleSoundTime: 0,
       paddleSoundInterval: 200, // ms between paddle movement sounds
-      gameMode: null, // Tracks current game mode for D-Pad logic
-      showLeaderboards: false
+      gameMode: null // Tracks current game mode for D-Pad logic
     };
 
     // Commentary phrases
@@ -1773,6 +1772,14 @@
         document.getElementById('dpadControlsRight').style.display = 'none';
       }
     }
+
+    function showLeaderboards() {
+  document.getElementById('titleScreen').style.display = 'none';
+  document.getElementById('leaderboardScreen').style.display = 'flex';
+  document.getElementById('backButton').style.display = 'flex';
+  updateLeaderboards();
+  playSelectSound();
+}
 
     function hideLeaderboards() {
       document.getElementById('leaderboardScreen').style.display = 'none';
@@ -3857,7 +3864,7 @@
       }
       
       // Hide D-Pad controls
-      document.getElementById('dpadControls').style.display = 'none';
+      6document.getElementById('dpadControls').style.display = 'none';
       document.getElementById('dpadControlsRight').style.display = 'none';
       
       // Start music again if not muted
@@ -3873,4 +3880,3 @@
   </script>
 </body>
 </html>
-
