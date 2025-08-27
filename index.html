@@ -5,8 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>🏆 PONG CHAMPIONSHIP 2.7 🏆</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏓</text></svg>">
   <style>
     :root {
       --paddle-width: 15px;
@@ -200,7 +200,20 @@
     #musicMuteButton { top: 15px; right: 15px; }
     #backButton { top: 15px; right: 70px; }
     #dpadButton { top: 15px; right: 125px; }
-    #whatsNewButton { bottom: 20px; right: 20px; }
+    #whatsNewButton { 
+      position: absolute;
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,0.3);
+      border: 2px solid white;
+      border-radius: 20px;
+      padding: 5px 15px;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      z-index: 40;
+    }
     
     #pauseScreen, #countdown, #halftimeScreen, #gameOverScreen {
       display: none;
@@ -909,7 +922,13 @@
       #musicMuteButton { right: 10px; top: 10px; }
       #backButton { right: 60px; top: 10px; }
       #dpadButton { right: 110px; top: 10px; }
-      #whatsNewButton { bottom: 15px; right: 15px; }
+      #whatsNewButton { 
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.9rem;
+        padding: 4px 12px;
+      }
       .mobile-btn {
         width: 60px;
         height: 60px;
@@ -1038,7 +1057,7 @@
     <button id="musicMuteButton" class="control-btn">🎵</button>
     <button id="backButton" class="control-btn" style="display: none;">↩️</button>
     <button id="dpadButton" class="control-btn">🎮</button>
-    <button id="whatsNewButton" class="control-btn">ℹ️</button>
+    <button id="whatsNewButton">ℹ️ What's New in 2.7</button>
     
     <div id="mobileControls" style="display: none;">
       <div class="mobile-paddle-controls">
@@ -1090,7 +1109,6 @@
       <button class="btn-championship" id="practiceButton">PRACTICE</button>
       <button class="btn-championship" id="endlessButton">ENDLESS MODE</button>
       <button class="btn-championship" id="tutorialButton">TUTORIAL</button>
-      
     </div>
 
     <div id="leaderboardScreen" class="screen">
@@ -1137,19 +1155,18 @@
     <div id="whatsNewContent">
       <h2>What's New in Pong Championship 2.7</h2>
       <ul>
-        <li>Fixed the bug where players were getting free points after pause/resume or halftime</li>
-        <li>Significantly improved performance on iPad 9th Gen and other mobile devices</li>
-        <li>Practice mode now properly resets the ball immediately when it hits edges</li>
-        <li>Added proper mastery messages when completing practice challenges</li>
-        <li>Improved D-Pad system that adapts to different game modes</li>
-        <li>Fixed Practice Mode AI - bot now moves correctly</li>
+        <li>Fixed the bug where pausing/resuming or halftime gave free points</li>
+        <li>Significant performance optimizations for iPad 9th Gen</li>
+        <li>Practice mode now properly resets the ball when hitting edges</li>
+        <li>Practice mode mastery messages when reaching 10 points</li>
+        <li>Improved D-Pad system that adapts to game mode</li>
+        <li>Fixed Practice Mode bot movement issues</li>
         <li>Fixed ball visibility issue at game start</li>
-        <li>Added proper score handling in Endless Mode when Show Score is off</li>
-        <li>Added continuous paddle movement sound effects</li>
-        <li>Added favicon for better browser experience</li>
-        <li>Improved UI layout with better button placement</li>
-        <li>Added comprehensive tutorial system</li>
-        <li>Many other bug fixes and performance improvements</li>
+        <li>Endless Mode score visibility options work correctly</li>
+        <li>Added paddle movement sound effects</li>
+        <li>Added favicon support</li>
+        <li>UI improvements for better button placement</li>
+        <li>Replaced "Learn About Pong" with comprehensive Tutorial</li>
       </ul>
       <button class="modal-btn" id="closeWhatsNew">CLOSE</button>
     </div>
@@ -1279,30 +1296,33 @@
 
   <div id="tutorialModal" class="modal-overlay" style="display: none;">
     <div class="modal-content">
-      <div class="modal-title">TUTORIAL</div>
-      <div style="color: white; text-align: left; margin-bottom: 20px; max-height: 50vh; overflow-y: auto;">
-        <h3>2 Player Mode:</h3>
+      <div class="modal-title">PONG CHAMPIONSHIP TUTORIAL</div>
+      <div style="text-align: left; color: white; margin-bottom: 20px;">
+        <h3>2 PLAYER MODE:</h3>
         <p>• Left Player: Use W/S keys to move up/down</p>
         <p>• Right Player: Use Arrow Up/Down keys to move</p>
-        <p>• Press E (Left) or Arrow Left (Right) for power shots when your power bar is full</p>
+        <p>• Press E (Left) or Arrow Left (Right) for Power Shots when charged</p>
         
-        <h3>4 Player Mode:</h3>
+        <h3>4 PLAYER MODE:</h3>
         <p>• Left Top: W/S keys</p>
         <p>• Left Bottom: Q/A keys</p>
         <p>• Right Top: O/L keys</p>
         <p>• Right Bottom: Arrow Up/Down keys</p>
-        <p>• Press Z (Left Team) or K (Right Team) for team power shots</p>
+        <p>• Press Z (Left Team) or K (Right Team) for Team Power Shots</p>
         
-        <h3>Power Shots:</h3>
-        <p>• Wait for your power bar to fill completely</p>
-        <p>• Press the power button when the bar is full to activate</p>
-        <p>• Your next shot will be much faster and powerful</p>
+        <h3>MOBILE CONTROLS:</h3>
+        <p>• Use on-screen buttons to move paddles</p>
+        <p>• Tap power buttons when charged for special shots</p>
         
-        <h3>Mobile Controls:</h3>
-        <p>• Use the on-screen buttons to move paddles</p>
-        <p>• Tap the power button when it's glowing to activate power shot</p>
+        <h3>GAME MECHANICS:</h3>
+        <p>• Power bar fills automatically over time</p>
+        <p>• When full, activate power shot for a super-fast return</p>
+        <p>• Ball speeds up with each hit</p>
+        <p>• First to 10 points wins (with bonus points in deuce situations)</p>
       </div>
-      <button class="modal-btn" id="closeTutorial">CLOSE</button>
+      <div style="display: flex; justify-content: center; gap: 10px; margin-top: 15px;">
+        <button class="modal-btn" id="closeTutorial">CLOSE</button>
+      </div>
     </div>
   </div>
 
@@ -1468,8 +1488,9 @@
       opponentIsBot: true,
       fireTrails: [],
       confettiElements: [],
-      paddleSoundPlaying: false,
-      lastPaddleSoundTime: 0
+      lastPaddleSoundTime: 0,
+      paddleSoundInterval: 200, // ms between paddle movement sounds
+      gameMode: null // Tracks current game mode for D-Pad logic
     };
 
     // Commentary phrases
@@ -1594,7 +1615,6 @@
       document.getElementById('leaderboardButton').addEventListener('click', showLeaderboards);
       document.getElementById('backToMenuButton').addEventListener('click', hideLeaderboards);
       document.getElementById('tutorialButton').addEventListener('click', showTutorial);
-      document.getElementById('closeTutorial').addEventListener('click', hideTutorial);
       
       // Modal submit buttons
       document.getElementById('submitTwoPlayerNames').addEventListener('click', submitTwoPlayerNames);
@@ -1606,6 +1626,9 @@
       document.getElementById('practiceContinue').addEventListener('click', hidePracticeInstructions);
       document.getElementById('closeWhatsNew').addEventListener('click', () => {
         document.getElementById('whatsNewModal').style.display = 'none';
+      });
+      document.getElementById('closeTutorial').addEventListener('click', () => {
+        document.getElementById('tutorialModal').style.display = 'none';
       });
       
       // Modal cancel buttons
@@ -1722,11 +1745,6 @@
       playSelectSound();
     }
 
-    function hideTutorial() {
-      document.getElementById('tutorialModal').style.display = 'none';
-      playSelectSound();
-    }
-
     function showWhatsNew() {
       document.getElementById('whatsNewModal').style.display = 'flex';
       playSelectSound();
@@ -1734,23 +1752,25 @@
 
     function toggleDPad() {
       game.dpadEnabled = !game.dpadEnabled;
-      
-      // Show/hide D-Pad based on game mode
-      const showLeftDPad = game.dpadEnabled && (game.isLocalMultiplayer || game.isPracticeMode || (game.isEndlessMode && !game.opponentIsBot));
-      const showRightDPad = game.dpadEnabled && (game.isLocalMultiplayer || game.isFourPlayer || (game.isEndlessMode && !game.opponentIsBot));
-      
-      document.getElementById('dpadControls').style.display = showLeftDPad ? 'block' : 'none';
-      document.getElementById('dpadControlsRight').style.display = showRightDPad ? 'block' : 'none';
-      
+      updateDPadVisibility();
       document.getElementById('dpadButton').textContent = game.dpadEnabled ? "🎮 ON" : "🎮 OFF";
       playSelectSound();
     }
 
-    function showLeaderboards() {
-      document.getElementById('titleScreen').style.display = 'none';
-      document.getElementById('leaderboardScreen').style.display = 'flex';
-      document.getElementById('backButton').style.display = 'flex';
-      playSelectSound();
+    function updateDPadVisibility() {
+      // Show/hide D-Pad based on game mode
+      if (game.dpadEnabled) {
+        document.getElementById('dpadControls').style.display = 'block';
+        
+        // Show right D-Pad only for appropriate modes
+        const showRightDPad = game.isLocalMultiplayer || game.isFourPlayer || 
+                             (game.isEndlessMode && !game.opponentIsBot) || 
+                             game.isPracticeMode;
+        document.getElementById('dpadControlsRight').style.display = showRightDPad ? 'block' : 'none';
+      } else {
+        document.getElementById('dpadControls').style.display = 'none';
+        document.getElementById('dpadControlsRight').style.display = 'none';
+      }
     }
 
     function hideLeaderboards() {
@@ -1776,7 +1796,7 @@
       } else if (document.getElementById('whatsNewModal').style.display === 'flex') {
         document.getElementById('whatsNewModal').style.display = 'none';
       } else if (document.getElementById('tutorialModal').style.display === 'flex') {
-        hideTutorial();
+        document.getElementById('tutorialModal').style.display = 'none';
       } else {
         returnToMenu();
       }
@@ -1786,6 +1806,14 @@
       if (game.soundEnabled && !game.isMuted) {
         selectSound.currentTime = 0;
         selectSound.play().catch(e => console.log("Audio play error:", e));
+      }
+    }
+
+    function playPaddleSound() {
+      if (game.soundEnabled && !game.isMuted && Date.now() - game.lastPaddleSoundTime > game.paddleSoundInterval) {
+        paddleSound.currentTime = 0;
+        paddleSound.play().catch(e => console.log("Audio play error:", e));
+        game.lastPaddleSoundTime = Date.now();
       }
     }
 
@@ -2135,18 +2163,6 @@
       confettiSound.src = 'confetti.mp3';
     }
 
-    function playPaddleSound() {
-      if (!game.soundEnabled || game.isMuted) return;
-      
-      const now = Date.now();
-      if (now - game.lastPaddleSoundTime > 100) {
-        paddleSound.currentTime = 0;
-        paddleSound.volume = 0.3;
-        paddleSound.play().catch(e => console.log("Audio play error:", e));
-        game.lastPaddleSoundTime = now;
-      }
-    }
-
     function playRandomStartMusic() {
       if (!game.soundEnabled || game.isMusicMuted) return;
       
@@ -2237,7 +2253,8 @@
       game.ballColor = 'white';
       
       // Make sure ball is visible
-      drawBall();
+      game.ball.x = Math.max(game.ballRadius, Math.min(canvas.width - game.ballRadius, game.ball.x));
+      game.ball.y = Math.max(game.ballRadius, Math.min(canvas.height - game.ballRadius, game.ball.y));
     }
 
     function resetPaddles() {
@@ -2586,22 +2603,25 @@
       const speedFactor = deltaTime / 16; // 16ms is ~60fps
       const paddleSpeed = PADDLE_SPEED * speedFactor;
 
+      // Track if any paddle is moving for sound
+      let isPaddleMoving = false;
+
       // Mobile controls
       if (game.mobileControls.leftUp) {
         game.leftPaddle.y -= paddleSpeed;
-        playPaddleSound();
+        isPaddleMoving = true;
       }
       if (game.mobileControls.leftDown) {
         game.leftPaddle.y += paddleSpeed;
-        playPaddleSound();
+        isPaddleMoving = true;
       }
       if (game.mobileControls.rightUp) {
         game.rightPaddle.y -= paddleSpeed;
-        playPaddleSound();
+        isPaddleMoving = true;
       }
       if (game.mobileControls.rightDown) {
         game.rightPaddle.y += paddleSpeed;
-        playPaddleSound();
+        isPaddleMoving = true;
       }
       
       // Mobile power buttons
@@ -2617,29 +2637,29 @@
         if (game.isLocalMultiplayer || game.isPracticeMode || (game.isEndlessMode && !game.opponentIsBot)) {
           if (game.keysPressed['w'] || game.keysPressed['W']) {
             game.leftPaddle.y -= paddleSpeed;
-            playPaddleSound();
+            isPaddleMoving = true;
           }
           if (game.keysPressed['s'] || game.keysPressed['S']) {
             game.leftPaddle.y += paddleSpeed;
-            playPaddleSound();
+            isPaddleMoving = true;
           }
           if (game.keysPressed['ArrowUp']) {
             game.rightPaddle.y -= paddleSpeed;
-            playPaddleSound();
+            isPaddleMoving = true;
           }
           if (game.keysPressed['ArrowDown']) {
             game.rightPaddle.y += paddleSpeed;
-            playPaddleSound();
+            isPaddleMoving = true;
           }
         } else {
           // Player controls
           if (game.keysPressed['w'] || game.keysPressed['W']) {
             game.leftPaddle.y -= paddleSpeed;
-            playPaddleSound();
+            isPaddleMoving = true;
           }
           if (game.keysPressed['s'] || game.keysPressed['S']) {
             game.leftPaddle.y += paddleSpeed;
-            playPaddleSound();
+            isPaddleMoving = true;
           }
           
           // AI for right paddle in single player or endless mode
@@ -2661,10 +2681,10 @@
           
           if (paddleCenter < predictedBallY - 15) {
             game.rightPaddle.y += paddleSpeed * reactionSpeed;
-            playPaddleSound();
+            isPaddleMoving = true;
           } else if (paddleCenter > predictedBallY + 15) {
             game.rightPaddle.y -= paddleSpeed * reactionSpeed;
-            playPaddleSound();
+            isPaddleMoving = true;
           }
           
           // AI power shot
@@ -2676,221 +2696,47 @@
         // 4-player controls
         if (game.keysPressed['w'] || game.keysPressed['W']) {
           game.leftTopPaddle.y -= paddleSpeed;
-          playPaddleSound();
+          isPaddleMoving = true;
         }
         if (game.keysPressed['s'] || game.keysPressed['S']) {
           game.leftTopPaddle.y += paddleSpeed;
-          playPaddleSound();
+          isPaddleMoving = true;
         }
         if (game.keysPressed['q'] || game.keysPressed['Q']) {
           game.leftBottomPaddle.y -= paddleSpeed;
-          playPaddleSound();
+          isPaddleMoving = true;
         }
         if (game.keysPressed['a'] || game.keysPressed['A']) {
           game.leftBottomPaddle.y += paddleSpeed;
-          playPaddleSound();
+          isPaddleMoving = true;
         }
         if (game.keysPressed['o'] || game.keysPressed['O']) {
           game.rightTopPaddle.y -= paddleSpeed;
-          playPaddleSound();
+          isPaddleMoving = true;
         }
         if (game.keysPressed['l'] || game.keysPressed['L']) {
           game.rightTopPaddle.y += paddleSpeed;
-          playPaddleSound();
+          isPaddleMoving = true;
         }
         if (game.keysPressed['ArrowUp']) {
           game.rightBottomPaddle.y -= paddleSpeed;
-          playPaddleSound();
+          isPaddleMoving = true;
         }
         if (game.keysPressed['ArrowDown']) {
           game.rightBottomPaddle.y += paddleSpeed;
-          playPaddleSound();
+          isPaddleMoving = true;
         }
+      }
+      
+      // Play paddle sound if moving
+      if (isPaddleMoving) {
+        playPaddleSound();
       }
       
       constrainPaddles();
     }
 
     function checkCollisions() {
-      if (game.isPaused || game.halftimeActive) return;
-      
-      const paddleHeight = game.isFourPlayer ? game.fourPlayerPaddleHeight : game.paddleHeight;
-
-      // Ball collision with paddles
-      if (!game.isFourPlayer) {
-        // Left paddle collision
-        if (game.ball.x - game.ballRadius < 20 + game.paddleWidth &&
-            game.ball.y > game.leftPaddle.y &&
-            game.ball.y < game.leftPaddle.y + paddleHeight) {
-          const angle = getBallAngle(game.leftPaddle.y, game.ball.y, paddleHeight);
-          
-          // Check for power shot
-          if (game.leftCharged || game.last10Seconds) {
-            game.ball.dx = Math.abs(Math.cos(angle)) * game.ball.speed * SMASH_SPEED_MULTIPLIER;
-            game.ball.dy = Math.sin(angle) * game.ball.speed * SMASH_SPEED_MULTIPLIER;
-            game.isSmashActive = true;
-            game.smashEndTime = Date.now() + SMASH_DURATION;
-            game.leftCharged = false;
-            const leftChargeElement = document.getElementById('leftCharge');
-            const leftChargeLabel = document.getElementById('leftChargeLabel');
-            if (leftChargeElement) leftChargeElement.classList.remove('active');
-            if (leftChargeLabel) leftChargeLabel.textContent = 'P1 POWER';
-            startLeftCharge();
-            if (!game.isPracticeMode && !game.isEndlessMode) {
-              queueCommentary("POWER SHOT FROM " + game.leftPlayer + "!", true, true);
-            } else if (game.isPracticeMode && game.practiceType === 'powershot') {
-              game.practiceWins++;
-              if (game.practiceWins >= 10) {
-                queueCommentary("Good job! You have mastered power shots!", true, true);
-                game.practiceWins = 0;
-              }
-            }
-          } else {
-            game.ball.dx = Math.abs(Math.cos(angle)) * game.ball.speed;
-            game.ball.dy = Math.sin(angle) * game.ball.speed;
-          }
-          
-          // Increase ball speed but cap at MAX_BALL_SPEED
-          if (game.ball.speed < MAX_BALL_SPEED) {
-            game.ball.speed += BALL_SPEED_INCREMENT;
-            game.ball.originalSpeed = game.ball.speed;
-          }
-          
-          game.lastScorer = game.leftPlayer;
-          playRandomHitSound();
-        }
-        
-        // Right paddle collision
-        if (game.ball.x + game.ballRadius > canvas.width - 20 - game.paddleWidth &&
-            game.ball.y > game.rightPaddle.y &&
-            game.ball.y < game.rightPaddle.y + paddleHeight) {
-          const angle = getBallAngle(game.rightPaddle.y, game.ball.y, paddleHeight);
-          
-          // Check for power shot
-          if (game.rightCharged || game.last10Seconds) {
-            game.ball.dx = -Math.abs(Math.cos(angle)) * game.ball.speed * SMASH_SPEED_MULTIPLIER;
-            game.ball.dy = Math.sin(angle) * game.ball.speed * SMASH_SPEED_MULTIPLIER;
-            game.isSmashActive = true;
-            game.smashEndTime = Date.now() + SMASH_DURATION;
-            game.rightCharged = false;
-            const rightChargeElement = document.getElementById('rightCharge');
-            const rightChargeLabel = document.getElementById('rightChargeLabel');
-            if (rightChargeElement) rightChargeElement.classList.remove('active');
-            if (rightChargeLabel) rightChargeLabel.textContent = game.isLocalMultiplayer ? 'P2 POWER' : 'BOT POWER';
-            startRightCharge();
-            if (!game.isPracticeMode && !game.isEndlessMode) {
-              queueCommentary("POWER SHOT FROM " + game.rightPlayer + "!", true, true);
-            } else if (game.isPracticeMode && game.practiceType === 'responding') {
-              game.practiceWins++;
-              if (game.practiceWins >= 10) {
-                queueCommentary("Excellent! You've mastered responding to shots!", true, true);
-                game.practiceWins = 0;
-              }
-            }
-          } else {
-            game.ball.dx = -Math.abs(Math.cos(angle)) * game.ball.speed;
-            game.ball.dy = Math.sin(angle) * game.ball.speed;
-          }
-          
-          // Increase ball speed but cap at MAX_BALL_SPEED
-          if (game.ball.speed < MAX_BALL_SPEED) {
-            game.ball.speed += BALL_SPEED_INCREMENT;
-            game.ball.originalSpeed = game.ball.speed;
-          }
-          
-          game.lastScorer = game.rightPlayer;
-          playRandomHitSound();
-        }
-      } else {
-        // 4-player paddle collisions
-        // Left side paddles
-        if (game.ball.x - game.ballRadius < 20 + game.paddleWidth) {
-          if ((game.ball.y > game.leftTopPaddle.y && game.ball.y < game.leftTopPaddle.y + paddleHeight) ||
-              (game.ball.y > game.leftBottomPaddle.y && game.ball.y < game.leftBottomPaddle.y + paddleHeight)) {
-            const paddle = game.ball.y < canvas.height/2 ? game.leftTopPaddle : game.leftBottomPaddle;
-            const angle = getBallAngle(paddle.y, game.ball.y, paddleHeight);
-            
-            // Check for team power shot
-            if (game.teamLeftCharged || game.last10Seconds) {
-              game.ball.dx = Math.abs(Math.cos(angle)) * game.ball.speed * SMASH_SPEED_MULTIPLIER;
-              game.ball.dy = Math.sin(angle) * game.ball.speed * SMASH_SPEED_MULTIPLIER;
-              game.isSmashActive = true;
-              game.smashEndTime = Date.now() + SMASH_DURATION;
-              game.teamLeftCharged = false;
-              const leftChargeElement = document.getElementById('leftCharge');
-              const leftChargeLabel = document.getElementById('leftChargeLabel');
-              if (leftChargeElement) leftChargeElement.classList.remove('active');
-              if (leftChargeLabel) leftChargeLabel.textContent = 'TEAM POWER';
-              startLeftCharge();
-              queueCommentary("TEAM POWER SHOT FROM " + game.leftPlayer + "!", true, true);
-            } else {
-              game.ball.dx = Math.abs(Math.cos(angle)) * game.ball.speed;
-              game.ball.dy = Math.sin(angle) * game.ball.speed;
-            }
-            
-            // Increase ball speed but cap at MAX_BALL_SPEED
-            if (game.ball.speed < MAX_BALL_SPEED) {
-              game.ball.speed += BALL_SPEED_INCREMENT;
-              game.ball.originalSpeed = game.ball.speed;
-            }
-            
-            game.lastScorer = game.leftPlayer;
-            playRandomHitSound();
-          }
-        }
-        
-                // Right side paddles
-        if (game.ball.x + game.ballRadius > canvas.width - 20 - game.paddleWidth) {
-          if ((game.ball.y > game.rightTopPaddle.y && game.ball.y < game.rightTopPaddle.y + paddleHeight) ||
-              (game.ball.y > game.rightBottomPaddle.y && game.ball.y < game.rightBottomPaddle.y + paddleHeight)) {
-            const paddle = game.ball.y < canvas.height/2 ? game.rightTopPaddle : game.rightBottomPaddle;
-            const angle = getBallAngle(paddle.y, game.ball.y, paddleHeight);
-            
-            // Check for team power shot
-            if (game.teamRightCharged || game.last10Seconds) {
-              game.ball.dx = -Math.abs(Math.cos(angle)) * game.ball.speed * SMASH_SPEED_MULTIPLIER;
-              game.ball.dy = Math.sin(angle) * game.ball.speed * SMASH_SPEED_MULTIPLIER;
-              game.isSmashActive = true;
-              game.smashEndTime = Date.now() + SMASH_DURATION;
-              game.teamRightCharged = false;
-              const rightChargeElement = document.getElementById('rightCharge');
-              const rightChargeLabel = document.getElementById('rightChargeLabel');
-              if (rightChargeElement) rightChargeElement.classList.remove('active');
-              if (rightChargeLabel) rightChargeLabel.textContent = 'TEAM POWER';
-              startRightCharge();
-              queueCommentary("TEAM POWER SHOT FROM " + game.rightPlayer + "!", true, true);
-            } else {
-              game.ball.dx = -Math.abs(Math.cos(angle)) * game.ball.speed;
-              game.ball.dy = Math.sin(angle) * game.ball.speed;
-            }
-          
-          // Increase ball speed but cap at MAX_BALL_SPEED
-          if (game.ball.speed < MAX_BALL_SPEED) {
-            game.ball.speed += BALL_SPEED_INCREMENT;
-            game.ball.originalSpeed = game.ball.speed;
-          }
-          
-          game.lastScorer = game.rightPlayer;
-          playRandomHitSound();
-        }
-      }
-      
-      // Ball out of bounds - scoring
-      if (game.ball.x - game.ballRadius < 0) {
-        if (!game.isPracticeMode && !game.isEndlessMode) {
-          game.rightPaddle.score++;
-          document.getElementById('rightScore').textContent = game.rightPaddle.score;
-          game.lastScorer = game.rightPlayer;
-          handleScore();
-        } else if (game.isPracticeMode) {
-          // In practice mode, just reset the ball immediately
-          resetBall();
-          game.ball.dx = -Math.abs(game.ball.dx);
-          if (game.practiceType === 'responding') {
-            queueCommentary("Try again! Press E for a power shot!", true);
-          }
-
-                function checkCollisions() {
       if (game.isPaused || game.halftimeActive) return;
       
       const paddleHeight = game.isFourPlayer ? game.fourPlayerPaddleHeight : game.paddleHeight;
@@ -3214,6 +3060,7 @@
       game.isFourPlayer = false;
       game.isPracticeMode = false;
       game.isEndlessMode = false;
+      game.gameMode = '2player';
       
       document.getElementById('twoPlayerPrompt').style.display = 'none';
       document.getElementById('backButton').style.display = 'none';
@@ -3245,6 +3092,7 @@
       game.isFourPlayer = false;
       game.isPracticeMode = false;
       game.isEndlessMode = false;
+      game.gameMode = '1player';
       
       document.getElementById('singlePlayerPrompt').style.display = 'none';
       document.getElementById('backButton').style.display = 'none';
@@ -3275,13 +3123,14 @@
       game.isFourPlayer = true;
       game.isPracticeMode = false;
       game.isEndlessMode = false;
+      game.gameMode = '4player';
       
       document.getElementById('fourPlayerPrompt').style.display = 'none';
       document.getElementById('backButton').style.display = 'none';
       const mobileControls = document.getElementById('mobileControls');
       if (mobileControls) mobileControls.style.display = 'none';
       startGame();
-      playSelectSound();
+            playSelectSound();
     }
 
     function showEndlessPrompt() {
@@ -3314,6 +3163,7 @@
       game.showScore = showScore;
       game.enableCommentary = enableCommentary;
       game.opponentIsBot = opponentIsBot;
+      game.gameMode = opponentIsBot ? 'endless1p' : 'endless2p';
       
       document.getElementById('endlessPrompt').style.display = 'none';
       document.getElementById('backButton').style.display = 'none';
@@ -3343,6 +3193,7 @@
       game.practiceType = "powershot";
       game.isEndlessMode = false;
       game.practiceWins = 0;
+      game.gameMode = 'practice';
       
       document.getElementById('practiceModePrompt').style.display = 'none';
       document.getElementById('backButton').style.display = 'none';
@@ -3364,6 +3215,7 @@
       game.practiceType = "responding";
       game.isEndlessMode = false;
       game.practiceWins = 0;
+      game.gameMode = 'practice';
       
       document.getElementById('practiceModePrompt').style.display = 'none';
       document.getElementById('backButton').style.display = 'none';
@@ -3533,12 +3385,8 @@
         if (mobileControls) mobileControls.style.display = 'flex';
       }
       
-      // Configure D-Pad based on game mode
-      const showLeftDPad = game.dpadEnabled && (game.isLocalMultiplayer || game.isPracticeMode || (game.isEndlessMode && !game.opponentIsBot));
-      const showRightDPad = game.dpadEnabled && (game.isLocalMultiplayer || game.isFourPlayer || (game.isEndlessMode && !game.opponentIsBot));
-      
-      document.getElementById('dpadControls').style.display = showLeftDPad ? 'block' : 'none';
-      document.getElementById('dpadControlsRight').style.display = showRightDPad ? 'block' : 'none';
+      // Update D-Pad visibility based on game mode
+      updateDPadVisibility();
       
       if (!game.isPracticeMode && !game.isEndlessMode) {
         queueCommentary(`THE CHAMPIONSHIP MATCH BEGINS! ${game.leftPlayer} VS ${game.rightPlayer}!`, true, true);
@@ -4006,6 +3854,10 @@
         const mobileControls = document.getElementById('mobileControls');
         if (mobileControls) mobileControls.style.display = 'flex';
       }
+      
+      // Hide D-Pad controls
+      document.getElementById('dpadControls').style.display = 'none';
+      document.getElementById('dpadControlsRight').style.display = 'none';
       
       // Start music again if not muted
       if (game.soundEnabled && !game.isMusicMuted && game.musicStarted) {
