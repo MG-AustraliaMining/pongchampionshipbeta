@@ -1734,6 +1734,39 @@
       setupButtonSounds();
     }
 
+    function toggleMute() {
+  if (!game.soundEnabled) return;
+  
+  game.isMuted = !game.isMuted;
+  const muteButton = document.getElementById('muteButton');
+  if (muteButton) muteButton.textContent = game.isMuted ? "🔇" : "🔊";
+  window.speechSynthesis.cancel();
+  
+  if (game.isMuted) {
+    queueCommentary("Commentary muted", true, true);
+  } else {
+    queueCommentary("Commentary unmuted", true, true);
+  }
+}
+
+function toggleMusicMute() {
+  if (!game.soundEnabled) return;
+  
+  game.isMusicMuted = !game.isMusicMuted;
+  const musicMuteButton = document.getElementById('musicMuteButton');
+  if (musicMuteButton) musicMuteButton.textContent = game.isMusicMuted ? "🔇" : "🎵";
+  
+  if (game.isMusicMuted) {
+    backgroundMusic.pause();
+    queueCommentary("Music muted", true, true);
+  } else {
+    if (game.musicStarted && game.gameStarted) {
+      backgroundMusic.play().catch(e => console.log("Audio play error:", e));
+    }
+    queueCommentary("Music unmuted", true, true);
+  }
+}
+
     function showTutorial() {
       document.getElementById('tutorialModal').style.display = 'flex';
       playSelectSound();
@@ -3359,3 +3392,4 @@
     </script>
 </body>
 </html>
+
